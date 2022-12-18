@@ -87,7 +87,7 @@ class CarrosDataTable extends DataTable
             Column::make('descricao')->title('Descrição'),
             Column::make('created_at')->title('Criado em'),
             Column::make('updated_at')->title('Atualizado em'),
-            Column::computed('action')
+            Column::computed('action')->title('Ações')
             ->addClass('text-center'),
         ];
     }

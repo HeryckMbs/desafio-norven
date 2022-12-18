@@ -10,6 +10,12 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.dataTables.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/buttons/2.3.2/css/buttons.bootstrap4.min.css">
+
     <link rel="stylesheet" href="{{ asset('css/fontawesome.min.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.2.min.js"
         integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
@@ -77,15 +83,16 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1 class="m-0">@yield('title', 'P')</h1>
+                                <h1 class="m-0">@yield('title', 'Dashboard')</h1>
                             </div><!-- /.col -->
+                            <div class="col-sm-6 d-flex justify-content-end">
+                                @yield('actions')
+                            </div>
                         </div>
 
                         <!-- /.row -->
                     </div>
-                    <div class="card-body">
-                        @yield('actions')
-                    </div>
+
                     <!-- /.container-fluid -->
                 </div>
                 <div class="content">
@@ -134,6 +141,11 @@
     @vite('resources/js/app.js')
     {{-- <script src="http://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js" defer></script> --}}
     <!-- AdminLTE App -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
     <script src="{{ asset('js/adminlte.min.js') }}" defer></script>
     @include('notify::components.notify')
     @yield('scripts')
@@ -158,8 +170,7 @@
 
 
         $('#fecha').on('click', function() {
-            $('#modalRequest').modal("hide");
-            $('.modal-backdrop').hide()
+            $('#modalRequest').modal('hide');
         })
     </script>
 

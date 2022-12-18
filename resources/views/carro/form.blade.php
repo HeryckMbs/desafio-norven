@@ -1,5 +1,9 @@
-<form method="POST" action="{{ isset($carro) ? route('carro.update', $carro->id) : route('carro.create') }}"
+<form id="formCar" method="POST"
+    action="{{ isset($carro) ? route('carro.update', $carro->id) : route('carro.create') }}"
     enctype="multipart/form-data">
+    @if (isset($carro))
+        @method('PUT')
+    @endif
     <div class="modal-dialog modal-default">
         <div class="modal-content">
             <div class="modal-header">
@@ -21,8 +25,8 @@
                 </div>
                 <div class="form-group">
                     <label>Cor</label>
-                    <input value="{{ isset($carro) ? $carro->cor : '' }} " type="Ano" class="form-control"
-                        name="cor">
+                    <input id="cor" value="{{ isset($carro) ? $carro->cor : '' }} " type="Ano"
+                        class="form-control" name="cor">
 
                 </div>
                 <div class="form-group">
@@ -58,7 +62,7 @@
                 </div>
                 <div class="form-group ">
                     <label for="Modelo">Descrição</label>
-                    <textarea class="form-control" rows="3" name="descricao">{{ isset($carro) ? $carro->descricao : '' }}</textarea>
+                    <textarea id="descricao" class="form-control" rows="3" name="descricao">{{ isset($carro) ? $carro->descricao : '' }}</textarea>
                 </div>
 
 
@@ -74,5 +78,16 @@
 
 
     </div>
-    <script></script>
+    <script>
+        $('#fecha').on('click', function() {
+            for (input of $('#modalRequest input')) {
+                console.log(input)
+                $('#descricao').empty()
+                if (input.name != '_token') {
+                    input.value = ''
+                }
+            }
+            $('#modalRequest').modal('hide');
+        })
+    </script>
 </form>

@@ -18,7 +18,7 @@
                     </p>
                 </a>
             </li>
-
+            {{--
             <li class="nav-item">
                 <a href="{{ route('users.index') }}" class="nav-link">
                     <i class="nav-icon fas fa-users"></i>
@@ -26,7 +26,7 @@
                         {{ __('Users') }}
                     </p>
                 </a>
-            </li>
+            </li> --}}
             <li class="nav-item">
                 <a href="{{ route('carro.index') }}" class="nav-link">
                     <i class="nav-icon fas fa-car"></i>
@@ -36,7 +36,7 @@
                 </a>
             </li>
 
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a href="{{ route('about') }}" class="nav-link">
                     <i class="nav-icon far fa-address-card"></i>
                     <p>
@@ -62,7 +62,7 @@
                     </li>
                 </ul>
             </li>
-        </ul>
+        </ul> --}}
     </nav>
     <!-- /.sidebar-menu -->
 </div>

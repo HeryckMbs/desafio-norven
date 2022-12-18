@@ -18,13 +18,14 @@ use App\Http\Controllers\CarroController;
 Route::get('/', function () {
     return view('auth.login');
 });
+Route::get('/welcome', function () {
+    return view('welcome');
+});
 
 Auth::routes();
 
 
 Route::middleware('auth')->group(function () {
-    Auth::routes();
-
     Route::view('about', 'about')->name('about');
     Route::get('users', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
     Route::get('profile', [\App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');

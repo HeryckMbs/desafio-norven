@@ -25,10 +25,8 @@ class CarrosDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query->with(['marca'])))
-            ->addColumn('action', 'carros.action')
-            // ->addColumn('Marca', function ($r) {
-            //     return $r->marca->nome;
-            // })
+        ->addColumn('action', 'carro.action')
+        ->rawColumns(['link', 'action'])
             ->editColumn('created_at', function ($r) {
                 return Carbon::parse($r->created_at)->format('d/m/Y');
             })
@@ -61,7 +59,7 @@ class CarrosDataTable extends DataTable
                     ->setTableId('carros-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    //->dom('Bfrtip')
+                    ->dom('Bfrtip')
                     ->orderBy(1)
                     ->selectStyleSingle()
                     ->buttons([
@@ -82,17 +80,15 @@ class CarrosDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center'),
+
             Column::make('modelo')->title('Modelo'),
             Column::make('cor'),
             Column::make('marca.nome', )->title('Marca'),
             Column::make('descricao')->title('Descrição'),
             Column::make('created_at')->title('Criado em'),
             Column::make('updated_at')->title('Atualizado em'),
+            Column::computed('action')
+            ->addClass('text-center'),
         ];
     }
 

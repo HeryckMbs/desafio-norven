@@ -37,6 +37,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [CarroController::class,'create'])->name('carro.create');
         Route::delete('/{id}', [CarroController::class,'delete'])->name('carro.delete');
         Route::put('/{id}', [CarroController::class,'update'])->name('carro.update');
-        Route::get('/form', [CarroController::class, 'form'])->name('carro.form');
+        Route::get('/form/{id?}', [CarroController::class, 'form'])->name('carro.form');
     });
 });

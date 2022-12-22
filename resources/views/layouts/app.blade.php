@@ -146,6 +146,7 @@
         src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
     <script type="text/javascript" charset="utf8"
         src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
+    <script src="/vendor/datatables/buttons.server-side.js"></script>
     <script src="{{ asset('js/adminlte.min.js') }}" defer></script>
     @include('notify::components.notify')
     @yield('scripts')

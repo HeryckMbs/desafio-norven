@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CarroController;
+use App\Http\Controllers\ManutencaoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,4 +41,14 @@ Route::middleware('auth')->group(function () {
         Route::put('/{id}', [CarroController::class,'update'])->name('carro.update');
         Route::get('/form/{id?}', [CarroController::class, 'form'])->name('carro.form');
     });
+    Route::group(
+        ['prefix' => 'manutencao'],
+        function () {
+            Route::get('/', [ManutencaoController::class,'index'])->name('manutencao.index');
+            Route::post('/', [ManutencaoController::class,'create'])->name('manutencao.create');
+            Route::delete('/{id}', [ManutencaoController::class,'delete'])->name('manutencao.delete');
+            Route::put('/{id}', [ManutencaoController::class,'update'])->name('manutencao.update');
+            Route::get('/form/{id?}', [ManutencaoController::class, 'form'])->name('manutencao.form');
+        }
+    );
 });

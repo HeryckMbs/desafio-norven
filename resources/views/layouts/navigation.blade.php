@@ -38,9 +38,19 @@
 
             <li class="nav-item">
                 <a href="{{ route('manutencao.index') }}" class="nav-link">
-                    <i class="fas fa-wrench"></i>
+                    <i class="nav-icon fas fa-wrench"></i>
                     <p>
                         Minhas Manutenções
+                    </p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ route('servico.index') }}" class="nav-link">
+                    <i class="nav-icon fas fa-clipboard-list"></i>
+
+                    <p>
+                        Serviços
                     </p>
                 </a>
             </li>

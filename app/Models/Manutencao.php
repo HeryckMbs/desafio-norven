@@ -12,6 +12,7 @@ class Manutencao extends Model
         'carro_id',
         'data_entrega',
         'descricao',
+        'status'
     ];
 
     protected $dates = [

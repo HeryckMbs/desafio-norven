@@ -5,6 +5,22 @@
         novo carro</button>
 @endsection
 @section('content')
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="info-box bg-gradient-success">
+                <span class="info-box-icon"><i class="fa fa-car"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Quantidade de Carros</span>
+                    <span class="info-box-number">{{ $qtd_carros }}</span>
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
     <div class="table table-responsive">
         {{ $dataTable->table() }}
     </div>

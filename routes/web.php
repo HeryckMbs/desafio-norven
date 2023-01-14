@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CarroController;
 use App\Http\Controllers\ManutencaoController;
+use App\Http\Controllers\ServicoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,7 +49,19 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [ManutencaoController::class,'create'])->name('manutencao.create');
             Route::delete('/{id}', [ManutencaoController::class,'delete'])->name('manutencao.delete');
             Route::put('/{id}', [ManutencaoController::class,'update'])->name('manutencao.update');
+            Route::put('search/{id}', [ManutencaoController::class,'searchManutencao'])->name('manutencao.update');
+
             Route::get('/form/{id?}', [ManutencaoController::class, 'form'])->name('manutencao.form');
+        }
+    );
+
+    Route::group(
+        ['prefix' => 'servico'],
+        function () {
+            Route::get('/', [ServicoController::class,'index'])->name('servico.index');
+            Route::post('/', [ServicoController::class,'create'])->name('servico.create');
+            Route::delete('/{id}', [ServicoController::class,'delete'])->name('servico.delete');
+            Route::put('/{id}', [ServicoController::class,'update'])->name('servico.update');
         }
     );
 });

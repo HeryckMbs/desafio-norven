@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name', 'Laravel') }}</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+
     @notifyCss
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -15,6 +17,8 @@
         href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.dataTables.min.css">
     <link rel="stylesheet" type="text/css"
         href="https://cdn.datatables.net/buttons/2.3.2/css/buttons.bootstrap4.min.css">
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
 
     <link rel="stylesheet" href="{{ asset('css/fontawesome.min.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.2.min.js"
@@ -142,21 +146,37 @@
     {{-- <script src="http://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js" defer></script> --}}
     <!-- AdminLTE App -->
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="text/javascript" charset="utf8"
         src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
-    <script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
     <script src="/vendor/datatables/buttons.server-side.js"></script>
     <script src="{{ asset('js/adminlte.min.js') }}" defer></script>
     @include('notify::components.notify')
     @yield('scripts')
     @notifyJs
     @stack('scripts')
+
+    <script>
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    borderWidth: 1
+                }]
+            },
+
+        });
+    </script>
+
     <script>
         function modalG(id) {
 
             var url = `carro/form/${id}`
-            console.log(url)
             $.ajax({
                 url: url,
                 method: "GET"
@@ -168,6 +188,37 @@
 
         }
 
+        function editManutencao(id) {
+            let request = {}
+            for (input of $('#modalRequest input')) {
+                $('#descricao').empty()
+                if (input.name != '_token') {
+                    request[input.name] = input.value;
+                }
+            }
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                method: "PUT",
+                url: `manutencao/search/${id}`,
+                data: request
+            }).done(function(response) {
+                console.log(response.carr)
+
+                $('#carro').val(`${response.carro_id}`);
+                $('#data_entrega').val(`${Date.parse(response.data_entrega)}`)
+                $('#servico').val(`${response.servico}`)
+                $('#status').val(`${response.status}`)
+                $('#descricao').val(`${response.descricao}`)
+                $('#modalRequest').modal('show')
+
+
+            })
+        }
 
 
         $('#fecha').on('click', function() {

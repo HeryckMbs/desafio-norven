@@ -20,7 +20,7 @@
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label>Carro</label>
-                        <select class="form-control" name="carro">
+                        <select class="form-control" id="carro" name="carro">
                             @foreach ($my_cars as $car)
                                 <option value="{{ $car->id }}">
                                     {{ $car->modelo }}</option>
@@ -30,24 +30,35 @@
                     </div>
                     <div class="col-md-6 form-group">
                         <label>Data de Entrega</label>
-                        <input value="{{ isset($carro) ? $carro->cor : '' }} " type="date" class="form-control"
-                            name="data_entrega">
+                        <input id="data_entrega" value="{{ isset($carro) ? $carro->cor : '' }} " type="date"
+                            class="form-control" name="data_entrega">
 
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-12 form-group ">
-                        <label for="Modelo">Serviço</label>
-                        <select class="form-control" name="servico">
-                            <option>Selecione um serviço</option>
-                            <option value="{{ null }}">Serviço não encontrado</option>
-                            @if (isset($servicos))
-                                @foreach ($servicos as $servico)
-                                    <option value="{{ $servicos->id }}">
-                                        {{ $servicos->descricao }}</option>
-                                @endforeach
-                            @endif
+                        <label for="Modelo">Serviços</label>
+                        @foreach ($servicos as $servico)
+                            <div class="form-check">
+                                <input class="form-check-input" name="servico[]" type="checkbox"
+                                    value="{{ $servico->id }}" id="flexCheckDefault{{ $loop->iteration }}">
+                                <label class="form-check-label" for="flexCheckDefault{{ $loop->iteration }}">
+                                    {{ $servico->nome }}
+                                </label>
+                            </div>
+                        @endforeach
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 form-group ">
+                        <label for="Modelo">Status</label>
+                        <select id="status" class="form-control" name="status">
+                            <option value="pendente">Pendente</option>
+                            <option value="andamento">Em andamento</option>
+                            <option value="concluido">Concluído</option>
+                            <option value="recusado">Recusado</option>
                         </select>
 
                     </div>
@@ -64,7 +75,7 @@
 
             <div class="modal-footer">
                 <button type="button" id="fecha" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button id="enviar"type="submit" class="btn btn-primary">Save changes</button>
             </div>
 
 
@@ -75,7 +86,6 @@
     <script>
         $('#fecha').on('click', function() {
             for (input of $('#modalRequest input')) {
-                console.log(input)
                 $('#descricao').empty()
                 if (input.name != '_token') {
                     input.value = ''

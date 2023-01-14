@@ -29,6 +29,11 @@ class ManutencaoDataTable extends DataTable
         ->editColumn('created_at', function ($r) {
             return Carbon::parse($r->created_at)->format('d/m/Y');
         })
+        ->addColumn('action', 'manutencao.action')
+        ->rawColumns(['link', 'action'])
+        ->editColumn('status', function ($r) {
+            return strtoupper($r->status);
+        })
         ->editColumn('data_entrega', function ($r) {
             return Carbon::parse($r->data_entrega)->format('d/m/Y');
         })
@@ -80,6 +85,7 @@ class ManutencaoDataTable extends DataTable
         return [
 
                   Column::make('descricao')->title('Descrição'),
+                  Column::make('status')->title('Status'),
                   Column::make('carro.modelo')->title('Carro'),
                   Column::make('data_entrega')->title('Data de entrega'),
                   Column::make('created_at')->title('Criado em'),

@@ -12,12 +12,12 @@ return new class () extends Migration {
      */
     public function up()
     {
-        Schema::create('manutencaos', function (Blueprint $table) {
+        Schema::create('servicos_manutencoes', function (Blueprint $table) {
             $table->id();
-            $table->integer('carro_id');
-            $table->string('status')->default('pendente');
-            $table->dateTime('data_entrega');
-            $table->text('descricao');
+            $table->unsignedBigInteger('manutencao_id');
+            $table->foreign('manutencao_id')->references('id')->on('manutencaos')->onDelete('cascade');
+            $table->unsignedBigInteger('servico_id');
+            $table->foreign('servico_id')->references('id')->on('servicos')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class () extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('manutencaos');
+        Schema::dropIfExists('servicos_manutencoes');
     }
 };

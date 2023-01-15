@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name', 'Laravel') }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
     @notifyCss
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -21,8 +22,7 @@
         src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
 
     <link rel="stylesheet" href="{{ asset('css/fontawesome.min.css') }}">
-    <script src="https://code.jquery.com/jquery-3.6.2.min.js"
-        integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="{{ asset('css/adminlte.min.css') }}">
 
 
@@ -157,20 +157,48 @@
     @stack('scripts')
 
     <script>
-        const ctx = document.getElementById('myChart');
-
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    borderWidth: 1
-                }]
-            },
-
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
         });
+        const ctx = document.getElementById('myChart');
+        let data = {};
+        $.ajax({
+            method: "GET",
+            url: '{{ route('teste') }}'
+        }).done(function(response) {
+            console.log(response)
+            let labels = [];
+            let qtdCarros = []
+            response.forEach(function(element) {
+                if (!labels.includes(element.nome)) {
+                    labels.push(element.nome)
+                }
+                qtdCarros.push(element.id)
+            })
+            const occurrences = qtdCarros.reduce((acc, curr) => {
+                return acc[curr] ? ++acc[curr] : acc[curr] = 1, acc
+            }, {});
+
+            new Chart(ctx, {
+                type: 'bar',
+                options: {
+                    responsive: true,
+
+                },
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Quantidade por marca',
+                        data: Object.values(occurrences),
+                        borderWidth: 2,
+
+                    }]
+                },
+
+            });
+        })
     </script>
 
     <script>
@@ -207,11 +235,10 @@
                 url: `manutencao/search/${id}`,
                 data: request
             }).done(function(response) {
-                console.log(response.carr)
+                console.log(response)
 
                 $('#carro').val(`${response.carro_id}`);
                 $('#data_entrega').val(`${Date.parse(response.data_entrega)}`)
-                $('#servico').val(`${response.servico}`)
                 $('#status').val(`${response.status}`)
                 $('#descricao').val(`${response.descricao}`)
                 $('#modalRequest').modal('show')

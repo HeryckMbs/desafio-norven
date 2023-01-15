@@ -34,7 +34,6 @@
         $('#newMarca').on('click', function() {
             let confirm = $('#newMarca').is(":checked")
             if (confirm) {
-                console.log('safksd')
                 $('#marca').val('')
                 $('#marca').prop('disabled', true)
                 $('#Modelo').prop('disabled', false)

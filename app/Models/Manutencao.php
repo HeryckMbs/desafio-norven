@@ -25,4 +25,15 @@ class Manutencao extends Model
     {
         return $this->belongsTo(Carro::class, 'carro_id');
     }
+
+    public function servicos()
+    {
+        return Servico::join(
+            'servicos_manutencoes',
+            'servicos_manutencoes.servico_id',
+            '=',
+            'servicos.id'
+        )
+            ->where('servico_manutencoes.manutencao_id', '=', $this->id);
+    }
 }

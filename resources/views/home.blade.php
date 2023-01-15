@@ -3,13 +3,29 @@
 @section('content')
     <!-- Main content -->
 
-    <p class="card-text">
-        {{ __('You are logged in!') }}
-    </p>
-    <div style="width: 35vw;height:35vw">
-        <canvas id="myChart"></canvas>
+    <div class="row">
+        <div class="col-6">
+            <label>Minhas Marcas de Carro</label>
+
+            <canvas id="myChart" aria-label="Hello ARIA World">
+            </canvas>
+        </div>
+        <div class="col-6">
+            <label>Meus Agendamentos</label>
+
+            <div class="table table-responsive">
+                {{ $dataTable->table() }}
+            </div>
+        </div>
     </div>
 
 
     <!-- /.content -->
 @endsection
+
+@push('scripts')
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.2/css/buttons.bootstrap4.min.css">
+    <script src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
+    <script src="/vendor/datatables/buttons.server-side.js"></script>
+    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+@endpush

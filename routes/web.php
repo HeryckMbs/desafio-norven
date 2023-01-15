@@ -1,10 +1,16 @@
 <?php
 
+use App\Models\Carro;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CarroController;
 use App\Http\Controllers\ManutencaoController;
 use App\Http\Controllers\ServicoController;
+use App\Models\Manutencao;
+use App\Models\Marca;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +29,16 @@ Route::get('/', function () {
 Route::get('/welcome', function () {
     return view('welcome');
 });
+Route::get('/teste', function () {
+    $myCars = Carro::where('dono_id', '=', Auth::id())->pluck('marca_id');
+    $myBrands = [];
+    foreach ($myCars as $c) {
+        $aux = Marca::where('id', $c)->get()->toArray();
+        array_push($myBrands, $aux[0]);
+    }
+    return $myBrands;
+})->name('teste');
+
 
 Auth::routes();
 

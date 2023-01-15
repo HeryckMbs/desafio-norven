@@ -1,7 +1,7 @@
 <form id="formManutencao" method="POST"
     action="{{ isset($carro) ? route('carro.update', $carro->id) : route('manutencao.create') }}"
     enctype="multipart/form-data">
-    @if (isset($carro))
+    @if (isset($agendamento))
         @method('PUT')
     @endif
     <div class="modal-dialog modal-default">

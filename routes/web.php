@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ApiController;
 use App\Models\Carro;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
@@ -38,12 +39,17 @@ Route::get('/teste', function () {
     }
     return $myBrands;
 })->name('teste');
+Route::get('/testee', function () {
+})->name('teste2');
 
 
 Auth::routes();
 
 
+
 Route::middleware('auth')->group(function () {
+    Route::get('/servicos_manutencao/{id}', [ServicoController::class, 'servicos_manutencao'])->name('servicos.manutencao');
+
     Route::view('about', 'about')->name('about');
     Route::get('users', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
     Route::get('profile', [\App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');

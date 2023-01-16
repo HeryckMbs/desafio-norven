@@ -53,10 +53,12 @@ class ManutencaoController extends Controller
             ];
             $novaManutencao = Manutencao::create($dataManutencao);
 
-            foreach ($request->servico as $servico) {
-                ServicosManutencoes::create(['manutencao_id' => $novaManutencao->id, 'servico_id' => $servico]);
-            }
 
+            if (isset($request->servico) && $request->servico != null) {
+                foreach ($request->servico as $servico) {
+                    ServicosManutencoes::create(['manutencao_id' => $novaManutencao->id, 'servico_id' => $servico]);
+                }
+            }
 
             DB::commit();
             if ($novaManutencao) {
@@ -95,36 +97,36 @@ class ManutencaoController extends Controller
 
     public function searchManutencao($id)
     {
-        $manutencao = Manutencao::findOrFail($id)->with(['carro','servicos'])->first();
+        $manutencao = Manutencao::findOrFail($id)->with(['carro'])->first();
         dd($manutencao);
         return $manutencao;
     }
 
     public function update(Request $request, $id)
     {
-        try {
-            $validator = Validator::make(
-                $request->all(),
-                [
-                'cor' => 'required',
-                'modelo' => 'required',
-                'descricao' => 'required',
-                'ano' => 'required',
-                'marca' => 'required'
-            ],
-                [
-                    'cor.required' => 'É necessário informar a cor do veículo',
-                    'modelo.required' => 'É necessário informar o modelo do veículo',
-                    'descricao.required' => 'É necessário informar a descrição do veículo',
-                    'ano.required' => 'É necessário informar o ano de fabricação do veículo',
-                    'marca.required' => 'É necessário informar a marca do veículo'
+        $validator = Validator::make(
+            $request->all(),
+            [
+            'cor' => 'required',
+            'modelo' => 'required',
+            'descricao' => 'required',
+            'ano' => 'required',
+            'marca' => 'required'
+        ],
+            [
+                'cor.required' => 'É necessário informar a cor do veículo',
+                'modelo.required' => 'É necessário informar o modelo do veículo',
+                'descricao.required' => 'É necessário informar a descrição do veículo',
+                'ano.required' => 'É necessário informar o ano de fabricação do veículo',
+                'marca.required' => 'É necessário informar a marca do veículo'
 
-                ]
-            );
-            if ($validator->fails()) {
-                notify()->warning(implode(' ', $validator->messages()->all()), 'Atenção');
-                return redirect(route('manutencao.index'), 302);
-            }
+            ]
+        );
+        if ($validator->fails()) {
+            notify()->warning(implode(' ', $validator->messages()->all()), 'Atenção');
+            return redirect(route('manutencao.index'), 302);
+        }
+        try {
             $manutencao = Manutencao::findOrFail($id);
             $manutencao_data = [
                 'carro_id' => $request->carro,

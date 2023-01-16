@@ -84,6 +84,7 @@ class ManutencaoDataTable extends DataTable
     {
         return [
 
+                  Column::make('id')->title('#'),
                   Column::make('descricao')->title('Descrição'),
                   Column::make('status')->title('Status'),
                   Column::make('carro.modelo')->title('Carro'),

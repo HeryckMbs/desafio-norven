@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\ServicoDataTable;
+use App\Models\Manutencao;
 use App\Models\Servico;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -51,6 +52,16 @@ class ServicoController extends Controller
             DB::rollBack();
             notify()->error($e->getMessage(), 'ERRO');
             return redirect(route('servico.index'), );
+        }
+    }
+
+
+    public function servicos_manutencao($id_manutencao)
+    {
+        try {
+            $manutencao = Manutencao::findOrFail($id_manutencao);
+            return $manutencao->servicos();
+        } catch(\Exception $e) {
         }
     }
 }

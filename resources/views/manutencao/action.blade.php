@@ -7,5 +7,7 @@
         <button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
 
     </form>
+    <button data-target="#modalServicos" onclick="getServicos({{ $id }})" data-toggle="modal"
+        class="btn btn-info"><i class="fas fa-info"></i></button>
 
 </div>

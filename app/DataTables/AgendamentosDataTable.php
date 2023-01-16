@@ -4,6 +4,7 @@ namespace App\DataTables;
 
 use App\Models\Agendamento;
 use App\Models\Manutencao;
+use App\Models\Servico;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\EloquentDataTable;
@@ -39,7 +40,7 @@ class AgendamentosDataTable extends DataTable
         return $model->newQuery()
         ->join('carros', 'carros.id', '=', 'manutencaos.carro_id')
         ->where('carros.dono_id', '=', Auth::id())
-        ->where('data_entrega', '>=', Carbon::now()->addDays(7));
+        ->where('data_entrega', '<=', Carbon::now()->addDays(7));
     }
 
     /**

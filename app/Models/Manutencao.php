@@ -34,6 +34,6 @@ class Manutencao extends Model
             '=',
             'servicos.id'
         )
-            ->where('servico_manutencoes.manutencao_id', '=', $this->id);
+            ->where('servicos_manutencoes.manutencao_id', '=', $this->id)->get();
     }
 }

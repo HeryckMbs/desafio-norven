@@ -2598,6 +2598,10 @@
                     "type": "custom"
                 },
                 {
+                    "url": "https://www.paypal.com/paypalme/yoeunes",
+                    "type": "custom"
+                },
+                {
                     "url": "https://github.com/yoeunes",
                     "type": "github"
                 },

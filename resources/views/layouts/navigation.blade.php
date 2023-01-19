@@ -36,11 +36,21 @@
                 </a>
             </li>
 
-            {{-- <li class="nav-item">
-                <a href="{{ route('about') }}" class="nav-link">
-                    <i class="nav-icon far fa-address-card"></i>
+            <li class="nav-item">
+                <a href="{{ route('manutencao.index') }}" class="nav-link">
+                    <i class="nav-icon fas fa-wrench"></i>
                     <p>
-                        {{ __('About us') }}
+                        Minhas Manutenções
+                    </p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ route('servico.index') }}" class="nav-link">
+                    <i class="nav-icon fas fa-clipboard-list"></i>
+
+                    <p>
+                        Serviços
                     </p>
                 </a>
             </li>
@@ -62,7 +72,7 @@
                     </li>
                 </ul>
             </li>
-        </ul> --}}
+        </ul>
     </nav>
     <!-- /.sidebar-menu -->
 </div>

@@ -6,6 +6,7 @@ use App\Models\Carro;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
@@ -45,7 +46,7 @@ class CarrosDataTable extends DataTable
      */
     public function query(Carro $model): QueryBuilder
     {
-        return $model->newQuery();
+        return $model->newQuery()->where('dono_id', '=', Auth::id());
     }
 
     /**
@@ -62,13 +63,14 @@ class CarrosDataTable extends DataTable
                     ->dom('Bfrtip')
                     ->orderBy(1)
                     ->selectStyleSingle()
+
+                    ->responsive(true)
                     ->buttons([
-                        Button::make('excel'),
-                        Button::make('csv'),
-                        Button::make('pdf'),
-                        Button::make('print'),
-                        Button::make('reset'),
-                        Button::make('reload')
+                        // Button::make('excel'),
+                        // Button::make('csv'),
+                        // Button::make('pdf'),
+                        Button::make('print')->text('<i class="fa fa-print"></i>'),
+                        Button::make('reset')->text('<i class="fa fa-sync"></i>'),
                     ]);
     }
 

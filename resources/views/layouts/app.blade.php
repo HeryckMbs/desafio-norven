@@ -5,6 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name', 'Laravel') }}</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
     @notifyCss
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -15,10 +18,11 @@
         href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.dataTables.min.css">
     <link rel="stylesheet" type="text/css"
         href="https://cdn.datatables.net/buttons/2.3.2/css/buttons.bootstrap4.min.css">
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
 
     <link rel="stylesheet" href="{{ asset('css/fontawesome.min.css') }}">
-    <script src="https://code.jquery.com/jquery-3.6.2.min.js"
-        integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="{{ asset('css/adminlte.min.css') }}">
 
 
@@ -142,20 +146,65 @@
     {{-- <script src="http://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js" defer></script> --}}
     <!-- AdminLTE App -->
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="text/javascript" charset="utf8"
         src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
-    <script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
+    <script src="/vendor/datatables/buttons.server-side.js"></script>
     <script src="{{ asset('js/adminlte.min.js') }}" defer></script>
     @include('notify::components.notify')
     @yield('scripts')
     @notifyJs
     @stack('scripts')
+
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        const ctx = document.getElementById('myChart');
+        let data = {};
+        $.ajax({
+            method: "GET",
+            url: '{{ route('teste') }}'
+        }).done(function(response) {
+            console.log(response)
+            let labels = [];
+            let qtdCarros = []
+            response.forEach(function(element) {
+                if (!labels.includes(element.nome)) {
+                    labels.push(element.nome)
+                }
+                qtdCarros.push(element.id)
+            })
+            const occurrences = qtdCarros.reduce((acc, curr) => {
+                return acc[curr] ? ++acc[curr] : acc[curr] = 1, acc
+            }, {});
+
+            new Chart(ctx, {
+                type: 'bar',
+                options: {
+                    responsive: true,
+
+                },
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Quantidade por marca',
+                        data: Object.values(occurrences),
+                        borderWidth: 2,
+
+                    }]
+                },
+
+            });
+        })
+    </script>
+
     <script>
         function modalG(id) {
 
             var url = `carro/form/${id}`
-            console.log(url)
             $.ajax({
                 url: url,
                 method: "GET"
@@ -167,6 +216,36 @@
 
         }
 
+        function editManutencao(id) {
+            let request = {}
+            for (input of $('#modalRequest input')) {
+                $('#descricao').empty()
+                if (input.name != '_token') {
+                    request[input.name] = input.value;
+                }
+            }
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                method: "PUT",
+                url: `manutencao/search/${id}`,
+                data: request
+            }).done(function(response) {
+                console.log(response)
+
+                $('#carro').val(`${response.carro_id}`);
+                $('#data_entrega').val(`${Date.parse(response.data_entrega)}`)
+                $('#status').val(`${response.status}`)
+                $('#descricao').val(`${response.descricao}`)
+                $('#modalRequest').modal('show')
+
+
+            })
+        }
 
 
         $('#fecha').on('click', function() {

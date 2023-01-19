@@ -16,7 +16,8 @@ class CarroController extends Controller
     public function index(CarrosDataTable $carrosDataTable, Carro $model)
     {
         $marcas = Marca::get();
-        return $carrosDataTable->render('carro.index', compact('marcas'));
+        $qtd_carros = count(Carro::where('dono_id', Auth::id())->get());
+        return $carrosDataTable->render('carro.index', compact('marcas', 'qtd_carros'));
     }
 
     public function create(Request $request)

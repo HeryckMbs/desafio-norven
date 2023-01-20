@@ -5,7 +5,7 @@
 
     <div class="row">
         <div class="col-6">
-            <label>Minhas Marcas de Carro</label>
+            <label>Manutenções por Mês</label>
 
             <canvas id="myChart" aria-label="Hello ARIA World">
             </canvas>

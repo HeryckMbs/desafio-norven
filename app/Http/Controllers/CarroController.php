@@ -16,8 +16,23 @@ class CarroController extends Controller
     public function index(CarrosDataTable $carrosDataTable, Carro $model)
     {
         $marcas = Marca::get();
-        $qtd_carros = count(Carro::where('dono_id', Auth::id())->get());
-        return $carrosDataTable->render('carro.index', compact('marcas', 'qtd_carros'));
+        $meusCarros = Carro::where('dono_id', Auth::id())->get();
+        $qtd_carros = count($meusCarros);
+        $marcasMyCars = DB::table('carros')
+            ->join('marcas', 'marcas.id', '=', 'carros.marca_id')
+            ->where('carros.dono_id','=',Auth::id())
+            ->selectRaw('marcas.nome, count(carros.marca_id)')
+            ->groupBy('marcas.nome')
+            ->get();
+        $maior = 0;
+        $marcaMaisFamosa = [];
+        foreach ($marcasMyCars as $marca) {
+            if($marca->count > $maior){
+                $maior= $marca->count;
+                $marcaMaisFamosa = $marca;
+            }
+        }
+        return $carrosDataTable->render('carro.index', compact('marcas', 'qtd_carros','marcaMaisFamosa'));
     }
 
     public function create(Request $request)

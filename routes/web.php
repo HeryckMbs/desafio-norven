@@ -10,6 +10,7 @@ use App\Http\Controllers\ManutencaoController;
 use App\Http\Controllers\ServicoController;
 use App\Models\Manutencao;
 use App\Models\Marca;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -31,15 +32,37 @@ Route::get('/welcome', function () {
     return view('welcome');
 });
 Route::get('/teste', function () {
+    $minhasManutencoes = Manutencao::where('cliente_id', '=', Auth::id())->get();
+    $meses = [
+        '01' => 0,
+        '02' => 0,
+        '03' => 0,
+        '04' => 0,
+        '05' => 0,
+        '06' => 0,
+        '07' => 0,
+        '08' => 0,
+        '09' => 0,
+        '10' => 0,
+        '11' => 0,
+        '12' => 0,
+        'count' => 0
+    ];
+    foreach($minhasManutencoes as $manutencoes){
+        if($manutencoes->created_at->format('Y') == Carbon::now()->format('Y')){
+            $meses[$manutencoes->created_at->format('m')] += 1;
+        }
+    }
+    $meses['count'] = count($meses) - 1;
+    return $meses; 
+})->name('teste');
+
+
+Route::get('/testee', function () {
     $myCars = Carro::where('dono_id', '=', Auth::id())->pluck('marca_id');
     $myBrands = [];
-    foreach ($myCars as $c) {
-        $aux = Marca::where('id', $c)->get()->toArray();
-        array_push($myBrands, $aux[0]);
-    }
-    return $myBrands;
-})->name('teste');
-Route::get('/testee', function () {
+    
+
 })->name('teste2');
 
 

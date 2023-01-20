@@ -86,10 +86,10 @@
                 <div class="content-header">
                     <div class="container-fluid">
                         <div class="row mb-2">
-                            <div class="col-sm-6">
+                            <div class="col-sm-9">
                                 <h1 class="m-0">@yield('title', 'Dashboard')</h1>
                             </div><!-- /.col -->
-                            <div class="col-sm-6 d-flex justify-content-end">
+                            <div class="col-sm-3 d-flex justify-content-between">
                                 @yield('actions')
                             </div>
                         </div>
@@ -168,30 +168,38 @@
             method: "GET",
             url: '{{ route('teste') }}'
         }).done(function(response) {
-            console.log(response)
-            let labels = [];
-            let qtdCarros = []
-            response.forEach(function(element) {
-                if (!labels.includes(element.nome)) {
-                    labels.push(element.nome)
-                }
-                qtdCarros.push(element.id)
-            })
-            const occurrences = qtdCarros.reduce((acc, curr) => {
-                return acc[curr] ? ++acc[curr] : acc[curr] = 1, acc
-            }, {});
 
+            let labels = [
+                            'Janeiro',
+                            'Fevereiro',
+                            'Março',
+                            'Abril',
+                            'Maio',
+                            'Junho',
+                            'Julho',
+                            'Agosto',
+                            'Setembro',
+                            'Outubro',
+                            'Novembro',
+                            'Dezembro'
+                        ];
+            let qtdCarros = [];
+            for(let i = 1; i <= response.count; i++) {
+                let aux = i < 10 ? '0' + i : i ;      
+                qtdCarros.push(response[aux]);	
+            }
+       
             new Chart(ctx, {
                 type: 'bar',
                 options: {
                     responsive: true,
-
+                    maintainAspectRatio: true
                 },
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Quantidade por marca',
-                        data: Object.values(occurrences),
+                        label: 'Manutenções por mês',
+                        data: qtdCarros,
                         borderWidth: 2,
 
                     }]

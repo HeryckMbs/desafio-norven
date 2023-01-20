@@ -44,12 +44,14 @@ class ManutencaoController extends Controller
                 notify()->warning(implode(' ', $validator->messages()->all()), 'Atenção');
                 return redirect(route('manutencao.index'), -1);
             }
+            $carro  = Carro::findOrFail($request->carro);
 
             $dataManutencao = [
-                'carro_id' => $request->carro,
+                'carro_id' => $carro->id,
                 'data_entrega' => Carbon::parse($request->data_entrega),
                 'status' =>$request->status,
-                'descricao' => $request->descricao
+                'descricao' => $request->descricao,
+                'cliente_id'=> $carro->dono_id
             ];
             $novaManutencao = Manutencao::create($dataManutencao);
 

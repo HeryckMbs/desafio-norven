@@ -166,7 +166,7 @@
         let data = {};
         $.ajax({
             method: "GET",
-            url: '{{ route('teste') }}'
+            url: '{{ route('manutencao.dashboard') }}'
         }).done(function(response) {
 
             let labels = [

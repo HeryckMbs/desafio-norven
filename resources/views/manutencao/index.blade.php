@@ -33,9 +33,11 @@
             }).done(function(response) {
                 console.log(response)
                 response.forEach(function(element) {
+                    let photo = element.url_foto != null ? element.url_foto : 'https://img.freepik.com/fotos-gratis/trabalhador-de-servico-de-carro-muscular-reparando-o-veiculo_146671-19605.jpg?w=2000'
+
                     let html = `<div class="card" >
                                     <img class="card-img-top"
-                                    src="https://img.freepik.com/fotos-gratis/trabalhador-de-servico-de-carro-muscular-reparando-o-veiculo_146671-19605.jpg?w=2000"
+                                    src="${photo}"
                                     alt="Card image cap">
                                     <div class="card-body">
                                         <h3 class="card-title" style="font-weight: bold;">${element.nome}</h3>

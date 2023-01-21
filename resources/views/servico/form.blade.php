@@ -41,6 +41,14 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12 form-group ">
+                        <label for="Modelo">Url da Foto</label>
+                        <input name="url_foto"  value="" type="text"
+                            class="form-control">
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 form-group ">
                         <label for="Modelo">Descrição</label>
                         <textarea id="descricao" class="form-control" rows="3" name="descricao">{{ isset($carro) ? $carro->descricao : '' }}</textarea>
                     </div>

@@ -24,7 +24,11 @@ class AgendamentosDataTable extends DataTable
      */
     public function dataTable($query)
     {
-        return (new EloquentDataTable($query))->editColumn('data_entrega', function ($r) {
+        return (new EloquentDataTable($query))
+        ->editColumn('status', function($s){
+            return strtoupper($s->status);
+        })
+        ->editColumn('data_entrega', function ($r) {
             return Carbon::parse($r->data_entrega)->format('d/m/Y');
         });
     }
@@ -55,7 +59,7 @@ class AgendamentosDataTable extends DataTable
             ->columns($this->getColumns())
             ->responsive(true)
             ->searching(false)
-            ->scrollCollapse(false)
+            ->scrollCollapse(true)
             ->minifiedAjax()
             ->dom('Bfrtip')
             ->buttons([

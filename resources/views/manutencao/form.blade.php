@@ -4,7 +4,7 @@
     @if (isset($agendamento))
         @method('PUT')
     @endif
-    <div class="modal-dialog modal-default">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Cadastrar Manutenção</h5>
@@ -37,30 +37,48 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-12 form-group ">
+                    <div class="col-md-6 form-group ">
                         <label for="Modelo">Serviços</label>
                         @foreach ($servicos as $servico)
                             <div class="form-check">
                                 <input class="form-check-input" name="servico[]" type="checkbox"
-                                    value="{{ $servico->id }}" id="flexCheckDefault{{ $loop->iteration }}">
-                                <label class="form-check-label" for="flexCheckDefault{{ $loop->iteration }}">
-                                    {{ $servico->nome }}
+                                    value="{{ $servico->id }}" data-valor="{{ $servico->valor }}"
+                                    id="servico{{ $loop->iteration }}">
+                                <label class="form-check-label" for="servico{{ $loop->iteration }}">
+                                    {{ $servico->nome }} - Valor : {{ $servico->valor }}
                                 </label>
                             </div>
                         @endforeach
 
                     </div>
+                    <div class="col-md-6 form-group">
+                        <div class="row">
+                            <div class="col-12 form-group">
+                                <label for="Modelo">Status</label>
+                                <select id="status" class="form-control" name="status">
+                                    <option value="pendente">Pendente</option>
+                                    <option value="andamento">Em andamento</option>
+                                    <option value="concluido">Concluído</option>
+                                    <option value="recusado">Recusado</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 form-group">
+                                <label>Desconto</label>
+                                <input name="desconto" value="" id="desconto" placeholder="%" type="text"
+                                    class="form-control">
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
                 <div class="row">
                     <div class="col-md-12 form-group ">
-                        <label for="Modelo">Status</label>
-                        <select id="status" class="form-control" name="status">
-                            <option value="pendente">Pendente</option>
-                            <option value="andamento">Em andamento</option>
-                            <option value="concluido">Concluído</option>
-                            <option value="recusado">Recusado</option>
-                        </select>
-
+                        <label>Valor</label>
+                        <input readonly name="valor_total" value="" id="total" type="text"
+                            class="form-control">
                     </div>
                 </div>
                 <div class="row">
@@ -69,6 +87,8 @@
                         <textarea id="descricao" class="form-control" rows="3" name="descricao">{{ isset($carro) ? $carro->descricao : '' }}</textarea>
                     </div>
                 </div>
+
+
 
 
             </div>
@@ -92,6 +112,39 @@
                 }
             }
             $('#modalRequest').modal('hide');
+        })
+
+        /*
+        return element.dataset.valor
+        */
+        $('.form-check-input').on('click', function() {
+            setValorTotal()
+        })
+
+        function setValorTotal(getValue) {
+            let valor = 0;
+            let servicosSelecionados = $('.form-check input:checked').each(function(index, element) {
+                valor += parseInt(element.dataset.valor);
+            })
+            if(getValue){
+                return valor
+            }else{
+                $('#total').val(valor)
+            }
+            
+        }
+
+        $('#desconto').on('keyup', function() {
+            let desconto = $('#desconto').val();
+            console.log(desconto)
+            if (desconto == 0 || desconto == '') {
+                setValorTotal()
+            } else {
+                let valorManutencao = setValorTotal(true)
+                valorManutencao = valorManutencao - (valorManutencao * (desconto / 100))
+                $('#total').val(valorManutencao);
+            }
+
         })
     </script>
 </form>

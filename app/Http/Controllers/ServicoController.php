@@ -40,7 +40,8 @@ class ServicoController extends Controller
                 'nome' => $request->nome,
                 'valor' => $desconto > 0 ? $request->valor * $desconto : $request->valor,
                 'desconto' => $request->desconto,
-                'descricao' => $request->descricao == null ? '' : $request->descricao
+                'descricao' => $request->descricao == null ? '' : $request->descricao,
+                'url_foto' => isset($request->url_foto) ? $request->url_foto : ''
             ];
 
             Servico::create($data_servico);

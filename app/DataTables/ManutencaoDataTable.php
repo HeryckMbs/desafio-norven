@@ -67,6 +67,7 @@ class ManutencaoDataTable extends DataTable
                     ->setTableId('manutencao-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
+                    ->responsive(true)
                     ->dom('Bfrtip')
                     ->orderBy(1)
                     ->buttons(

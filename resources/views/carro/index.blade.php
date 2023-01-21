@@ -22,7 +22,7 @@
                 <span class="info-box-icon"><i class="fa fa-heart"></i></span>
                 <div class="info-box-content">
                     <span class="info-box-text">Marca mais Famosa</span>
-                    <span class="info-box-number">{{ $marcaMaisFamosa->nome }}</span>
+                    <span class="info-box-number">{{isset($marcaMaisFamosa) && !empty($marcaMaisFamosa) ? $marcaMaisFamosa->nome : 'Nenhuma'}}</span>
                 </div>
               </div>
         </div>

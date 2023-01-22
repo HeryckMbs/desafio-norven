@@ -4,6 +4,7 @@ use App\Models\Carro;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CarroController;
+use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ManutencaoController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\DashboardController;
@@ -36,7 +37,7 @@ Route::get('/teste', function () {
 
 
 Route::get('/testee', function () {
-    $myCars = Carro::where('dono_id', '=', Auth::id())->pluck('marca_id');
+    $myCars = Carro::where('responsavel_id', '=', Auth::id())->pluck('marca_id');
     $myBrands = [];
     
 
@@ -85,6 +86,16 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{id}', [ServicoController::class,'delete'])->name('servico.delete');
             Route::put('/{id}', [ServicoController::class,'update'])->name('servico.update');
         }
+    );
+
+
+    Route::group(
+        ['prefix' => 'cliente'],
+        function () {
+            Route::get('/', [ClienteController::class,'index'])->name('cliente.index');
+            Route::post('/', [ClienteController::class,'create'])->name('cliente.create');
+            Route::delete('/{id}', [ClienteController::class,'delete'])->name('cliente.delete');
+            Route::put('/{id}', [ClienteController::class,'update'])->name('cliente.update');    }
     );
 
     Route::group(

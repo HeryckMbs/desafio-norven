@@ -4,7 +4,7 @@
     @if (isset($carro))
         @method('PUT')
     @endif
-    <div class="modal-dialog modal-default">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Cadastrar Carro</h5>
@@ -17,40 +17,58 @@
             <div class="modal-body">
 
                 @csrf
-                <div class="form-group">
-                    <label>Modelo</label>
-                    <input value="{{ isset($carro) ? $carro->modelo : '' }} " type="text" class="form-control"
-                        id="ModeloCarro" name="modelo">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label>Modelo</label>
+                        <input value="{{ isset($carro) ? $carro->modelo : '' }} " type="text" class="form-control"
+                            id="ModeloCarro" name="modelo">
 
-                </div>
-                <div class="form-group">
-                    <label>Cor</label>
-                    <input id="cor" value="{{ isset($carro) ? $carro->cor : '' }} " type="Ano"
-                        class="form-control" name="cor">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Cor</label>
+                        <input id="cor" value="{{ isset($carro) ? $carro->cor : '' }} " type="text"
+                            class="form-control" name="cor">
 
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Ano</label>
-                    <select class="form-control" name="ano">
-                        <option value="{{ isset($carro) ? $carro->ano : null }}">
-                            {{ isset($carro) ? $carro->ano : 'Selecione um ano' }}</option>
-                        @for ($ano = 1920; $ano <= 2022; $ano++)
-                            <option value="{{ $ano }}">
-                                {{ $ano }}</option>
-                        @endfor
-                    </select>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label>Placa</label>
+                        <input id="placa" value="{{ isset($carro) ? $carro->cor : '' }} " type="text"
+                            class="form-control" name="placa">
+
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Kilometragem</label>
+                        <input id="kilometragem" value="{{ isset($carro) ? $carro->cor : '' }} " type="number"
+                            class="form-control" name="kilometragem">
+
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="Marca">Marca</label>
-                    <select id="marca" class="form-control" name="marca">
-                        <option value="{{ isset($carro) ? $carro->marca_id : null }}">
-                            {{ isset($carro) ? $carro->marca->nome : 'Selecione uma marca' }}</option>
-                        @foreach ($marcas as $marca)
-                            <option value="{{ $marca->id }}">
-                                {{ $marca->nome }}
-                            </option>
-                        @endforeach
-                    </select>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label>Ano</label>
+                        <select class="form-control" name="ano">
+                            <option value="{{ isset($carro) ? $carro->ano : null }}">
+                                {{ isset($carro) ? $carro->ano : 'Selecione um ano' }}</option>
+                            @for ($ano = 1920; $ano <= 2022; $ano++)
+                                <option value="{{ $ano }}">
+                                    {{ $ano }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label for="Marca">Marca</label>
+                        <select id="marca" class="form-control" name="marca">
+                            <option value="{{ isset($carro) ? $carro->marca_id : null }}">
+                                {{ isset($carro) ? $carro->marca->nome : 'Selecione uma marca' }}</option>
+                            @foreach ($marcas as $marca)
+                                <option value="{{ $marca->id }}">
+                                    {{ $marca->nome }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group form-check">
                     <input type="checkbox" id="newMarca" name="newMarca" class="form-check-input" id="exampleCheck1">

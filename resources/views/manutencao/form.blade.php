@@ -114,18 +114,18 @@
             $('#modalRequest').modal('hide');
         })
 
-        /*
-        return element.dataset.valor
-        */
+  
         $('.form-check-input').on('click', function() {
             setValorTotal()
         })
 
         function setValorTotal(getValue) {
             let valor = 0;
-            let servicosSelecionados = $('.form-check input:checked').each(function(index, element) {
+
+            $('.form-check input:checked').each(function(index, element) {
                 valor += parseInt(element.dataset.valor);
             })
+
             if(getValue){
                 return valor
             }else{

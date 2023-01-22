@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -12,11 +13,13 @@ return new class () extends Migration {
      */
     public function up()
     {
-        Schema::create('servicos', function (Blueprint $table) {
+        Schema::create('clientes', function (Blueprint $table) {
             $table->id();
-            $table->string('nome', 35);
-            $table->string('descricao', 150);
-            $table->float('valor');
+            $table->text('nome');
+            $table->string('cpf/cnpj');
+            $table->string('telefone');
+            $table->string('email')->nullable();
+            
             $table->timestamps();
         });
     }
@@ -28,6 +31,6 @@ return new class () extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('servicos');
+        Schema::dropIfExists('clientes');
     }
 };

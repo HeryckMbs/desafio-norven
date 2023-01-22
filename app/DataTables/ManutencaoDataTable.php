@@ -50,7 +50,7 @@ class ManutencaoDataTable extends DataTable
     public function query(Manutencao $model)
     {
         $my_cars = DB::table('carros')
-        ->where('dono_id', '=', Auth::id())
+        ->where('responsavel_id', '=', Auth::id())
         ->select('id')->pluck('id')->toArray();
 
         return $model->newQuery()->whereIn('carro_id', $my_cars);

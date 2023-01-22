@@ -17,7 +17,7 @@ class ManutencaoController extends Controller
 {
     public function index(ManutencaoDataTable $manutencaoDataTable)
     {
-        $my_cars = Carro::where('dono_id', Auth::id())->get();
+        $my_cars = Carro::where('responsavel_id', Auth::id())->get();
         $servicos = Servico::get();
         return $manutencaoDataTable->render('manutencao.index', compact('my_cars', 'servicos'));
     }
@@ -51,7 +51,7 @@ class ManutencaoController extends Controller
                 'data_entrega' => Carbon::parse($request->data_entrega),
                 'status' =>$request->status,
                 'descricao' => $request->descricao,
-                'cliente_id'=> $carro->dono_id
+                'cliente_id'=> $carro->responsavel_id
             ];
             $novaManutencao = Manutencao::create($dataManutencao);
 

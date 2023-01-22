@@ -16,9 +16,11 @@ return new class () extends Migration {
             $table->id();
             $table->string('cor', 20);
             $table->string('modelo', 25);
+            $table->string('placa', 8);
             $table->integer('ano');
+            $table->bigInteger('kilometragem');
             $table->integer('marca_id');
-            $table->integer('dono_id');
+            $table->integer('responsavel_id');
             $table->text('descricao');
             $table->timestamps();
         });

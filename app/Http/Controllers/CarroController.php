@@ -16,11 +16,11 @@ class CarroController extends Controller
     public function index(CarrosDataTable $carrosDataTable, Carro $model)
     {
         $marcas = Marca::get();
-        $meusCarros = Carro::where('dono_id', Auth::id())->get();
+        $meusCarros = Carro::where('responsavel_id', Auth::id())->get();
         $qtd_carros = count($meusCarros);
         $marcasMyCars = DB::table('carros')
             ->join('marcas', 'marcas.id', '=', 'carros.marca_id')
-            ->where('carros.dono_id','=',Auth::id())
+            ->where('carros.responsavel_id','=',Auth::id())
             ->selectRaw('marcas.nome, count(carros.marca_id)')
             ->groupBy('marcas.nome')
             ->get();
@@ -43,13 +43,17 @@ class CarroController extends Controller
             'cor' => 'required',
             'modelo' => 'required',
             'descricao' => 'required',
-            'ano' => 'required'
+            'ano' => 'required',
+            'placa' => 'required',
+            'kilometragem' => 'required'
         ],
             [
                 'cor.required' => 'É necessário informar a cor do veículo',
                 'modelo.required' => 'É necessário informar o modelo do veículo',
                 'descricao.required' => 'É necessário informar a descrição do veículo',
-                'ano.required' => 'É necessário informar o ano de fabricação do veículo'
+                'ano.required' => 'É necessário informar o ano de fabricação do veículo',
+                'placa.required' => 'É necessário informar a placa do veículo',
+                'kilometragem.required' => 'É necessário informar a kilometragem do veículo'
             ]
         );
         if ($validator->fails()) {
@@ -69,7 +73,9 @@ class CarroController extends Controller
                 'ano' => $request->ano,
                 'marca_id' => isset($novaMarca) ? $novaMarca->id : $request->marca,
                 'descricao' => $request->descricao,
-                'dono_id' => Auth::id()
+                'responsavel_id' => Auth::id(),
+                'placa' => $request->placa,
+                'kilometragem' => $request->kilometragem
             ];
             $newCarro = Carro::create($data_carro);
             DB::commit();
@@ -120,15 +126,16 @@ class CarroController extends Controller
             'modelo' => 'required',
             'descricao' => 'required',
             'ano' => 'required',
-            'marca' => 'required'
+            'placa' => 'required',
+            'kilometragem' => 'required'
         ],
             [
                 'cor.required' => 'É necessário informar a cor do veículo',
                 'modelo.required' => 'É necessário informar o modelo do veículo',
                 'descricao.required' => 'É necessário informar a descrição do veículo',
                 'ano.required' => 'É necessário informar o ano de fabricação do veículo',
-                'marca.required' => 'É necessário informar a marca do veículo'
-
+                'placa.required' => 'É necessário informar a placa do veículo',
+                'kilometragem.required' => 'É necessário informar a kilometragem do veículo'
             ]
         );
         if ($validator->fails()) {
@@ -139,12 +146,15 @@ class CarroController extends Controller
 
         try {
             $carro = Carro::findOrFail($idCarro);
-            $data = [
+            $data =  [
                 'modelo' => $request->modelo,
                 'cor' => $request->cor,
                 'ano' => $request->ano,
-                'marca_id' => $request->marca,
-                'descricao' => $request->descricao
+                'marca_id' => isset($novaMarca) ? $novaMarca->id : $request->marca,
+                'descricao' => $request->descricao,
+                'responsavel_id' => Auth::id(),
+                'placa' => $request->placa,
+                'kilometragem' => $request->kilometragem
             ];
             DB::beginTransaction();
             $carro->update($data);

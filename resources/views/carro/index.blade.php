@@ -26,6 +26,15 @@
                 </div>
               </div>
         </div>
+        <div class="col-md-4">
+            <div class="info-box bg-success">
+                <span class="info-box-icon"><i class="fa fa-heart"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Marca mais Famosa</span>
+                    <span class="info-box-number">{{isset($marcaMaisFamosa) && !empty($marcaMaisFamosa) ? $marcaMaisFamosa->nome : 'Nenhuma'}}</span>
+                </div>
+              </div>
+        </div>
     </div>
     <div class="table table-responsive">
         {{ $dataTable->table() }}

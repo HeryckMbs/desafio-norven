@@ -43,7 +43,7 @@ class AgendamentosDataTable extends DataTable
     {
         return $model->newQuery()
         ->join('carros', 'carros.id', '=', 'manutencaos.carro_id')
-        ->where('carros.dono_id', '=', Auth::id())
+        ->where('carros.responsavel_id', '=', Auth::id())
         ->where('data_entrega', '<=', Carbon::now()->addDays(7));
     }
 

@@ -22,7 +22,7 @@ class CarroSeeder extends Seeder
             'cor' => 'Verde',
             'modelo' => 'Gol 1000',
             'marca_id' => 1,
-            'dono_id' => 1,
+            'responsavel_id' => 1,
             'descricao' => 'Carro lendário que está há 20 anos na familia',
             'ano' => 1995
         ]);

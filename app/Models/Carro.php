@@ -16,9 +16,11 @@ class Carro extends Model
         'cor',
         'modelo',
         'marca_id',
-        'dono_id',
+        'responsavel_id',
         'descricao',
-        'ano'
+        'ano',
+        'placa',
+        'kilometragem'
     ];
 
     protected $dates = ['created_at', 'updated_at'];
@@ -27,13 +29,5 @@ class Carro extends Model
     {
         return $this->belongsTo(Marca::class, 'marca_id', 'id');
     }
-
-
-    public function store(Request $request)
-    {
-        dd($request);
-        try {
-        } catch(\Exception $e) {
-        }
-    }
+    
 }

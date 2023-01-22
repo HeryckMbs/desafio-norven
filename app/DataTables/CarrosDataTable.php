@@ -28,6 +28,9 @@ class CarrosDataTable extends DataTable
         return (new EloquentDataTable($query->with(['marca'])))
         ->addColumn('action', 'carro.action')
         ->rawColumns(['link', 'action'])
+        ->editColumn('cor',function($r){
+            return strtoupper($r->cor);
+        })
             ->editColumn('created_at', function ($r) {
                 return Carbon::parse($r->created_at)->format('d/m/Y');
             })
@@ -46,7 +49,7 @@ class CarrosDataTable extends DataTable
      */
     public function query(Carro $model): QueryBuilder
     {
-        return $model->newQuery()->where('dono_id', '=', Auth::id());
+        return $model->newQuery()->where('responsavel_id', '=', Auth::id());
     }
 
     /**
@@ -84,6 +87,8 @@ class CarrosDataTable extends DataTable
 
             Column::make('modelo')->title('Modelo'),
             Column::make('cor'),
+            Column::make('placa' )->title('Placa'),
+            Column::make('kilometragem', )->title('Kilometragem'),
             Column::make('marca.nome', )->title('Marca'),
             Column::make('descricao')->title('Descrição'),
             Column::make('created_at')->title('Criado em'),

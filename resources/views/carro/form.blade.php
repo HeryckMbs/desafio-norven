@@ -34,13 +34,13 @@
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label>Placa</label>
-                        <input id="placa" value="{{ isset($carro) ? $carro->cor : '' }} " type="text"
+                        <input id="placa" value="{{ isset($carro) ? $carro->placa : '' }} " type="text"
                             class="form-control" name="placa">
 
                     </div>
                     <div class="col-md-6 form-group">
                         <label>Kilometragem</label>
-                        <input id="kilometragem" value="{{ isset($carro) ? $carro->cor : '' }} " type="number"
+                        <input id="kilometragem" value="{{ isset($carro) ? $carro->kilometragem : '' }}" type="number"
                             class="form-control" name="kilometragem">
 
                     </div>
@@ -87,8 +87,8 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" id="fecha" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button type="button" id="fecha" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
             </div>
 
 
@@ -97,7 +97,7 @@
 
     </div>
     <script>
-        $('#fecha').on('click', function() {
+        function limpaCampos(){
             for (input of $('#modalRequest input')) {
                 console.log(input)
                 $('#descricao').empty()
@@ -106,6 +106,15 @@
                 }
             }
             $('#modalRequest').modal('hide');
+        }
+        
+        $('#fecha').on('click', function() {
+            limpaCampos();
         })
+
+        $('.close').on('click', function(){
+            limpaCampos();
+        })
+
     </script>
 </form>

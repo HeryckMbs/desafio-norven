@@ -185,10 +185,10 @@
                         ];
             let qtdCarros = [];
             for(let i = 1; i <= response.count; i++) {
-                let aux = i < 10 ? '0' + i : i ;      
-                qtdCarros.push(response[aux]);	
+                let aux = i < 10 ? '0' + i : i ;
+                qtdCarros.push(response[aux]);
             }
-       
+
             new Chart(ctx, {
                 type: 'bar',
                 options: {
@@ -243,12 +243,21 @@
                 url: `manutencao/search/${id}`,
                 data: request
             }).done(function(response) {
-                console.log(response)
 
-                $('#carro').val(`${response.carro_id}`);
-                $('#data_entrega').val(`${Date.parse(response.data_entrega)}`)
-                $('#status').val(`${response.status}`)
-                $('#descricao').val(`${response.descricao}`)
+                $('#carro').val(`${response[0].carro_id}`);
+                $('#data_entrega').val(`${Date.parse(response[0].data_entrega)}`)
+                $('#status').val(`${response[0].status}`)
+                $('#descricao').val(`${response[0].descricao}`)
+                let servicos = response[1].map(function (element){
+                    return element.id
+                })
+                console.log(servicos)
+                $('.form-check-input').each(function(index, element) {
+                    if(servicos.includes(parseInt(element.value))){
+                        $(element).attr('checked')
+                    }
+                })
+
                 $('#modalRequest').modal('show')
 
 

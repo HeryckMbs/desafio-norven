@@ -31,14 +31,14 @@
                 </div>
                 {{-- TODO:: --}}
                 {{-- RETIRAR ESSE CAMPO E COLOCAR NA ORDEM DE FECHAMENTO DA MANUTENÇÃO --}}
-                <div class="row">
+                {{-- <div class="row">
                     <div class="col-md-12 form-group ">
                         <label for="Modelo">Desconto</label>
                         <input name="desconto" min="0" max="100" value="" type="number"
                             class="form-control">
 
                     </div>
-                </div>
+                </div> --}}
                 <div class="row">
                     <div class="col-md-12 form-group ">
                         <label for="Modelo">Url da Foto</label>

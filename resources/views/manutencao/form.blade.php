@@ -104,17 +104,55 @@
 
     </div>
     <script>
-        $('#fecha').on('click', function() {
+        function getServicos(id_manutencao) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $('#servicos').empty();
+            $.ajax({
+                method: "GET",
+                url: `/servicos_manutencao/${id_manutencao}`
+
+            }).done(function(response) {
+                console.log(response)
+                response.forEach(function(element) {
+                    let photo = element.url_foto !== '' ? element.url_foto : 'https://img.freepik.com/fotos-gratis/trabalhador-de-servico-de-carro-muscular-reparando-o-veiculo_146671-19605.jpg?w=2000'
+                    console.log(photo);
+                    let html = `<div class="card" >
+                                    <img class="card-img-top"
+                                    src="${photo}"
+                                    alt="Card image cap">
+                                    <div class="card-body">
+                                        <h3 class="card-title" style="font-weight: bold;">${element.nome}</h3>
+                                        <p class="card-text">Descrição: ${element.descricao}</p>
+                                        <p class="card-text">Valor: R$ ${element.valor}</p>
+                                    </div>
+                                </div>`
+                    $('#servicos').append(html)
+                })
+            })
+        }
+        function limpaCampos(){
             for (input of $('#modalRequest input')) {
+                console.log(input)
                 $('#descricao').empty()
                 if (input.name != '_token') {
                     input.value = ''
                 }
             }
             $('#modalRequest').modal('hide');
+        }
+
+        $('#fecha').on('click', function() {
+            limpaCampos();
         })
 
-  
+        $('.close').on('click', function(){
+            limpaCampos();
+        })
+
         $('.form-check-input').on('click', function() {
             setValorTotal()
         })
@@ -131,12 +169,11 @@
             }else{
                 $('#total').val(valor)
             }
-            
+
         }
 
         $('#desconto').on('keyup', function() {
             let desconto = $('#desconto').val();
-            console.log(desconto)
             if (desconto == 0 || desconto == '') {
                 setValorTotal()
             } else {
@@ -147,4 +184,9 @@
 
         })
     </script>
+
+        <script>
+
+
+        </script>
 </form>

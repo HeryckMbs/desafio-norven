@@ -24,22 +24,18 @@ class ServicoController extends Controller
             $validator = Validator::make($request->all(), [
                 'nome' => 'required',
                 'valor' => 'required',
-                'desconto' => 'required',
             ], [
                 'nome.required' => 'É necessário informar o nome do serviço',
                 'valor.required' => 'É necessário informar o valor do serviço',
-                'desconto.required' => 'É necessário informar o desconto do serviço'
             ]);
 
             if ($validator->fails()) {
                 notify()->warning(implode(' ', $validator->messages()->all()), 'Atenção');
                 return redirect(route('servico.index'), );
             }
-            $desconto = 1 - $request->desconto/100 ;
             $data_servico = [
                 'nome' => $request->nome,
-                'valor' => $desconto > 0 ? $request->valor * $desconto : $request->valor,
-                'desconto' => $request->desconto,
+                'valor' => $request->valor,
                 'descricao' => $request->descricao == null ? '' : $request->descricao,
                 'url_foto' => isset($request->url_foto) ? $request->url_foto : ''
             ];

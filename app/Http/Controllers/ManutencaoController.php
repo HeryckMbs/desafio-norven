@@ -99,9 +99,9 @@ class ManutencaoController extends Controller
 
     public function searchManutencao($id)
     {
+
         $manutencao = Manutencao::findOrFail($id)->with(['carro'])->first();
-        dd($manutencao);
-        return $manutencao;
+        return [$manutencao,$manutencao->servicos()];
     }
 
     public function update(Request $request, $id)

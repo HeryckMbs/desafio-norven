@@ -111,9 +111,7 @@
     <script>
 
        $('#estado').on('change',function(){
-            let estado = $('#estado').val()
-            console.log(estado)    
-        
+            let estado = $('#estado').val()        
             $.ajax({
                 method: "GET",
                 url: `http://enderecos.metheora.com/api/estado/${estado}/cidades`

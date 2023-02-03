@@ -68,8 +68,6 @@ class ServicoDataTable extends DataTable
             Column::make('nome', )->title('Nome'),
             Column::make('descricao')->title('Descrição'),
             Column::make('valor')->title('Valor'),
-            Column::make('desconto')->title('Desconto'),
-
         ];
     }
 

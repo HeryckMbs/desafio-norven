@@ -1,7 +1,8 @@
-<form id="formServico" method="POST" action="" enctype="multipart/form-data">
-    {{-- @if (isset($carro))
+<form id="formServico" method="POST" action="{{ isset($servico) ? route('servico.update', $servico->id) : route('servico.create') }}"
+      enctype="multipart/form-data">
+    @if (isset($servico))
         @method('PUT')
-    @endif --}}
+    @endif
     <div class="modal-dialog modal-default">
         <div class="modal-content">
             <div class="modal-header">
@@ -16,33 +17,23 @@
                 @csrf
                 <div class="row">
                     <div class="col-md-12 form-group">
-                        <label>Nome</label>
-                        <input name="nome" value="" type="text" class="form-control">
+                        <label for="nome">Nome</label>
+                        <input name="nome" value="{{isset($servico) ? $servico->nome: ''}}" id="nome" type="text" class="form-control">
 
                     </div>
-
                 </div>
 
                 <div class="row">
                     <div class="col-md-12 form-group ">
                         <label for="Modelo">Valor</label>
-                        <input name="valor" value="" type="number" class="form-control">
+                        <input name="valor" id="valor" value="{{isset($servico) ? $servico->valor: ''}}" type="number" class="form-control">
                     </div>
                 </div>
-                {{-- TODO:: --}}
-                {{-- RETIRAR ESSE CAMPO E COLOCAR NA ORDEM DE FECHAMENTO DA MANUTENÇÃO --}}
-                {{-- <div class="row">
-                    <div class="col-md-12 form-group ">
-                        <label for="Modelo">Desconto</label>
-                        <input name="desconto" min="0" max="100" value="" type="number"
-                            class="form-control">
 
-                    </div>
-                </div> --}}
                 <div class="row">
                     <div class="col-md-12 form-group ">
-                        <label for="Modelo">Url da Foto</label>
-                        <input name="url_foto"  value="" type="text"
+                        <label for="url_foto">Url da Foto</label>
+                        <input name="url_foto" id="url_foto" value="{{isset($servico) ? $servico->url_foto: ''}}" type="text"
                             class="form-control">
 
                     </div>
@@ -50,7 +41,7 @@
                 <div class="row">
                     <div class="col-md-12 form-group ">
                         <label for="Modelo">Descrição</label>
-                        <textarea id="descricao" class="form-control" rows="3" name="descricao">{{ isset($carro) ? $carro->descricao : '' }}</textarea>
+                        <textarea id="descricao" class="form-control" rows="3" name="descricao">{{ isset($servico) ? $servico->descricao : '' }}</textarea>
                     </div>
                 </div>
 
@@ -58,8 +49,8 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" id="fecha" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id="enviar"type="submit" class="btn btn-primary">Save changes</button>
+                <button type="button" id="fecha" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button id="enviar" type="submit" class="btn btn-primary">Salvar</button>
             </div>
 
 

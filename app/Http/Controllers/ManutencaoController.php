@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DataTables\ManutencaoDataTable;
 use App\Models\Carro;
 use App\Models\Manutencao;
+use App\Models\Marca;
 use App\Models\Servico;
 use App\Models\ServicosManutencoes;
 use Carbon\Carbon;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class ManutencaoController extends Controller
+class  ManutencaoController extends Controller
 {
     public function index(ManutencaoDataTable $manutencaoDataTable)
     {
@@ -145,5 +146,13 @@ class ManutencaoController extends Controller
             notify()->success('Não foi possível atualizar sua manutenção, por favor tente novamente!', 'Erro!');
             return redirect(route('manutencao.index'), );
         }
+    }
+
+    public function form($idmanutencao)
+    {
+        $manutencao = Manutencao::findOrFail($idmanutencao);
+        $my_cars = Carro::where('responsavel_id', Auth::id())->get();
+        $servicos = Servico::get();
+        return view('manutencao.form', compact('manutencao', 'my_cars','servicos'));
     }
 }

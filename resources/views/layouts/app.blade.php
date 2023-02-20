@@ -225,13 +225,7 @@
         }
 
         function editManutencao(id) {
-            let request = {}
-            for (input of $('#modalRequest input')) {
-                $('#descricao').empty()
-                if (input.name != '_token') {
-                    request[input.name] = input.value;
-                }
-            }
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -239,27 +233,44 @@
             });
 
             $.ajax({
-                method: "PUT",
-                url: `manutencao/search/${id}`,
-                data: request
+                method: "GET",
+                url: `manutencao/form/${id}`,
             }).done(function(response) {
-
-                $('#carro').val(`${response[0].carro_id}`);
-                $('#data_entrega').val(`${Date.parse(response[0].data_entrega)}`)
-                $('#status').val(`${response[0].status}`)
-                $('#descricao').val(`${response[0].descricao}`)
-                let servicos = response[1].map(function (element){
-                    return element.id
-                })
-                console.log(servicos)
-                $('.form-check-input').each(function(index, element) {
-                    if(servicos.includes(parseInt(element.value))){
-                        $(element).attr('checked')
-                    }
-                })
-
+                //
+                // $('#carro').val(`${response[0].carro_id}`);
+                // $('#data_entrega').val(`${Date.parse(response[0].data_entrega)}`)
+                // $('#status').val(`${response[0].status}`)
+                // $('#descricao').val(`${response[0].descricao}`)
+                // let servicos = response[1].map(function (element){
+                //     return element.id
+                // })
+                // $('.form-check-input').each(function(index, element) {
+                //     if(servicos.includes(parseInt(element.value))){
+                //         $(element).attr('checked')
+                //     }
+                // })
+                // $('#modalRequest').modal('show')
+                console.log(response);
+                $('#modalRequest').empty();
+                $('#modalRequest').html(response)
                 $('#modalRequest').modal('show')
+            })
+        }
+        function editServico(id) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
 
+            $.ajax({
+                method: "GET",
+                url: `servico/form/${id}`,
+            }).done(function(response) {
+                console.log(response)
+                $('#modalRequest').empty();
+                $('#modalRequest').html(response)
+                $('#modalRequest').modal('show')
 
             })
         }

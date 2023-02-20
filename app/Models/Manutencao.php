@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Manutencao extends Model
 {
@@ -36,5 +37,11 @@ class Manutencao extends Model
             'servicos.id'
         )
             ->where('servicos_manutencoes.manutencao_id', '=', $this->id)->get();
+    }
+
+    public function servicosId(){
+        return DB::table('manutencaos')
+            ->join('servicos_manutencoes','manutencaos.id','=', 'servicos_manutencoes.manutencao_id')
+            ->selectRaw('servicos_manutencoes.servico_id')->get();
     }
 }

@@ -21,6 +21,7 @@ class ServicoDataTable extends DataTable
     public function dataTable($query)
     {
         return (new EloquentDataTable($query))
+            ->rawColumns(['action'])
             ->addColumn('action', 'servico.action');
     }
 
@@ -65,9 +66,10 @@ class ServicoDataTable extends DataTable
         return [
 
             Column::make('id')->title('#'),
-            Column::make('nome', )->title('Nome'),
+            Column::make('nome' )->title('Nome'),
             Column::make('descricao')->title('Descrição'),
-            Column::make('valor')->title('Valor'),
+            Column::make('valor')->title('Valor (R$)'),
+            Column::make('action')->title('Ações'),
         ];
     }
 

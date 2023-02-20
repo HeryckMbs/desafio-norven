@@ -1,7 +1,7 @@
 <form id="formManutencao" method="POST"
-    action="{{ isset($carro) ? route('carro.update', $carro->id) : route('manutencao.create') }}"
+    action="{{ isset($manutencao) ? route('manutencao.update', $manutencao->id) : route('manutencao.create') }}"
     enctype="multipart/form-data">
-    @if (isset($agendamento))
+    @if (isset($manutencao))
         @method('PUT')
     @endif
     <div class="modal-dialog modal-lg">
@@ -22,7 +22,7 @@
                         <label>Carro</label>
                         <select class="form-control" id="carro" name="carro">
                             @foreach ($my_cars as $car)
-                                <option value="{{ $car->id }}">
+                                <option value="{{ $car->id }}"> {{isset($manutencao) && $car->id == $manutencao->carro_id ? 'selected' : ''}}
                                     {{ $car->modelo }}</option>
                             @endforeach
                         </select>
@@ -30,7 +30,7 @@
                     </div>
                     <div class="col-md-6 form-group">
                         <label>Data de Entrega</label>
-                        <input id="data_entrega" value="{{ isset($carro) ? $carro->cor : '' }} " type="date"
+                        <input id="data_entrega" value="{{ isset($manutencao) ? $manutencao->data_entrega->format('d/m/Y') : '' }} " type="date"
                             class="form-control" name="data_entrega">
 
                     </div>
@@ -94,8 +94,8 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" id="fecha" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id="enviar"type="submit" class="btn btn-primary">Save changes</button>
+                <button type="button" id="fecha" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button id="enviar"type="submit" class="btn btn-primary">Salvar</button>
             </div>
 
 
@@ -184,9 +184,4 @@
 
         })
     </script>
-
-        <script>
-
-
-        </script>
 </form>

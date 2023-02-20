@@ -32,14 +32,14 @@ Route::get('/welcome', function () {
     return view('welcome');
 });
 Route::get('/teste', function () {
-    
+
 })->name('teste');
 
 
 Route::get('/testee', function () {
-    $myCars = Carro::where('responsavel_id', '=', Auth::id())->pluck('marca_id');
-    $myBrands = [];
-    
+$manutencao = Manutencao::findOrFail(4);
+$servicos = $manutencao->servicosId();
+dd($servicos[0]);
 
 })->name('teste2');
 
@@ -65,27 +65,23 @@ Route::middleware('auth')->group(function () {
         Route::put('/{id}', [CarroController::class,'update'])->name('carro.update');
         Route::get('/form/{id?}', [CarroController::class, 'form'])->name('carro.form');
     });
-    Route::group(
-        ['prefix' => 'manutencao'],
-        function () {
-            Route::get('/', [ManutencaoController::class,'index'])->name('manutencao.index');
-            Route::post('/', [ManutencaoController::class,'create'])->name('manutencao.create');
-            Route::delete('/{id}', [ManutencaoController::class,'delete'])->name('manutencao.delete');
-            Route::put('/{id}', [ManutencaoController::class,'update'])->name('manutencao.update');
-            Route::put('search/{id}', [ManutencaoController::class,'searchManutencao'])->name('manutencao.update');
-
-            Route::get('/form/{id?}', [ManutencaoController::class, 'form'])->name('manutencao.form');
+    Route::group(['prefix' => 'manutencao'],function () {
+        Route::get('/', [ManutencaoController::class,'index'])->name('manutencao.index');
+        Route::post('/', [ManutencaoController::class,'create'])->name('manutencao.create');
+        Route::delete('/{id}', [ManutencaoController::class,'delete'])->name('manutencao.delete');
+        Route::put('/{id}', [ManutencaoController::class,'update'])->name('manutencao.update');
+        Route::put('search/{id}', [ManutencaoController::class,'searchManutencao'])->name('manutencao.update');
+        Route::get('/form/{id?}', [ManutencaoController::class, 'form'])->name('manutencao.form');
         }
     );
 
-    Route::group(
-        ['prefix' => 'servico'],
-        function () {
-            Route::get('/', [ServicoController::class,'index'])->name('servico.index');
-            Route::post('/', [ServicoController::class,'create'])->name('servico.create');
-            Route::delete('/{id}', [ServicoController::class,'delete'])->name('servico.delete');
-            Route::put('/{id}', [ServicoController::class,'update'])->name('servico.update');
-        }
+    Route::group(['prefix' => 'servico'],function () {
+        Route::get('/', [ServicoController::class,'index'])->name('servico.index');
+        Route::post('/', [ServicoController::class,'create'])->name('servico.create');
+        Route::delete('/{id}', [ServicoController::class,'delete'])->name('servico.delete');
+        Route::put('/{id}', [ServicoController::class,'update'])->name('servico.update');
+        Route::get('/form/{id?}', [ServicoController::class, 'form'])->name('servico.form');
+    }
     );
 
 

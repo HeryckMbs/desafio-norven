@@ -18,8 +18,15 @@
         @yield('closeform')
     </div>
 
-    {{-- <script type="text/javascript" src="{{ asset('/bower_components/LTR/default/assets/js/pages/form_layouts.js') }}"> --}}
-    {{-- </script> --}}
-    {{-- <script type="text/javascript" src="{{ asset('/js/custom.js') }}"></script> --}}
-
+    <script>
+        $('#fecha').on('click', function() {
+            for (input of $('#modalRequest input')) {
+                $('#descricao').empty()
+                if (input.name != '_token') {
+                    input.value = ''
+                }
+            }
+            $('#modalRequest').modal('hide');
+        })
+    </script>
 </div>

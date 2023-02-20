@@ -20,19 +20,19 @@ class CarroController extends Controller
         $qtd_carros = count($meusCarros);
         $marcasMyCars = DB::table('carros')
             ->join('marcas', 'marcas.id', '=', 'carros.marca_id')
-            ->where('carros.responsavel_id','=',Auth::id())
+            ->where('carros.responsavel_id', '=', Auth::id())
             ->selectRaw('marcas.nome, count(carros.marca_id)')
             ->groupBy('marcas.nome')
             ->get();
         $maior = 0;
         $marcaMaisFamosa = [];
         foreach ($marcasMyCars as $marca) {
-            if($marca->count > $maior){
-                $maior= $marca->count;
+            if ($marca->count > $maior) {
+                $maior = $marca->count;
                 $marcaMaisFamosa = $marca;
             }
         }
-        return $carrosDataTable->render('carro.index', compact('marcas', 'qtd_carros','marcaMaisFamosa'));
+        return $carrosDataTable->render('carro.index', compact('marcas', 'qtd_carros', 'marcaMaisFamosa'));
     }
 
     public function create(Request $request)
@@ -40,13 +40,13 @@ class CarroController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-            'cor' => 'required',
-            'modelo' => 'required',
-            'descricao' => 'required',
-            'ano' => 'required',
-            'placa' => 'required',
-            'kilometragem' => 'required'
-        ],
+                'cor' => 'required',
+                'modelo' => 'required',
+                'descricao' => 'required',
+                'ano' => 'required',
+                'placa' => 'required',
+                'kilometragem' => 'required'
+            ],
             [
                 'cor.required' => 'É necessário informar a cor do veículo',
                 'modelo.required' => 'É necessário informar o modelo do veículo',
@@ -81,16 +81,16 @@ class CarroController extends Controller
             DB::commit();
             if ($newCarro) {
                 notify()->success('Seu veículo foi cadastrado com sucesso!.', 'EBA!');
-                return redirect(route('carro.index'), );
+                return redirect(route('carro.index'),);
             } else {
                 notify()->error('Ocorreu um erro ao cadastrar seu veículo, por favor tente novamente.', 'ERRO');
-                return redirect(route('carro.index'), );
+                return redirect(route('carro.index'),);
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             report($e);
             DB::rollBack();
             notify()->error($e->getMessage(), 'ERRO');
-            return redirect(route('carro.index'), );
+            return redirect(route('carro.index'),);
         }
     }
 
@@ -102,11 +102,11 @@ class CarroController extends Controller
             $carro->delete();
             DB::commit();
             notify()->success('Seu veículo foi excluído com sucesso!', 'EBA!');
-            return redirect(route('carro.index'), );
-        } catch(\Exception $e) {
+            return redirect(route('carro.index'),);
+        } catch (\Exception $e) {
             DB::rollBack();
             notify()->error($e->getMessage(), 'ERRO');
-            return redirect(route('carro.index'), );
+            return redirect(route('carro.index'),);
         }
     }
 
@@ -122,13 +122,13 @@ class CarroController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-            'cor' => 'required',
-            'modelo' => 'required',
-            'descricao' => 'required',
-            'ano' => 'required',
-            'placa' => 'required',
-            'kilometragem' => 'required'
-        ],
+                'cor' => 'required',
+                'modelo' => 'required',
+                'descricao' => 'required',
+                'ano' => 'required',
+                'placa' => 'required',
+                'kilometragem' => 'required'
+            ],
             [
                 'cor.required' => 'É necessário informar a cor do veículo',
                 'modelo.required' => 'É necessário informar o modelo do veículo',
@@ -143,28 +143,27 @@ class CarroController extends Controller
             return redirect(route('carro.index'), 302);
         }
 
-
+        $carro = Carro::findOrFail($idCarro);
+        $data = [
+            'modelo' => $request->modelo,
+            'cor' => $request->cor,
+            'ano' => $request->ano,
+            'marca_id' => isset($novaMarca) ? $novaMarca->id : $request->marca,
+            'descricao' => $request->descricao,
+            'responsavel_id' => Auth::id(),
+            'placa' => $request->placa,
+            'kilometragem' => $request->kilometragem
+        ];
         try {
-            $carro = Carro::findOrFail($idCarro);
-            $data =  [
-                'modelo' => $request->modelo,
-                'cor' => $request->cor,
-                'ano' => $request->ano,
-                'marca_id' => isset($novaMarca) ? $novaMarca->id : $request->marca,
-                'descricao' => $request->descricao,
-                'responsavel_id' => Auth::id(),
-                'placa' => $request->placa,
-                'kilometragem' => $request->kilometragem
-            ];
             DB::beginTransaction();
             $carro->update($data);
             DB::commit();
             notify()->success('Seu veículo foi atualizado com sucesso!.', 'EBA!');
-            return redirect(route('carro.index'), );
-        } catch(\Exception $e) {
+            return redirect(route('carro.index'),);
+        } catch (\Exception $e) {
             report($e);
             notify()->error($e->getMessage(), 'ERRO');
-            return redirect(route('carro.index'), );
+            return redirect(route('carro.index'),);
         }
     }
 }

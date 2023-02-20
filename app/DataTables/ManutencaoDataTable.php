@@ -36,9 +36,8 @@ class ManutencaoDataTable extends DataTable
         })
         ->editColumn('data_entrega', function ($r) {
             return Carbon::parse($r->data_entrega)->format('d/m/Y');
-        })
+        });
 
-            ->addColumn('action', 'manutencao.action');
     }
 
     /**

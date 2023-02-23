@@ -8,6 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"
         integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js" integrity="sha512-d4KkQohk+HswGs6A1d6Gak6Bb9rMWtxjOa0IiY49Q3TeFd5xAzjWXDCBW9RS7m86FQ4RzM2BdHmdJnnKRYknxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @notifyCss
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -85,8 +86,8 @@
             <div class="container-fluid">
                 <div class="content-header">
                     <div class="container-fluid">
-                        <div class="row mb-2">
-                            <div class="col-sm-9">
+                        <div class="row mb-2 ">
+                            <div class="col-sm-9 ">
                                 <h1 class="m-0">@yield('title', 'Dashboard')</h1>
                             </div><!-- /.col -->
                             <div class="col-sm-3 d-flex justify-content-between">
@@ -267,7 +268,6 @@
                 method: "GET",
                 url: `servico/form/${id}`,
             }).done(function(response) {
-                console.log(response)
                 $('#modalRequest').empty();
                 $('#modalRequest').html(response)
                 $('#modalRequest').modal('show')

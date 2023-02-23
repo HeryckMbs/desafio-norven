@@ -30,11 +30,11 @@ class  ManutencaoController extends Controller
             $validator = Validator::make(
                 $request->all(),
                 [
-                'carro' => 'required',
-                'data_entrega' => 'required',
-                'descricao' => 'required',
+                    'carro' => 'required',
+                    'data_entrega' => 'required',
+                    'descricao' => 'required',
 
-            ],
+                ],
                 [
                     'carro.required' => 'É necessário informar o veículo',
                     'data_entrega.required' => 'É necessário informar a data de entrega do veículo',
@@ -45,14 +45,17 @@ class  ManutencaoController extends Controller
                 notify()->warning(implode(' ', $validator->messages()->all()), 'Atenção');
                 return redirect(route('manutencao.index'), -1);
             }
-            $carro  = Carro::findOrFail($request->carro);
-
+            $carro = Carro::findOrFail($request->carro);
+            $valor = substr($request->valor, 4);
+            $valor = str_replace('.', '', $valor);
+            $valor = str_replace(',', '.', $valor);
             $dataManutencao = [
                 'carro_id' => $carro->id,
                 'data_entrega' => Carbon::parse($request->data_entrega),
-                'status' =>$request->status,
+                'status' => $request->status,
+                'valor' => (float)$valor,
                 'descricao' => $request->descricao,
-                'cliente_id'=> $carro->responsavel_id
+                'cliente_id' => $carro->responsavel_id
             ];
             $novaManutencao = Manutencao::create($dataManutencao);
 
@@ -66,17 +69,17 @@ class  ManutencaoController extends Controller
             DB::commit();
             if ($novaManutencao) {
                 notify()->success('Sua manutenção foi cadastrada com sucesso!.', 'EBA!');
-                return redirect(route('manutencao.index'), );
+                return redirect(route('manutencao.index'),);
             } else {
                 notify()->error('Ocorreu um erro ao cadastrar sua manutenção, por favor tente novamente.', 'ERRO');
-                return redirect(route('manutencao.index'), );
+                return redirect(route('manutencao.index'),);
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             report($e);
 
             DB::rollBack();
             notify()->error($e->getMessage(), 'ERRO');
-            return redirect(route('manutencao.index'), );
+            return redirect(route('manutencao.index'),);
         }
     }
 
@@ -88,12 +91,12 @@ class  ManutencaoController extends Controller
             $manutencao->delete();
             DB::commit();
             notify()->success('Sua manutenção foi excluída com sucesso!.', 'EBA!');
-            return redirect(route('manutencao.index'), );
-        } catch(\Exception $e) {
+            return redirect(route('manutencao.index'),);
+        } catch (\Exception $e) {
             report($e);
             DB::rollBack();
             notify()->success('Não foi possível excluir sua manutenção, por favor tente novamente!', 'Erro!');
-            return redirect(route('manutencao.index'), );
+            return redirect(route('manutencao.index'),);
         }
     }
 
@@ -102,7 +105,7 @@ class  ManutencaoController extends Controller
     {
 
         $manutencao = Manutencao::findOrFail($id)->with(['carro'])->first();
-        return [$manutencao,$manutencao->servicos()];
+        return [$manutencao, $manutencao->servicos()];
     }
 
     public function update(Request $request, $id)
@@ -110,19 +113,14 @@ class  ManutencaoController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-            'cor' => 'required',
-            'modelo' => 'required',
-            'descricao' => 'required',
-            'ano' => 'required',
-            'marca' => 'required'
-        ],
+                'carro' => 'required',
+                'valor' => 'required',
+                'data_entrega' => 'required'
+            ],
             [
-                'cor.required' => 'É necessário informar a cor do veículo',
-                'modelo.required' => 'É necessário informar o modelo do veículo',
-                'descricao.required' => 'É necessário informar a descrição do veículo',
-                'ano.required' => 'É necessário informar o ano de fabricação do veículo',
-                'marca.required' => 'É necessário informar a marca do veículo'
-
+                'carro.required' => 'É necessário informar o veículo',
+                'valor.required' => 'É necessário pelo menos um serviço para a manutenção',
+                'data_entrega.required' => 'É necessário informar quando a manutenção será entregue'
             ]
         );
         if ($validator->fails()) {
@@ -131,20 +129,29 @@ class  ManutencaoController extends Controller
         }
         try {
             $manutencao = Manutencao::findOrFail($id);
+            $valor = substr($request->valor, 4);
+            $valor = str_replace('.', '', $valor);
+            $valor = str_replace(',', '.', $valor);
             $manutencao_data = [
-                'carro_id' => $request->carro,
                 'data_entrega' => Carbon::parse($request->data_entrega),
-                'status' =>$request->status,
-                'descricao' => $request->descricao
+                'status' => $request->status,
+                'descricao' => $request->descricao,
+                'valor' => $valor,
             ];
+            if (isset($request->servico) && $request->servico != null) {
+                DB::table('servicos_manutencoes')->where('manutencao_id','=',$manutencao->id)->delete();
+                foreach ($request->servico as $servico) {
+                    ServicosManutencoes::create(['manutencao_id' => $manutencao->id, 'servico_id' => $servico]);
+                }
+            }
             $manutencao->update($manutencao_data);
             notify()->success('Sua manutenção foi atualizada com sucesso!', 'EBA!');
-            return redirect(route('manutencao.index'), );
-        } catch(\Exception $e) {
+            return redirect(route('manutencao.index'),);
+        } catch (\Exception $e) {
             report($e);
             DB::rollBack();
-            notify()->success('Não foi possível atualizar sua manutenção, por favor tente novamente!', 'Erro!');
-            return redirect(route('manutencao.index'), );
+            notify()->success('Não foi possível atualizar sua manutenção, por favor tente novamente! '. $e->getMessage(), 'Erro!');
+            return redirect(route('manutencao.index'),);
         }
     }
 
@@ -153,6 +160,7 @@ class  ManutencaoController extends Controller
         $manutencao = Manutencao::findOrFail($idmanutencao);
         $my_cars = Carro::where('responsavel_id', Auth::id())->get();
         $servicos = Servico::get();
-        return view('manutencao.form', compact('manutencao', 'my_cars','servicos'));
+        $manutencao_servicos = $manutencao->servicos();
+        return view('manutencao.form', compact('manutencao', 'my_cars', 'servicos', 'manutencao_servicos'));
     }
 }

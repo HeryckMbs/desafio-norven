@@ -14,13 +14,21 @@ class Manutencao extends Model
         'data_entrega',
         'descricao',
         'status',
-        'cliente_id'
+        'cliente_id',
+        'valor'
     ];
 
     protected $dates = [
         'created_at',
         'updated_at',
         'data_entrega'
+    ];
+
+    const STATUS = [
+        "pendente" => "Pendente",
+        "andamento" => "Em andamento",
+        "concluido" => "Concluido",
+        "recusado" => "Recusado"
     ];
 
     public function carro()
@@ -36,12 +44,7 @@ class Manutencao extends Model
             '=',
             'servicos.id'
         )
-            ->where('servicos_manutencoes.manutencao_id', '=', $this->id)->get();
+            ->where('servicos_manutencoes.manutencao_id', '=', $this->id)->pluck('servicos_manutencoes.servico_id');
     }
 
-    public function servicosId(){
-        return DB::table('manutencaos')
-            ->join('servicos_manutencoes','manutencaos.id','=', 'servicos_manutencoes.manutencao_id')
-            ->selectRaw('servicos_manutencoes.servico_id')->get();
-    }
 }

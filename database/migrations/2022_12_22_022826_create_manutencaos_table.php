@@ -17,6 +17,7 @@ return new class () extends Migration {
             $table->integer('carro_id');
             $table->string('status')->default('pendente');
             $table->dateTime('data_entrega');
+            $table->float('valor');
             $table->text('descricao');
             $table->timestamps();
         });

@@ -34,7 +34,7 @@
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label>Placa</label>
-                        <input id="placa" value="{{ isset($carro) ? $carro->placa : '' }} " type="text"
+                        <input id="placa" value="{{ isset($carro) ? $carro->placa : '' }} " maxlength="8"  type="text"
                             class="form-control" name="placa">
 
                     </div>
@@ -97,6 +97,9 @@
 
     </div>
     <script>
+        $(document).ready(function(){
+            $("#placa").mask('')
+        });
         function limpaCampos(){
             for (input of $('#modalRequest input')) {
                 console.log(input)
@@ -106,8 +109,9 @@
                 }
             }
             $('#modalRequest').modal('hide');
+            $('#modalRequest').empty();
         }
-        
+
         $('#fecha').on('click', function() {
             limpaCampos();
         })

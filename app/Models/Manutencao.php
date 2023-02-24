@@ -43,8 +43,15 @@ class Manutencao extends Model
             'servicos_manutencoes.servico_id',
             '=',
             'servicos.id'
-        )
-            ->where('servicos_manutencoes.manutencao_id', '=', $this->id)->pluck('servicos_manutencoes.servico_id');
+        )->where('servicos_manutencoes.manutencao_id', '=', $this->id)->pluck('servicos_manutencoes.servico_id');
+    }public function servicosObject()
+    {
+        return Servico::join(
+            'servicos_manutencoes',
+            'servicos_manutencoes.servico_id',
+            '=',
+            'servicos.id'
+        )->where('servicos_manutencoes.manutencao_id', '=', $this->id)->get();
     }
 
 }

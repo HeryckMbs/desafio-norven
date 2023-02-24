@@ -43,7 +43,7 @@ class  ManutencaoController extends Controller
             );
             if ($validator->fails()) {
                 notify()->warning(implode(' ', $validator->messages()->all()), 'Atenção');
-                return redirect(route('manutencao.index'), -1);
+                return redirect(route('manutencao.index'), 302);
             }
             $carro = Carro::findOrFail($request->carro);
             $valor = substr($request->valor, 4);
@@ -59,7 +59,6 @@ class  ManutencaoController extends Controller
             ];
             $novaManutencao = Manutencao::create($dataManutencao);
 
-
             if (isset($request->servico) && $request->servico != null) {
                 foreach ($request->servico as $servico) {
                     ServicosManutencoes::create(['manutencao_id' => $novaManutencao->id, 'servico_id' => $servico]);
@@ -67,18 +66,13 @@ class  ManutencaoController extends Controller
             }
 
             DB::commit();
-            if ($novaManutencao) {
-                notify()->success('Sua manutenção foi cadastrada com sucesso!.', 'EBA!');
-                return redirect(route('manutencao.index'),);
-            } else {
-                notify()->error('Ocorreu um erro ao cadastrar sua manutenção, por favor tente novamente.', 'ERRO');
-                return redirect(route('manutencao.index'),);
-            }
+            notify()->success('Sua manutenção foi cadastrada com sucesso!.', 'EBA!');
+            return redirect(route('manutencao.index'),);
+
         } catch (\Exception $e) {
             report($e);
-
             DB::rollBack();
-            notify()->error($e->getMessage(), 'ERRO');
+            notify()->error('Ocorreu um erro ao cadastrar sua manutenção, por favor tente novamente.', 'ERRO');
             return redirect(route('manutencao.index'),);
         }
     }

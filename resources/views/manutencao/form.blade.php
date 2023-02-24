@@ -117,7 +117,7 @@
                 console.log(response)
                 response.forEach(function(element) {
                     let photo = element.url_foto !== '' ? element.url_foto : 'https://img.freepik.com/fotos-gratis/trabalhador-de-servico-de-carro-muscular-reparando-o-veiculo_146671-19605.jpg?w=2000'
-                    console.log(photo);
+                    console.log(response);
                     let html = `<div class="card" >
                                     <img class="card-img-top"
                                     src="${photo}"
@@ -135,8 +135,12 @@
         function limpaCampos(){
             for (input of $('#modalRequest input')) {
                 $('#descricao').empty()
-                if (input.name != '_token') {
-                    input.value = ''
+                if (input.name !== '_token') {
+                    if(input.type === 'checkbox'){
+                        input.removeAttribute('checked');
+                    }else{
+                        input.value = ''
+                    }
                 }
             }
             $('#modalRequest').modal('hide');

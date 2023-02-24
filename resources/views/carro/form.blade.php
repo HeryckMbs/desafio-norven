@@ -109,7 +109,6 @@
                 }
             }
             $('#modalRequest').modal('hide');
-            $('#modalRequest').empty();
         }
 
         $('#fecha').on('click', function() {

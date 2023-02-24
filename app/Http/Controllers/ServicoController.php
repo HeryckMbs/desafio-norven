@@ -58,7 +58,7 @@ class ServicoController extends Controller
     {
         try {
             $manutencao = Manutencao::findOrFail($id_manutencao);
-            return $manutencao->servicos();
+            return $manutencao->servicosObject();
         } catch(\Exception $e) {
             notify()->error($e->getMessage(), 'ERRO');
             return redirect(route('servico.index'), );

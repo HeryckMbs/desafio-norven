@@ -14,7 +14,7 @@
                 <a href="{{ route('home') }}" class="nav-link">
                     <i class="nav-icon fas fa-th"></i>
                     <p>
-                        {{ __('Dashboard') }}
+                        {{ __('Página Principal') }}
                     </p>
                 </a>
             </li>
@@ -31,7 +31,7 @@
                 <a href="{{ route('carro.index') }}" class="nav-link">
                     <i class="nav-icon fas fa-car"></i>
                     <p>
-                        Meus carros
+                        Categorias
                     </p>
                 </a>
             </li>
@@ -40,7 +40,7 @@
                 <a href="{{ route('manutencao.index') }}" class="nav-link">
                     <i class="nav-icon fas fa-wrench"></i>
                     <p>
-                        Minhas Manutenções
+                        Marcas
                     </p>
                 </a>
             </li>
@@ -50,11 +50,19 @@
                     <i class="nav-icon fas fa-clipboard-list"></i>
 
                     <p>
-                        Serviços
+                        Fornecedores
                     </p>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{{ route('servico.index') }}" class="nav-link">
+                    <i class="nav-icon fas fa-clipboard-list"></i>
 
+                    <p>
+                        Produtos
+                    </p>
+                </a>
+            </li>
 
         </ul>
     </nav>

@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\Agendamento;
+use App\Models\Categoria;
 use App\Models\Manutencao;
 use App\Models\Servico;
 use Carbon\Carbon;
@@ -36,10 +37,10 @@ class AgendamentosDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Agendamento $model
+     * @param \App\Models\Categoria $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Manutencao $model)
+    public function query(Categoria $model)
     {
         return $model->newQuery()
         ->join('carros', 'carros.id', '=', 'manutencaos.carro_id')

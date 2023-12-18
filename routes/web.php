@@ -4,6 +4,7 @@ use App\Models\Carro;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CarroController;
+use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ManutencaoController;
 use App\Http\Controllers\ServicoController;
@@ -57,6 +58,8 @@ Route::middleware('auth')->group(function () {
     Route::put('profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
 
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+    Route::get('/produtosCategoria/{categoria_id}',[CategoriaController::class,'index'])->name('categoria.index');
 
     Route::group(['prefix' => 'carro'], function () {
         Route::get('/', [CarroController::class,'index'])->name('carro.index');

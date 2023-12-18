@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -12,13 +13,12 @@ return new class () extends Migration {
      */
     public function up()
     {
-        Schema::create('manutencaos', function (Blueprint $table) {
+        Schema::create('estoques', function (Blueprint $table) {
             $table->id();
-            $table->integer('carro_id');
-            $table->string('status')->default('pendente');
-            $table->dateTime('data_entrega');
-            $table->float('valor');
-            $table->text('descricao');
+            $table->unsignedBigInteger('produto_id');
+            $table->foreign('produto_id')->on('produtos')->references('id');
+            $table->float('preco_venda');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class () extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('manutencaos');
+        Schema::dropIfExists('estoques');
     }
 };

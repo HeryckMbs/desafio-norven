@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\AgendamentosDataTable;
+use App\Models\Categoria;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -22,8 +23,9 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index(AgendamentosDataTable $agendamentosDataTable)
+    public function index( )
     {
-        return $agendamentosDataTable->render('home');
+        $categorias = Categoria::all();
+        return view('home', compact('categorias'));
     }
 }

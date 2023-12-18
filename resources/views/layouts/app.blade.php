@@ -75,7 +75,7 @@
             <a href="/home" class="brand-link">
                 <img src="{{ asset('images/AdminLTELogo.png') }}" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">AdminLTE 3</span>
+                <span class="brand-text font-weight-light">Controle de Estoque</span>
             </a>
 
             @include('layouts.navigation')
@@ -88,7 +88,7 @@
                     <div class="container-fluid">
                         <div class="row mb-2 ">
                             <div class="col-sm-9 ">
-                                <h1 class="m-0">@yield('title', 'Dashboard')</h1>
+                                <h1 class="m-0">@yield('title', 'Página Principal')</h1>
                             </div><!-- /.col -->
                             <div class="col-sm-3 d-flex justify-content-between">
                                 @yield('actions')

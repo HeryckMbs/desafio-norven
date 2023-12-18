@@ -13,9 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('manutencaos', function ($table) {
-            $table->integer('cliente_id')->unsigned();
-            $table->foreign('cliente_id')->references('id')->on('users');
+        Schema::create('categorias', function (Blueprint $table) {
+            $table->id();
+            $table->string('nome');
+            $table->text('descricao');
+            $table->text('url_capa');
+            $table->timestamps();
         });
     }
 
@@ -26,9 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('manutencaos', function ($table) {
-            $table->dropColumn('cliente_id');
-            $table->dropForeign(['cliente_id']);
-        });
+        Schema::dropIfExists('categorias');
     }
 };

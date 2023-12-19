@@ -164,32 +164,51 @@ class FillBasicData extends Seeder
                 'nome' => 'Produto' . $numero,
                 'codigo' => 'COD00' . $numero,
                 'descricao' => 'Descrição do Produto ' . $numero,
-                'data_validade' => Carbon::now(),
-                'lote' => 'LT001',
                 'unidade_medida' => 'kg',
                 'fornecedor_id' => $numero,
-                'data_entrada' => Carbon::now(),
-                'preco' => 10.5,
                 'marca_id' => $numero,
                 'categoria_id' => $numero,
+                'preco_custo' => 10.5,
+                'preco_venda' => 14.5,
                 'informacao_nutricional' => 'Informações nutricionais do Produto ' . $numero,
                 'created_by' => 1
             ];
-            
+
             $produtosCadastrados[] = Produto::create($produto);
         }
-        foreach($produtosCadastrados as $produto){
-            foreach(range(1,4) as $numero) {
+        foreach (range(9, 1) as $numero) {
+            $produto = [
+                'nome' => 'Produto Inverso' . $numero,
+                'codigo' => 'COD000' . $numero,
+                'descricao' => 'Descrição do Produto Inverso' . $numero,
+                'unidade_medida' => 'kg',
+                'fornecedor_id' => $numero,
+                'marca_id' => $numero,
+                'categoria_id' => $numero,
+                'preco_custo' => 10.5,
+                'preco_venda' => 14.5,
+                'informacao_nutricional' => 'Informações nutricionais do Produto Inverso' . $numero,
+                'created_by' => 1
+            ];
+
+            $produtosCadastrados[] = Produto::create($produto);
+        }
+        foreach ($produtosCadastrados as $produto) {
+            foreach (range(1, 4) as $numero) {
                 $estoque = Estoque::create([
                     'produto_id' => $produto->id,
-                    'preco_venda' => $produto->preco,
+                    'data_validade' => Carbon::now(),
+                    'lote' => 'LT001',
+                    'data_entrada' => Carbon::now(),
+                    'preco_custo' => $produto->preco_custo,
+                    'preco_venda' => $produto->preco_venda,
                 ]);
 
                 $localizacao = Localizacao::create([
                     'categoria_id' => $produto->categoria_id,
-                    'prateleira' => $produto->categoria_id ,
-                    'posicao'=> $numero,
-                    'estoque_id'=> $estoque->id
+                    'prateleira' => $produto->categoria_id,
+                    'posicao' => $numero,
+                    'estoque_id' => $estoque->id
                 ]);
             }
         }

@@ -9,6 +9,8 @@ class Categoria extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['nome','descricao','url_capa'];
+
     public function produtos(){
         return $this->hasMany(Produto::class);
     }

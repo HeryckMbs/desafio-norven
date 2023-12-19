@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('localizacaos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('categoria_id');
-            $table->foreign('categoria_id')->on('categorias')->references('id');
+            $table->foreign('categoria_id')->on('categorias')->references('id')->onDelete('cascade');
             $table->unsignedBigInteger('estoque_id')->on('categorias')->references('id');
             $table->string('prateleira');
             $table->string('posicao');

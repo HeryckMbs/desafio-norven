@@ -4,6 +4,7 @@ import jQuery from 'jquery';
 import axios from 'axios';
 import 'bootstrap';
 
+
 window._ = lodash;
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support

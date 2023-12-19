@@ -9,6 +9,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ManutencaoController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProdutoController;
 use App\Models\Manutencao;
 use App\Models\Marca;
 use App\Models\User;
@@ -59,7 +60,14 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-    Route::get('/produtosCategoria/{categoria_id}',[CategoriaController::class,'index'])->name('categoria.index');
+    Route::get('/produtosCategoria/{categoria_id}',[CategoriaController::class,'produtosCategoria'])->name('produtosCategoria.index');
+    Route::get('/produto/{produto_id}',[ProdutoController::class,'getProduto'])->name('produto.produto');
+    Route::get('/categoria/{categoria_id}',[CategoriaController::class,'getCategoria'])->name('categoria.categoria');
+    Route::put('/categoria/{categoria_id}',[CategoriaController::class,'update'])->name('categoria.update');
+    Route::get('/categorias',[CategoriaController::class,'index'])->name('categoria.index');
+    Route::post('/categorias',[CategoriaController::class,'store'])->name('categoria.store');
+    Route::get('/categoriaForm/{categoria_id?}',[CategoriaController::class, 'categoriaForm'])->name('categoria.form');
+    Route::delete('/categorias/{categoria_id}',[CategoriaController::class,'delete'])->name('categoria.delete');
 
     Route::group(['prefix' => 'carro'], function () {
         Route::get('/', [CarroController::class,'index'])->name('carro.index');

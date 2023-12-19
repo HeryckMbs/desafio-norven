@@ -8,9 +8,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"
         integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js" integrity="sha512-d4KkQohk+HswGs6A1d6Gak6Bb9rMWtxjOa0IiY49Q3TeFd5xAzjWXDCBW9RS7m86FQ4RzM2BdHmdJnnKRYknxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"
+        integrity="sha512-d4KkQohk+HswGs6A1d6Gak6Bb9rMWtxjOa0IiY49Q3TeFd5xAzjWXDCBW9RS7m86FQ4RzM2BdHmdJnnKRYknxw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @notifyCss
-    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
@@ -141,7 +144,9 @@
     <!-- ./wrapper -->
 
     <!-- REQUIRED SCRIPTS -->
-
+    @if (\Session::has('messages'))
+        <input type="hidden" name="messages" id="messages" value="{{ json_encode(\Session::get('messages')) }}">
+    @endif
 
     @vite('resources/js/app.js')
     {{-- <script src="http://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js" defer></script> --}}
@@ -158,123 +163,40 @@
     @stack('scripts')
 
     <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: true,
+            timer: 5000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+        if (document.getElementById('messages') != null) {
+            const messages = JSON.parse(document.getElementById('messages').value);
+            for (let item in messages) {
+                for (let message of messages[item] ) {
+                    console.log({
+                        icon: `${item}`,
+                        title: `${message}`
+                    })
+                    Toast.fire({
+                        heightAuto: false,
+
+                        icon: `${item}`,
+                        title: `${message}`
+                    });
+                }
+            }
+            console.log(messages)
+        }
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        const ctx = document.getElementById('myChart');
-        let data = {};
-        $.ajax({
-            method: "GET",
-            url: '{{ route('manutencao.dashboard') }}'
-        }).done(function(response) {
-
-            let labels = [
-                            'Janeiro',
-                            'Fevereiro',
-                            'Março',
-                            'Abril',
-                            'Maio',
-                            'Junho',
-                            'Julho',
-                            'Agosto',
-                            'Setembro',
-                            'Outubro',
-                            'Novembro',
-                            'Dezembro'
-                        ];
-            let qtdCarros = [];
-            for(let i = 1; i <= response.count; i++) {
-                let aux = i < 10 ? '0' + i : i ;
-                qtdCarros.push(response[aux]);
-            }
-
-            new Chart(ctx, {
-                type: 'bar',
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true
-                },
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Manutenções por mês',
-                        data: qtdCarros,
-                        borderWidth: 2,
-
-                    }]
-                },
-
-            });
-        })
-    </script>
-
-    <script>
-        function modalG(id) {
-
-            var url = `carro/form/${id}`
-            $.ajax({
-                url: url,
-                method: "GET"
-            }).done(function(html) {
-                $('#modalRequest').empty();
-                $('#modalRequest').html(html)
-                $('#modalRequest').modal('show')
-            });
-
-        }
-
-        function editManutencao(id) {
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            $.ajax({
-                method: "GET",
-                url: `manutencao/form/${id}`,
-            }).done(function(response) {
-                //
-                // $('#carro').val(`${response[0].carro_id}`);
-                // $('#data_entrega').val(`${Date.parse(response[0].data_entrega)}`)
-                // $('#status').val(`${response[0].status}`)
-                // $('#descricao').val(`${response[0].descricao}`)
-                // let servicos = response[1].map(function (element){
-                //     return element.id
-                // })
-                // $('.form-check-input').each(function(index, element) {
-                //     if(servicos.includes(parseInt(element.value))){
-                //         $(element).attr('checked')
-                //     }
-                // })
-                // $('#modalRequest').modal('show')
-                console.log(response);
-                $('#modalRequest').empty();
-                $('#modalRequest').html(response)
-                $('#modalRequest').modal('show')
-            })
-        }
-        function editServico(id) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            $.ajax({
-                method: "GET",
-                url: `servico/form/${id}`,
-            }).done(function(response) {
-                $('#modalRequest').empty();
-                $('#modalRequest').html(response)
-                $('#modalRequest').modal('show')
-
-            })
-        }
-
 
         $('#fecha').on('click', function() {
             $('#modalRequest').modal('hide');

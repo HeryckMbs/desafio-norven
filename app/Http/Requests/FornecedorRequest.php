@@ -13,7 +13,7 @@ class FornecedorRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +23,22 @@ class FornecedorRequest extends FormRequest
      */
     public function rules()
     {
+        return [ 
+            'nome' => 'required',
+            'cnpj' => 'required',
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
         return [
-            //
+            'nome.required' => 'O campo Nome é obrigatório',
+            'cnpj.required' => 'O campo CNPJ da capa é obrigatório',
         ];
     }
 }

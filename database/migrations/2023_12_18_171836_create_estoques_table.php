@@ -23,6 +23,8 @@ return new class extends Migration
             $table->float('preco_custo');
             $table->float('preco_venda');
             $table->softDeletes();
+            $table->softDeletes();
+
             $table->timestamps();
         });
     }

@@ -35,6 +35,7 @@ return new class extends Migration
             
             $table->text('informacao_nutricional');
 
+            $table->softDeletes();
 
             $table->timestamps();
         });

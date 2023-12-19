@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('nome');
             $table->string('cnpj');
             $table->boolean('ativo')->default(false);
+            $table->softDeletes();
+
             $table->timestamps();
         });
     }

@@ -54,7 +54,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('servico.index') }}" class="nav-link">
+                <a href="{{ route('produto.index') }}" class="nav-link">
                     <i class="nav-icon fas fa-clipboard-list"></i>
 
                     <p>

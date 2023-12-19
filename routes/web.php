@@ -35,17 +35,6 @@ Route::get('/', function () {
 Route::get('/welcome', function () {
     return view('welcome');
 });
-Route::get('/teste', function () {
-
-})->name('teste');
-
-
-Route::get('/testee', function () {
-$manutencao = Manutencao::findOrFail(4);
-$servicos = $manutencao->servicosId();
-dd($servicos[0]);
-
-})->name('teste2');
 
 
 Auth::routes();
@@ -61,9 +50,10 @@ Route::middleware('auth')->group(function () {
     Route::put('profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
 
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    
+    Route::get('/produtoIndividual/{produto_id}',[ProdutoController::class,'getProdutoIndividual'])->name('produto.produto');
 
     Route::get('/produtosCategoria/{categoria_id}',[CategoriaController::class,'produtosCategoria'])->name('produtosCategoria.index');
-    Route::get('/produto/{produto_id}',[ProdutoController::class,'getProduto'])->name('produto.produto');
     Route::get('/categoria/{categoria_id}',[CategoriaController::class,'getCategoria'])->name('categoria.categoria');
     Route::put('/categorias/{categoria_id}',[CategoriaController::class,'update'])->name('categoria.update');
     Route::get('/categorias',[CategoriaController::class,'index'])->name('categoria.index');
@@ -73,48 +63,6 @@ Route::middleware('auth')->group(function () {
     
     Route::resource('fornecedor', FornecedorController::class);
     Route::resource('marca',MarcaController::class);
+    Route::resource('produto',ProdutoController::class);
 
-    
-
-    Route::group(['prefix' => 'carro'], function () {
-        Route::get('/', [CarroController::class,'index'])->name('carro.index');
-        Route::post('/', [CarroController::class,'create'])->name('carro.create');
-        Route::delete('/{id}', [CarroController::class,'delete'])->name('carro.delete');
-        Route::put('/{id}', [CarroController::class,'update'])->name('carro.update');
-        Route::get('/form/{id?}', [CarroController::class, 'form'])->name('carro.form');
-    });
-    Route::group(['prefix' => 'manutencao'],function () {
-        Route::get('/', [ManutencaoController::class,'index'])->name('manutencao.index');
-        Route::post('/', [ManutencaoController::class,'create'])->name('manutencao.create');
-        Route::delete('/{id}', [ManutencaoController::class,'delete'])->name('manutencao.delete');
-        Route::put('/{id}', [ManutencaoController::class,'update'])->name('manutencao.update');
-        Route::get('/form/{id?}', [ManutencaoController::class, 'form'])->name('manutencao.form');
-        }
-    );
-
-    Route::group(['prefix' => 'servico'],function () {
-        Route::get('/', [ServicoController::class,'index'])->name('servico.index');
-        Route::post('/', [ServicoController::class,'create'])->name('servico.create');
-        Route::delete('/{id}', [ServicoController::class,'delete'])->name('servico.delete');
-        Route::put('/{id}', [ServicoController::class,'update'])->name('servico.update');
-        Route::get('/form/{id?}', [ServicoController::class, 'form'])->name('servico.form');
-    }
-    );
-
-
-    Route::group(
-        ['prefix' => 'cliente'],
-        function () {
-            Route::get('/', [ClienteController::class,'index'])->name('cliente.index');
-            Route::post('/', [ClienteController::class,'create'])->name('cliente.create');
-            Route::delete('/{id}', [ClienteController::class,'delete'])->name('cliente.delete');
-            Route::put('/{id}', [ClienteController::class,'update'])->name('cliente.update');    }
-    );
-
-    Route::group(
-        ['prefix' => 'api'],
-        function () {
-            Route::get('/marcasFamosas', [DashboardController::class, 'manutencoesPorMes'])->name('manutencao.dashboard');
-    }
-    );
 });

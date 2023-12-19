@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FornecedorRequest;
 use App\Models\Fornecedor;
 use Illuminate\Http\Request;
 
@@ -34,7 +35,7 @@ class FornecedorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FornecedorRequest $request)
     {
 
         Fornecedor::create(['nome' => $request->nome, 'cnpj' => $request->cnpj, 'ativo' => isset($request->ativo)]);
@@ -71,7 +72,7 @@ class FornecedorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(FornecedorRequest $request, $id)
     {
         Fornecedor::find($id)->update(['nome' => $request->nome, 'cnpj' => $request->cnpj, 'ativo' => isset($request->ativo)]);
         return redirect(route('fornecedor.index'))->with('messages', ['success' => ['Fornecedor atualizado com sucesso!']]);

@@ -17,7 +17,7 @@ class CategoriaController extends Controller
     }
 
     public function index(){
-        $categorias = Categoria::orderBy('id')->get();
+        $categorias = Categoria::orderBy('id')->withTrashed()->get();
         return view('categoria.index', compact('categorias'));
     }
 

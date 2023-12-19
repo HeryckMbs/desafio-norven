@@ -21,7 +21,7 @@
         </thead>
         <tbody>
             @foreach ($categorias as $categoria)
-                <tr>
+                <tr class="{{ $categoria->deleted_at ? 'bg-danger' : '' }}">
                     <td>{{ $categoria->id }}</td>
                     <td>{{ $categoria->nome }}</td>
                     <td>{{ $categoria->descricao }}</td>
@@ -30,16 +30,17 @@
                             class="btn btn-primary infoFoto mr-1">
                             <i class="fas fa-info"></i>
                         </button>
-                        <a href="{{route('categoria.form',$categoria->id)}}" type="button" class="btn btn-warning mr-1 editModal"><i
-                                class="fas fa-edit"></i></a>
-                        <form method="POST" action="{{ route('categoria.delete', $categoria->id) }}"
-                            enctype="multipart/form-data">
-                            @method('DELETE')
-                            @csrf
-                            <button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
+                        @if ($categoria->deleted_at == null)
+                            <a href="{{ route('categoria.form', $categoria->id) }}" type="button"
+                                class="btn btn-warning mr-1 editModal"><i class="fas fa-edit"></i></a>
+                            <form method="POST" action="{{ route('categoria.delete', $categoria->id) }}"
+                                enctype="multipart/form-data">
+                                @method('DELETE')
+                                @csrf
+                                <button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
 
-                        </form>
-
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @endforeach
@@ -71,7 +72,7 @@
             </div>
         </div>
     </div>
- 
+
     </div>
 
 

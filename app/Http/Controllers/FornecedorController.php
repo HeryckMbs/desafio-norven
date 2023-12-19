@@ -14,7 +14,7 @@ class FornecedorController extends Controller
      */
     public function index()
     {
-        $fornecedores = Fornecedor::orderBy('id')->get();
+        $fornecedores = Fornecedor::orderBy('id')->withTrashed()->get();
         return view('fornecedor.index', compact('fornecedores'));
     }
 
@@ -74,7 +74,7 @@ class FornecedorController extends Controller
     public function update(Request $request, $id)
     {
         Fornecedor::find($id)->update(['nome' => $request->nome, 'cnpj' => $request->cnpj, 'ativo' => isset($request->ativo)]);
-        return redirect(route('fornecedor.index'))->with('messages', ['success' => ['Fornecedor criado com sucesso!']]);
+        return redirect(route('fornecedor.index'))->with('messages', ['success' => ['Fornecedor atualizado com sucesso!']]);
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MarcaController;
 use App\Models\Carro;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
@@ -69,8 +70,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/categorias',[CategoriaController::class,'store'])->name('categoria.store');
     Route::get('/categoriaForm/{categoria_id?}',[CategoriaController::class, 'categoriaForm'])->name('categoria.form');
     Route::delete('/categorias/{categoria_id}',[CategoriaController::class,'delete'])->name('categoria.delete');
+    
     Route::resource('fornecedor', FornecedorController::class);
-
+    Route::resource('marca',MarcaController::class);
 
     
 

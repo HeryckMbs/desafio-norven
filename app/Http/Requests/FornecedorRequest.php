@@ -23,7 +23,7 @@ class FornecedorRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        return [ 
             'nome' => 'required',
             'cnpj' => 'required',
         ];

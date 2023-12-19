@@ -4,12 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Fornecedor extends Model
+class Servico extends Model
 {
     use HasFactory;
-    use SoftDeletes;
-
-    protected $fillable = ['nome','cnpj','ativo'];
+    protected $fillable = ['nome', 'descricao', 'valor', 'url_foto'];
 }

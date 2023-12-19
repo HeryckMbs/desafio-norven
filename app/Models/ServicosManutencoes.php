@@ -4,12 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Fornecedor extends Model
+class ServicosManutencoes extends Model
 {
     use HasFactory;
-    use SoftDeletes;
-
-    protected $fillable = ['nome','cnpj','ativo'];
+    protected $fillable = ['manutencao_id','servico_id'];
 }

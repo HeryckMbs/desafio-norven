@@ -20,6 +20,8 @@ return new class extends Migration
             $table->unsignedBigInteger('estoque_id')->on('categorias')->references('id');
             $table->string('prateleira');
             $table->string('posicao');
+            $table->softDeletes();
+
             $table->timestamps();
         });
     }

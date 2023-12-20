@@ -8,7 +8,7 @@
 
 @section('content')
 
-    <table class="table table-striped table-hover">
+    <table id="produtosCategoriaTable" class="table table-striped table-hover">
         <thead>
             <tr>
                 <th>Id</th>
@@ -120,6 +120,11 @@
 
     @push('scripts')
         <script>
+                            let table = new DataTable('#produtosCategoriaTable', {
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json',
+            },
+        });
             $('.infoProduto').on('click', function() {
                 console.log(this)
                 fetch(`/produtoIndividual/${this.dataset.id}`).then(async (response) => {

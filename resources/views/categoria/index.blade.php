@@ -10,7 +10,7 @@
 
 @section('content')
 
-    <table class="table table-striped table-hover">
+    <table id="categoriaTable" class="table table-striped table-hover">
         <thead>
             <tr>
                 <th>Id</th>
@@ -79,6 +79,11 @@
 
 @push('scripts')
     <script>
+                    let table = new DataTable('#categoriaTable', {
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json',
+            },
+        });
         $('.infoFoto').on('click', function() {
             $('#fotoCategoria').attr('src', this.dataset.url)
             $('#nomeFotoCategoria').text(this.dataset.nome)

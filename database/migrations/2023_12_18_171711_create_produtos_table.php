@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('nome');
             $table->string('codigo')->unique();
-            $table->text('descricao');
+            $table->text('descricao')->nullable();
 
 
             $table->float('preco_custo');
@@ -33,7 +33,7 @@ return new class extends Migration
             $table->foreign('categoria_id')->on('categorias')->references('id')->onDelete('cascade');
             $table->foreign('created_by')->on('users')->references('id');
             
-            $table->text('informacao_nutricional');
+            $table->text('informacao_nutricional')->nullable();
 
             $table->softDeletes();
 

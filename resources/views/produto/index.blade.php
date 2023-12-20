@@ -10,7 +10,7 @@
 
 @section('content')
 
-    <table class="table table-striped table-hover">
+    <table id="produtosTable" class="table table-striped table-hover">
         <thead>
             <tr>
                 <th>Id</th>
@@ -21,7 +21,6 @@
                 <th>Responsável</th>
                 <th>Ativo</th>
 
-                <th class="text-center">Informações</th>
 
                 <th class="text-center">Ações</th>
             </tr>
@@ -37,16 +36,13 @@
                     <td style="text-overflow: ellipsis">{{ $produto->descricao }}</td>
                     <td>{{ $produto->responsavel->name }}</td>
                     <td>{{ $produto->deleted_at == null ? 'Ativo' : 'Inativo' }}</td>
-                    <td>
-                        @if ($produto->deleted_at == null)
-                            <button data-id="{{ $produto->id }}" type="button" class="btn btn-primary infoProduto mr-1">
-                                <i class="fas fa-info"></i>
-                            </button>
-                        @endif
 
-                    </td>
+                    
                     <td class="d-flex  justify-content-around">
                         @if ($produto->deleted_at == null)
+                        <button data-id="{{ $produto->id }}" type="button" class="btn btn-primary infoProduto mr-1">
+                            <i class="fas fa-info"></i>
+                        </button>
                             <a href="{{ route('produto.edit', $produto->id) }}" type="button"
                                 class="btn btn-warning mr-1 "><i class="fas fa-edit"></i></a>
                             <form method="POST" action="{{ route('produto.destroy', $produto->id) }}"
@@ -148,6 +144,11 @@
 
 @push('scripts')
     <script>
+        let table = new DataTable('#produtosTable', {
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json',
+            },
+        });
         $('.infoProduto').on('click', function() {
             console.log(this)
             fetch(`/produtoIndividual/${this.dataset.id}`).then(async (response) => {

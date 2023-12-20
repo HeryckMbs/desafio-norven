@@ -17,13 +17,7 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css">
-    <link rel="stylesheet" type="text/css"
-        href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.dataTables.min.css">
-    <link rel="stylesheet" type="text/css"
-        href="https://cdn.datatables.net/buttons/2.3.2/css/buttons.bootstrap4.min.css">
-    <script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
 
     <link rel="stylesheet" href="{{ asset('css/fontawesome.min.css') }}">
 
@@ -157,6 +151,7 @@
         src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
     <script src="/vendor/datatables/buttons.server-side.js"></script>
     <script src="{{ asset('js/adminlte.min.js') }}" defer></script>
+    
     @include('notify::components.notify')
     @yield('scripts')
     @notifyJs

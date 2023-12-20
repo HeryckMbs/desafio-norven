@@ -10,7 +10,7 @@
 
 @section('content')
 
-    <table class="table table-striped table-hover">
+    <table id="marcaTable" class="table table-striped table-hover">
         <thead>
             <tr>
                 <th>Id</th>
@@ -27,8 +27,8 @@
                     <td class="d-flex  justify-content-around">
 
                         @if ($marca->deleted_at == null)
-                            <a href="{{ route('marca.edit', $marca->id) }}" type="button"
-                                class="btn btn-warning mr-1 "><i class="fas fa-edit"></i></a>
+                            <a href="{{ route('marca.edit', $marca->id) }}" type="button" class="btn btn-warning mr-1 "><i
+                                    class="fas fa-edit"></i></a>
                             <form method="POST" action="{{ route('marca.destroy', $marca->id) }}"
                                 enctype="multipart/form-data">
                                 @method('DELETE')
@@ -45,7 +45,7 @@
     <!-- Button trigger modal -->
 
 
- 
+
 
 
 
@@ -53,5 +53,11 @@
 @endsection
 
 @push('scripts')
-
+    <script>
+        let table = new DataTable('#marcaTable', {
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json',
+            },
+        });
+    </script>
 @endpush

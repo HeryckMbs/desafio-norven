@@ -37,9 +37,14 @@
                     <td style="text-overflow: ellipsis">{{ $produto->descricao }}</td>
                     <td>{{ $produto->responsavel->name }}</td>
                     <td>{{ $produto->deleted_at == null ? 'Ativo' : 'Inativo' }}</td>
-                    <td> <button data-id="{{ $produto->id }}" type="button" class="btn btn-primary infoProduto mr-1">
-                            <i class="fas fa-info"></i>
-                        </button></td>
+                    <td>
+                        @if ($produto->deleted_at == null)
+                            <button data-id="{{ $produto->id }}" type="button" class="btn btn-primary infoProduto mr-1">
+                                <i class="fas fa-info"></i>
+                            </button>
+                        @endif
+
+                    </td>
                     <td class="d-flex  justify-content-around">
                         @if ($produto->deleted_at == null)
                             <a href="{{ route('produto.edit', $produto->id) }}" type="button"
@@ -146,9 +151,9 @@
     <script>
         $('.infoProduto').on('click', function() {
             console.log(this)
-            fetch(`/produto/${this.dataset.id}`).then(async (response) => {
+            fetch(`/produtoIndividual/${this.dataset.id}`).then(async (response) => {
                 let result = await response.json();
-
+                console.log(result)
                 document.getElementById('nomeProduto').textContent = result.data.nome
 
                 document.getElementById('codigoProduto').value = result.data.codigo

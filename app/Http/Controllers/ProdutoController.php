@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProdutoRequest;
+use App\Models\Categoria;
+use App\Models\Fornecedor;
+use App\Models\Marca;
 use App\Models\Produto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProdutoController extends Controller
 {
@@ -26,7 +31,10 @@ class ProdutoController extends Controller
      */
     public function create()
     {
-        return view('produto.form');
+        $categorias = Categoria::all();
+        $marcas = Marca::all();
+        $fornecedores = Fornecedor::all();
+        return view('produto.form',compact('categorias','marcas','fornecedores'));
     }
 
     /**
@@ -35,9 +43,24 @@ class ProdutoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProdutoRequest $request)
     {
-        //
+
+        Produto::create([
+            "nome" => $request->nome,
+            "codigo" => $request->codigo,
+            "unidade_medida" => $request->unidade_medida,
+            "preco_custo" => (float) $request->preco_custo,
+            "preco_venda" => (float) $request->preco_venda,
+            "categoria_id" => (int) $request->categoria,
+            "marca_id" => (int) $request->marca,
+            "fornecedor_id" => (int) $request->fornecedor,
+            "descricao" => $request->descricao,
+            "informacao_nutricional" => $request->informacaoNutricional,
+            "created_by" => Auth::id()
+        ]);
+        return redirect(route('produto.index'))->with('messages',['success'=>['Produto criado com sucesso!']]);
+
     }
 
     /**
@@ -59,7 +82,13 @@ class ProdutoController extends Controller
      */
     public function edit($id)
     {
-        //
+        
+        
+        $categorias = Categoria::all();
+        $marcas = Marca::all();
+        $fornecedores = Fornecedor::all();
+        $produto = Produto::find($id);
+        return view('produto.form',compact('produto','categorias','marcas','fornecedores'));
     }
 
     /**
@@ -69,9 +98,22 @@ class ProdutoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProdutoRequest $request, $id)
     {
-        //
+        Produto::find($id)->update([
+            "nome" => $request->nome,
+            "codigo" => $request->codigo,
+            "unidade_medida" => $request->unidade_medida,
+            "preco_custo" => (float) $request->preco_custo,
+            "preco_venda" => (float) $request->preco_venda,
+            "categoria_id" => (int) $request->categoria,
+            "marca_id" => (int) $request->marca,
+            "fornecedor_id" => (int) $request->fornecedor,
+            "descricao" => $request->descricao,
+            "informacao_nutricional" => $request->informacaoNutricional,
+            "created_by" => Auth::id()
+        ]);
+        return redirect(route('produto.index'))->with('messages',['success'=>['Produto atualizado com sucesso!']]);
     }
 
     /**
@@ -82,7 +124,12 @@ class ProdutoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try{
+            Produto::findOrFail($id)->delete();
+        }catch(\Exception $e){
+            return back()->with('messages',['error'=>['Requisição inválida!']]);
+        }
+        return back()->with('messages',['success'=>['Categoria excluída com sucesso!']]);
     }
 
     public function getProdutoIndividual(int $produto_id)

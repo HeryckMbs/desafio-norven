@@ -9,7 +9,19 @@
 
 
 @section('content')
-
+<div class="d-flex">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+        </div>
+        <form class="mr-2" id="formSearch" action="{{ route('fornecedor.index') }}" method="GET">
+            <input value="{{ $_GET['search'] ?? '' }}" type="text" id="search" name="search" class="form-control"
+                placeholder="" aria-label="" aria-describedby="basic-addon1">
+        </form>
+        <a href="{{ route('fornecedor.index') }}" class="btn btn-primary">Limpar busca</a>
+    </div>
+    {{ $fornecedores->links() }}
+</div>
     <table id="fornecedorTable" class="table table-striped table-hover">
         <thead>
             <tr>
@@ -80,11 +92,10 @@
 
 @push('scripts')
     <script>
-              let table = new DataTable('#fornecedorTable', {
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json',
-            },
-        });
+        document.getElementById('search').addEventListener('change', function() {
+            document.getElementById('formSearch').submit()
+        })
+
         $('.infoFoto').on('click', function() {
             $('#fotofornecedor').attr('src', this.dataset.url)
             $('#nomeFotofornecedor').text(this.dataset.nome)

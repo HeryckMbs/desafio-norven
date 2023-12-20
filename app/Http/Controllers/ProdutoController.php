@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ProdutoController extends Controller
 {
-  
+
     /**
      * Display a listing of the resource.
      *
@@ -20,8 +20,20 @@ class ProdutoController extends Controller
      */
     public function index()
     {
-        $produtos = Produto::with(['fornecedor','marca','responsavel'])->orderBy('id')->withTrashed()->get();
-        return view('produto.index',compact('produtos'));
+        $produtos = Produto::with(['fornecedor', 'marca', 'responsavel'])
+            ->orderBy('id')
+            ->when(request()->has('search'), function ($query) {
+                $request = request()->all();
+                return $query->where('nome', 'like', '%' . $request['search'] . '%')
+                    ->orWhere('codigo', 'like', '%' . $request['search'] . '%')
+                    ->orWhere('descricao', 'like', '%' . $request['search'] . '%')
+                    ->orWhereHas('responsavel', function ($query) use ($request) {
+                        $query->where('nome', 'like', '%' . $request['search'] . '%');
+                    });
+            })
+            ->withTrashed()
+            ->paginate(8);
+        return view('produto.index', compact('produtos'));
     }
 
     /**
@@ -34,7 +46,7 @@ class ProdutoController extends Controller
         $categorias = Categoria::all();
         $marcas = Marca::all();
         $fornecedores = Fornecedor::all();
-        return view('produto.form',compact('categorias','marcas','fornecedores'));
+        return view('produto.form', compact('categorias', 'marcas', 'fornecedores'));
     }
 
     /**
@@ -59,8 +71,7 @@ class ProdutoController extends Controller
             "informacao_nutricional" => $request->informacaoNutricional,
             "created_by" => Auth::id()
         ]);
-        return redirect(route('produto.index'))->with('messages',['success'=>['Produto criado com sucesso!']]);
-
+        return redirect(route('produto.index'))->with('messages', ['success' => ['Produto criado com sucesso!']]);
     }
 
     /**
@@ -82,13 +93,13 @@ class ProdutoController extends Controller
      */
     public function edit($id)
     {
-        
-        
+
+
         $categorias = Categoria::all();
         $marcas = Marca::all();
         $fornecedores = Fornecedor::all();
         $produto = Produto::find($id);
-        return view('produto.form',compact('produto','categorias','marcas','fornecedores'));
+        return view('produto.form', compact('produto', 'categorias', 'marcas', 'fornecedores'));
     }
 
     /**
@@ -113,7 +124,7 @@ class ProdutoController extends Controller
             "informacao_nutricional" => $request->informacaoNutricional,
             "created_by" => Auth::id()
         ]);
-        return redirect(route('produto.index'))->with('messages',['success'=>['Produto atualizado com sucesso!']]);
+        return redirect(route('produto.index'))->with('messages', ['success' => ['Produto atualizado com sucesso!']]);
     }
 
     /**
@@ -124,17 +135,17 @@ class ProdutoController extends Controller
      */
     public function destroy($id)
     {
-        try{
+        try {
             Produto::findOrFail($id)->delete();
-        }catch(\Exception $e){
-            return back()->with('messages',['error'=>['Requisição inválida!']]);
+        } catch (\Exception $e) {
+            return back()->with('messages', ['error' => ['Requisição inválida!']]);
         }
-        return back()->with('messages',['success'=>['Categoria excluída com sucesso!']]);
+        return back()->with('messages', ['success' => ['Categoria excluída com sucesso!']]);
     }
 
     public function getProdutoIndividual(int $produto_id)
     {
-        $produto = Produto::with(['fornecedor','marca','responsavel'])->where('id', '=', $produto_id)->first();
+        $produto = Produto::with(['fornecedor', 'marca', 'responsavel'])->where('id', '=', $produto_id)->first();
         return response()->json(['success' => true, 'data' => $produto], 200);
     }
 }

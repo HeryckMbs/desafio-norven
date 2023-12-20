@@ -18,15 +18,6 @@
                     </p>
                 </a>
             </li>
-
-{{--            <li class="nav-item">--}}
-{{--                <a href="{{ route('cliente.index') }}" class="nav-link">--}}
-{{--                    <i class="nav-icon fas fa-users"></i>--}}
-{{--                    <p>--}}
-{{--                        Clientes--}}
-{{--                    </p>--}}
-{{--                </a>--}}
-{{--            </li>--}}
             <li class="nav-item">
                 <a href="{{ route('categoria.index') }}" class="nav-link">
                     <i class=" nav-icon  fas fa-sliders-h"></i>                    <p>

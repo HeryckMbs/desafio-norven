@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'marcas')
+@section('title', 'Marcas')
 
 @section('actions')
     <a href="{{ route('marca.create') }}" class="btn btn-primary">
@@ -10,6 +10,20 @@
 
 @section('content')
 
+    <div class="d-flex">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+            </div>
+            <form class="mr-2" id="formSearch" action="{{ route('marca.index') }}" method="GET">
+                <input value="{{ $_GET['search'] ?? '' }}" type="text" id="search" name="search" class="form-control"
+                    placeholder="" aria-label="" aria-describedby="basic-addon1">
+            </form>
+            <a href="{{ route('marca.index') }}" class="btn btn-primary">Limpar busca</a>
+
+        </div>
+        {{ $marcas->links() }}
+    </div>
     <table id="marcaTable" class="table table-striped table-hover">
         <thead>
             <tr>
@@ -41,6 +55,7 @@
                 </tr>
             @endforeach
         </tbody>
+
     </table>
     <!-- Button trigger modal -->
 
@@ -54,10 +69,8 @@
 
 @push('scripts')
     <script>
-        let table = new DataTable('#marcaTable', {
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json',
-            },
-        });
+        document.getElementById('search').addEventListener('change', function() {
+            document.getElementById('formSearch').submit()
+        })
     </script>
 @endpush

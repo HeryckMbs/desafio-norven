@@ -9,7 +9,20 @@
 
 
 @section('content')
+<div class="d-flex">
 
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+        </div>
+        <form class="mr-2" id="formSearch" action="{{route('produto.index')}}" method="GET">
+            <input type="text" id="search" name="search" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+        </form>
+        <a href="{{ route('produto.index') }}" class="btn btn-primary">Limpar busca</a>
+
+      </div>
+    {{$produtos->links() }}
+</div>
     <table id="produtosTable" class="table table-striped table-hover">
         <thead>
             <tr>
@@ -37,7 +50,7 @@
                     <td>{{ $produto->responsavel->name }}</td>
                     <td>{{ $produto->deleted_at == null ? 'Ativo' : 'Inativo' }}</td>
 
-                    
+
                     <td class="d-flex  justify-content-around">
                         @if ($produto->deleted_at == null)
                         <button data-id="{{ $produto->id }}" type="button" class="btn btn-primary infoProduto mr-1">
@@ -58,6 +71,10 @@
                     </td>
                 </tr>
             @endforeach
+            <tfoot>
+                
+
+            </tfoot>
         </tbody>
     </table>
     <!-- Button trigger modal -->
@@ -144,11 +161,7 @@
 
 @push('scripts')
     <script>
-        let table = new DataTable('#produtosTable', {
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json',
-            },
-        });
+
         $('.infoProduto').on('click', function() {
             console.log(this)
             fetch(`/produtoIndividual/${this.dataset.id}`).then(async (response) => {
@@ -179,6 +192,9 @@
 
         document.getElementById('produtoModal').addEventListener('hide.bs.modal', function() {
             document.getElementById('formProduto').reset()
+        })
+        document.getElementById('search').addEventListener('change', function() {
+            document.getElementById('formSearch').submit()
         })
     </script>
 @endpush

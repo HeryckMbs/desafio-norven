@@ -15,7 +15,12 @@ class FornecedorController extends Controller
      */
     public function index()
     {
-        $fornecedores = Fornecedor::orderBy('id')->withTrashed()->get();
+        $fornecedores = Fornecedor::orderBy('id')->withTrashed()
+        ->when(request()->has('search'), function ($query) {
+            $request = request()->all();
+            return $query->where('nome', 'like', '%' . $request['search'] . '%')
+                ->orWhere('cnpj', 'like', '%' . $request['search'] . '%');
+        })->paginate(8);
         return view('fornecedor.index', compact('fornecedores'));
     }
 

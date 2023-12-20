@@ -15,8 +15,12 @@ class MarcaController extends Controller
      */
     public function index()
     {
-        $marcas = Marca::orderBy('id')->withTrashed()->get();
-        return view('marca.index',compact('marcas'));
+        $marcas = Marca::orderBy('id')->withTrashed()
+        ->when(request()->has('search'), function ($query) {
+            $request = request()->all();
+            return $query->where('nome', 'like', '%' . $request['search'] . '%');
+        })->paginate(4);
+        return view('marca.index', compact('marcas'));
     }
 
     /**
@@ -39,7 +43,6 @@ class MarcaController extends Controller
     {
         Marca::create($request->except('_token'));
         return redirect(route('marca.index'))->with('messages', ['success' => ['Marca criada com sucesso!']]);
-
     }
 
     /**
@@ -62,8 +65,7 @@ class MarcaController extends Controller
     public function edit($id)
     {
         $marca = Marca::find($id);
-        return view('marca.form',compact('marca'));
-
+        return view('marca.form', compact('marca'));
     }
 
     /**
@@ -75,9 +77,8 @@ class MarcaController extends Controller
      */
     public function update(MarcaRequest $request, $id)
     {
-        Marca::find($id)->update($request->except(['_token','_method']));
+        Marca::find($id)->update($request->except(['_token', '_method']));
         return redirect(route('marca.index'))->with('messages', ['success' => ['Marca atualizada com sucesso!']]);
-
     }
 
     /**

@@ -23,11 +23,14 @@ class CategoriaRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'nome' => 'required',
-            'url_capa' => 'required',
-            'descricao'=> 'required'
+            'descricao' => 'required'
         ];
+        if ($this->_method !== 'PUT') {
+            $rules['url_capa'] = 'required|file';
+        }
+        return $rules;
     }
 
     /**
@@ -37,10 +40,14 @@ class CategoriaRequest extends FormRequest
      */
     public function messages(): array
     {
-        return [
+        $messages = [
             'nome.required' => 'O campo nome é obrigatório',
-            'url_capa.required' => 'O campo foto da capa é obrigatório',
             'descricao.required' => 'O campo descrição é obrigatório'
         ];
+
+        if ($this->_method !== 'PUT') {
+            $messages['url_capa.required'] = 'O campo foto da capa é obrigatório';
+        }
+        return $messages;
     }
 }

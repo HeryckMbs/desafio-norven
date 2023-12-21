@@ -19,15 +19,15 @@
                     <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
                 @enderror
             </div>
-            <div class="col-6">
+            {{-- <div class="col-6">
                 <label for="exampleInputEmail1" class="form-label">Código do Produto</label>
                 <input name="codigo" value="{{ isset($produto) ? $produto->codigo : old('codigo') ?? '' }}"
                     class="form-control" id="quantidadeEstoque">
                 @error('codigo')
                     <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
                 @enderror
-            </div>
-            <div class="col-3">
+            </div> --}}
+            <div class="col-2">
                 <label for="exampleInputEmail1" class="form-label">Unidade de Medida</label>
                 <input name="unidade_medida"
                     value="{{ isset($produto) ? $produto->unidade_medida : old('unidade_medida') ?? '' }}"
@@ -39,7 +39,7 @@
 
             <div class="col-2">
                 <label for="exampleInputEmail1" class="form-label">Preço de custo</label>
-                <input type="number" name="preco_custo"
+                <input type="number" step="0.1" name="preco_custo"
                     value="{{ isset($produto) ? $produto->preco_custo : old('preco_custo') ?? '' }}" class="form-control"
                     id="preco_custo">
                 @error('preco_custo')
@@ -48,7 +48,7 @@
             </div>
             <div class="col-2">
                 <label for="exampleInputEmail1" class="form-label">Preço de Venda</label>
-                <input type="number" name="preco_venda"
+                <input type="number" step="0.1" name="preco_venda"
                     value="{{ isset($produto) ? $produto->preco_venda : old('preco_venda') ?? '' }}" class="form-control"
                     id="preco_venda">
                 @error('preco_venda')
@@ -56,7 +56,7 @@
                 @enderror
             </div>
 
-            <div class="col-5 ">
+            <div class="col-6 ">
                 <label for="exampleInputEmail1" class="form-label">Categoria</label>
                 <div class="input-group  ">
                     <select name="categoria"
@@ -113,7 +113,7 @@
                     <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
                 @enderror
             </div>
-            <div class="col-12">
+            <div class="col-6">
                 <label for="exampleInputEmail1" class="form-label">Responsável</label>
                 <input name="responsavel" class="form-control" id="responsavel" disabled value="{{ Auth::user()->name }}">
                 @error('responsavel')

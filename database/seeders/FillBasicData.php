@@ -6,6 +6,7 @@ use App\Models\Categoria;
 use App\Models\Estoque;
 use App\Models\Fornecedor;
 use App\Models\Localizacao;
+use App\Models\Lote;
 use App\Models\Marca;
 use App\Models\Produto;
 use App\Models\User;
@@ -162,14 +163,12 @@ class FillBasicData extends Seeder
         foreach (range(1, 9) as $numero) {
             $produto = [
                 'nome' => 'Produto' . $numero,
-                'codigo' => 'COD00' . $numero,
                 'descricao' => 'Descrição do Produto ' . $numero,
                 'unidade_medida' => 'kg',
                 'fornecedor_id' => $numero,
                 'marca_id' => $numero,
                 'categoria_id' => $numero,
-                'preco_custo' => 10.5,
-                'preco_venda' => 14.5,
+
                 'informacao_nutricional' => 'Informações nutricionais do Produto ' . $numero,
                 'created_by' => 1
             ];
@@ -179,14 +178,12 @@ class FillBasicData extends Seeder
         foreach (range(9, 1) as $numero) {
             $produto = [
                 'nome' => 'Produto Inverso' . $numero,
-                'codigo' => 'COD000' . $numero,
                 'descricao' => 'Descrição do Produto Inverso' . $numero,
                 'unidade_medida' => 'kg',
                 'fornecedor_id' => $numero,
                 'marca_id' => $numero,
                 'categoria_id' => $numero,
-                'preco_custo' => 10.5,
-                'preco_venda' => 14.5,
+
                 'informacao_nutricional' => 'Informações nutricionais do Produto Inverso' . $numero,
                 'created_by' => 1
             ];
@@ -194,14 +191,19 @@ class FillBasicData extends Seeder
             $produtosCadastrados[] = Produto::create($produto);
         }
         foreach ($produtosCadastrados as $produto) {
+            $lote = Lote::create([
+                'data_fabricacao' => Carbon::now()->subDays(3),
+                'data_validade' => Carbon::now()->addDays(4),
+                'data_entrada' => Carbon::now(),
+                'preco_custo_unitario' => 10,
+                'produto_id' => $produto->id,
+                'created_by' => 1
+            ]);
             foreach (range(1, 4) as $numero) {
                 $estoque = Estoque::create([
                     'produto_id' => $produto->id,
-                    'data_validade' => Carbon::now(),
-                    'lote' => 'LT001',
-                    'data_entrada' => Carbon::now(),
-                    'preco_custo' => $produto->preco_custo,
-                    'preco_venda' => $produto->preco_venda,
+                    'lote_id' => $lote->id,
+                    'preco_custo' => $lote->preco_custo_unitario,
                 ]);
 
                 $localizacao = Localizacao::create([

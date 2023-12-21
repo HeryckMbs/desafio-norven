@@ -28,7 +28,6 @@
             <tr>
                 <th>Id</th>
                 <th>Produto</th>
-                <th>Código</th>
                 <th>Descrição</th>
 
                 <th>Responsável</th>
@@ -44,8 +43,6 @@
                     <td>{{ $produto->id }}</td>
 
                     <td>{{ $produto->nome }}</td>
-                    <td>{{ $produto->codigo }}</td>
-                    {{-- <td>{{ \Carbon\Carbon::parse($produto->data_validade)->format('d/m/Y') }}</td> --}}
                     <td style="text-overflow: ellipsis">{{ $produto->descricao }}</td>
                     <td>{{ $produto->responsavel->name }}</td>
                     <td>{{ $produto->deleted_at == null ? 'Ativo' : 'Inativo' }}</td>

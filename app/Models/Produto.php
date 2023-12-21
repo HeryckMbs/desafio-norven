@@ -11,7 +11,6 @@ class Produto extends Model
     use SoftDeletes;
     protected $fillable = [
         "nome",
-        "codigo",
         "unidade_medida",
         "preco_custo",
         "preco_venda",
@@ -26,12 +25,12 @@ class Produto extends Model
     use HasFactory;
     public function getQuantidadeEmEstoqueAttribute()
     {
-        return $this->produtosEmEstoque->count();
+        return Estoque::where('produto_id',$this->id)->count();
     }
 
     public function produtosEmEstoque()
     {
-        return $this->hasMany(Estoque::class,);
+        return $this->hasMany(Estoque::class,)->where('deleted_at','=',null);
     }
 
     public function responsavel()

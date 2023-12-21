@@ -27,7 +27,7 @@
     @yield('styles')
 </head>
 
-<body class="hold-transition sidebar-mini">
+<body class="hold-transition sidebar-mini sidebar-collapse">
     <div class="wrapper">
 
         <!-- Navbar -->
@@ -67,7 +67,7 @@
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color:#1e0535">
             <!-- Brand Logo -->
             <a href="/home" class="brand-link">
                 <img src="{{ asset('images/AdminLTELogo.png') }}" alt="AdminLTE Logo"
@@ -83,11 +83,11 @@
             <div class="container-fluid">
                 <div class="content-header">
                     <div class="container-fluid">
-                        <div class="row mb-2 ">
-                            <div class="col-sm-9 ">
+                        <div class="row mb-2 d-flex justify-content-between">
+                            <div class="">
                                 <h1 class="m-0">@yield('title', 'Página Principal')</h1>
                             </div><!-- /.col -->
-                            <div class="col-sm-3 d-flex justify-content-between">
+                            <div class=" ">
                                 @yield('actions')
                             </div>
                         </div>
@@ -116,7 +116,7 @@
         <!-- /.content-wrapper -->
 
         <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark">
+        <aside class="control-sidebar control-sidebar-dark" >
             <!-- Control sidebar content goes here -->
             <div class="p-3">
                 <h5>Title</h5>
@@ -151,13 +151,17 @@
         src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
     <script src="/vendor/datatables/buttons.server-side.js"></script>
     <script src="{{ asset('js/adminlte.min.js') }}" defer></script>
-    
+
     @include('notify::components.notify')
     @yield('scripts')
     @notifyJs
     @stack('scripts')
 
     <script>
+        $(function() {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+
         const Toast = Swal.mixin({
             toast: true,
             position: "top-end",
@@ -172,7 +176,7 @@
         if (document.getElementById('messages') != null) {
             const messages = JSON.parse(document.getElementById('messages').value);
             for (let item in messages) {
-                for (let message of messages[item] ) {
+                for (let message of messages[item]) {
                     console.log({
                         icon: `${item}`,
                         title: `${message}`

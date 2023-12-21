@@ -25,12 +25,12 @@
             @foreach ($produtosCategoria as $produtoEmEstoque)
                 <tr>
                     <td>{{ $produtoEmEstoque->id }}</td>
-                    <td>{{ $produtoEmEstoque->produto->nome }}</td>
-                    <td>{{ $produtoEmEstoque->produto->codigo }}</td>
-                    <td>{{ \Carbon\Carbon::parse($produtoEmEstoque->produto->data_validade)->format('d/m/Y') }}</td>
-                    <td>{{ $produtoEmEstoque->produto->lote }}</td>
-                    <td>{{ $produtoEmEstoque->produto->responsavel->name }}</td>
-                    <td>{{ $produtoEmEstoque->produto->produtosEmEstoque->count() }}</td>
+                    <td>{{ $produtoEmEstoque->produtoRelacionado->nome }}</td>
+                    <td>{{ $produtoEmEstoque->produtoRelacionado->codigo }}</td>
+                    <td>{{ \Carbon\Carbon::parse($produtoEmEstoque->produtoRelacionado->data_validade)->format('d/m/Y') }}</td>
+                    <td>{{ $produtoEmEstoque->produtoRelacionado->lote }}</td>
+                    <td>{{ $produtoEmEstoque->produtoRelacionado->responsavel->name }}</td>
+                    <td>{{ $produtoEmEstoque->produtoRelacionado->produtosEmEstoque->count() }}</td>
                     <td class="d-flex  justify-content-center">
                         <button data-id="{{ $produtoEmEstoque->produto_id }}" type="button"
                             class="btn btn-primary infoProduto">
@@ -116,6 +116,7 @@
                 </div>
             </div>
         </div>
+    </div>
     @endsection
 
     @push('scripts')

@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('categoria_id');
             $table->foreign('categoria_id')->on('categorias')->references('id')->onDelete('cascade');
-            $table->unsignedBigInteger('estoque_id')->on('categorias')->references('id');
+            $table->unsignedBigInteger('estoque_id');
+            $table->foreign('estoque_id')->on('estoques')->references('id');
             $table->string('prateleira');
             $table->string('posicao');
             $table->softDeletes();

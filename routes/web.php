@@ -10,6 +10,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ManutencaoController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EstoqueController;
 use App\Http\Controllers\FornecedorController;
 use App\Http\Controllers\ProdutoController;
 use App\Models\Manutencao;
@@ -52,8 +53,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     
     Route::get('/produtoIndividual/{produto_id}',[ProdutoController::class,'getProdutoIndividual'])->name('produto.produto');
+    Route::get('/produtosCategoria/{categoria_id}',[CategoriaController::class,'produtosCategoria']);
 
-    Route::get('/produtosCategoria/{categoria_id}',[CategoriaController::class,'produtosCategoria'])->name('produtosCategoria.index');
+    Route::get('/produtosCategoriaEmEstoque/{categoria_id}',[CategoriaController::class,'produtosCategoriaEmEstoque'])->name('produtosCategoria.index');
     Route::get('/categoria/{categoria_id}',[CategoriaController::class,'getCategoria'])->name('categoria.categoria');
     Route::put('/categorias/{categoria_id}',[CategoriaController::class,'update'])->name('categoria.update');
     Route::get('/categorias',[CategoriaController::class,'index'])->name('categoria.index');
@@ -64,5 +66,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('fornecedor', FornecedorController::class);
     Route::resource('marca',MarcaController::class);
     Route::resource('produto',ProdutoController::class);
+    Route::resource('estoque',EstoqueController::class);
+    
+    Route::get('/produtoEstoqueInfo/{produto_estoque_id}',[EstoqueController::class,'getInfoProdutoEstoque']);
 
 });

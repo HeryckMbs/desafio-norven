@@ -4,18 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CategoriaRequest;
 use App\Models\Categoria;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class CategoriaController extends Controller
 {
+    public function produtosCategoriaEmEstoque(int $categoria_id)
+    {
+        $categoria = Categoria::find($categoria_id);
+        $produtosCategoria = $categoria->produtosEmEstoquePorCategoria->unique('produto_id');
+
+        return view('produtosCategoria.index', compact('produtosCategoria', 'categoria'));
+    }
     public function produtosCategoria(int $categoria_id)
     {
         $categoria = Categoria::find($categoria_id);
-        $produtosCategoria = $categoria->produtosEmEstoquePorCategoria->unique('produto.id');
-
-        return view('produtosCategoria.index', compact('produtosCategoria', 'categoria'));
+        $produtosCategoria = $categoria->produtos->map->only(['id','nome']);
+        return ['success' => true, 'data' => $produtosCategoria];
     }
 
     public function index()

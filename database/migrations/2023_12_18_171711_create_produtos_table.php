@@ -16,12 +16,8 @@ return new class extends Migration
         Schema::create('produtos', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->string('codigo')->unique();
             $table->text('descricao')->nullable();
 
-
-            $table->float('preco_custo');
-            $table->float('preco_venda');
             $table->string('unidade_medida');
             $table->unsignedBigInteger('fornecedor_id');
             $table->unsignedBigInteger('marca_id');

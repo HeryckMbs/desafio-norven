@@ -9,32 +9,31 @@
 
 
 @section('content')
-<div class="d-flex">
+    <div class="d-flex">
 
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+            </div>
+            <form class="mr-2" id="formSearch" action="{{ route('produto.index') }}" method="GET">
+                <input type="text" id="search" name="search" class="form-control" placeholder="" aria-label=""
+                    aria-describedby="basic-addon1">
+            </form>
+            <a href="{{ route('produto.index') }}" class="btn btn-primary">Limpar busca</a>
+
         </div>
-        <form class="mr-2" id="formSearch" action="{{route('produto.index')}}" method="GET">
-            <input type="text" id="search" name="search" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
-        </form>
-        <a href="{{ route('produto.index') }}" class="btn btn-primary">Limpar busca</a>
-
-      </div>
-    {{$produtos->links() }}
-</div>
+        {{ $produtos->links() }}
+    </div>
     <table id="produtosTable" class="table table-striped table-hover">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Produto</th>
-                <th>Código</th>
-                <th>Descrição</th>
+                <th>Nome</th>
+                <th>Categoria</th>
 
+                <th>Descrição</th>
                 <th>Responsável</th>
                 <th>Ativo</th>
-
-
                 <th class="text-center">Ações</th>
             </tr>
         </thead>
@@ -44,8 +43,8 @@
                     <td>{{ $produto->id }}</td>
 
                     <td>{{ $produto->nome }}</td>
-                    <td>{{ $produto->codigo }}</td>
-                    {{-- <td>{{ \Carbon\Carbon::parse($produto->data_validade)->format('d/m/Y') }}</td> --}}
+                    <td>{{ $produto->categoria->nome }}</td>
+
                     <td style="text-overflow: ellipsis">{{ $produto->descricao }}</td>
                     <td>{{ $produto->responsavel->name }}</td>
                     <td>{{ $produto->deleted_at == null ? 'Ativo' : 'Inativo' }}</td>
@@ -53,9 +52,9 @@
 
                     <td class="d-flex  justify-content-around">
                         @if ($produto->deleted_at == null)
-                        <button data-id="{{ $produto->id }}" type="button" class="btn btn-primary infoProduto mr-1">
-                            <i class="fas fa-info"></i>
-                        </button>
+                            <button data-id="{{ $produto->id }}" type="button" class="btn btn-primary infoProduto mr-1">
+                                <i class="fas fa-info"></i>
+                            </button>
                             <a href="{{ route('produto.edit', $produto->id) }}" type="button"
                                 class="btn btn-warning mr-1 "><i class="fas fa-edit"></i></a>
                             <form method="POST" action="{{ route('produto.destroy', $produto->id) }}"
@@ -71,10 +70,10 @@
                     </td>
                 </tr>
             @endforeach
-            <tfoot>
-                
+        <tfoot>
 
-            </tfoot>
+
+        </tfoot>
         </tbody>
     </table>
     <!-- Button trigger modal -->
@@ -106,15 +105,6 @@
                                 <input class="form-control" id="unidadeMedida" disabled>
                             </div>
 
-                            <div class="col-3">
-                                <label for="exampleInputEmail1" class="form-label">Preço de custo</label>
-                                <input class="form-control" id="precoCusto" disabled>
-                            </div>
-                            <div class="col-3">
-                                <label for="exampleInputEmail1" class="form-label">Preço de Venda</label>
-                                <input class="form-control" id="precoVenda" disabled>
-                            </div>
-
                             <div class="col-6">
                                 <label for="exampleInputEmail1" class="form-label">Fornecedor</label>
                                 <input class="form-control" id="fornecedorNome" disabled>
@@ -127,7 +117,7 @@
                                 <label for="exampleInputEmail1" class="form-label">Data de cadastro</label>
                                 <input class="form-control" id="dataCadastro" disabled>
                             </div>
-                            <div class="col-12">
+                            <div class="col-6">
                                 <label for="exampleInputEmail1" class="form-label">Responsável</label>
                                 <input class="form-control" id="responsavel" disabled>
                             </div>
@@ -161,7 +151,6 @@
 
 @push('scripts')
     <script>
-
         $('.infoProduto').on('click', function() {
             console.log(this)
             fetch(`/produtoIndividual/${this.dataset.id}`).then(async (response) => {
@@ -169,11 +158,10 @@
                 console.log(result)
                 document.getElementById('nomeProduto').textContent = result.data.nome
 
-                document.getElementById('codigoProduto').value = result.data.codigo
+                document.getElementById('codigoProduto').value = result.data.id
                 document.getElementById('quantidadeEstoque').value = result.data.quantidadeEmEstoque
                 document.getElementById('unidadeMedida').value = result.data.unidade_medida
-                document.getElementById('precoCusto').value = result.data.preco_custo
-                document.getElementById('precoVenda').value = result.data.preco_venda
+
                 document.getElementById('fornecedorNome').value = result.data.fornecedor.nome
                 document.getElementById('marca').value = result.data.marca.nome
 

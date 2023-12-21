@@ -1,18 +1,12 @@
 <!-- Sidebar -->
 <div class="sidebar">
-    <!-- Sidebar user panel (optional) -->
-    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="info">
-            <a href="{{ route('profile.show') }}" class="d-block">{{ Auth::user()->name }}</a>
-        </div>
-    </div>
 
     <!-- Sidebar Menu -->
     <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item">
                 <a href="{{ route('home') }}" class="nav-link">
-                    <i class="nav-icon fas fa-th"></i>
+                    <i class="nav-icon fa-solid fa-house"></i>
                     <p>
                         {{ __('Página Principal') }}
                     </p>
@@ -20,15 +14,16 @@
             </li>
             <li class="nav-item">
                 <a href="{{ route('categoria.index') }}" class="nav-link">
-                    <i class=" nav-icon  fas fa-sliders-h"></i>                    <p>
+                    <i class=" nav-icon fa-solid fa-list"></i>                    <p>
                         Categorias
                     </p>
+                    
                 </a>
             </li>
 
             <li class="nav-item">
                 <a href="{{ route('marca.index') }}" class="nav-link">
-                    <i class="nav-icon fas fa-wrench"></i>
+                    <i class="nav-icon fa-solid fa-copyright"></i>
                     <p>
                         Marcas
                     </p>
@@ -37,8 +32,7 @@
 
             <li class="nav-item">
                 <a href="{{ route('fornecedor.index') }}" class="nav-link">
-                    <i class="nav-icon fas fa-clipboard-list"></i>
-
+                    <i class="nav-icon fa-solid fa-business-time"></i>
                     <p>
                         Fornecedores
                     </p>
@@ -46,10 +40,17 @@
             </li>
             <li class="nav-item">
                 <a href="{{ route('produto.index') }}" class="nav-link">
-                    <i class="nav-icon fas fa-clipboard-list"></i>
-
+                    <i class="nav-icon fa-solid fa-barcode"></i>
                     <p>
                         Produtos
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('estoque.index') }}" class="nav-link">
+                    <i class="nav-icon fa-solid fa-box-open"></i>
+                    <p>
+                        Estoque
                     </p>
                 </a>
             </li>

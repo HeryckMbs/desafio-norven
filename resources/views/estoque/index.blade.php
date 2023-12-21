@@ -196,8 +196,7 @@
                     .nome
 
                 document.getElementById('codigoProduto').value = result.data.id
-                // document.getElementById('posicaoEstoque').value =
-                //     `${result.data.categoria_relacionada.id} - ${result.data.localizacao_estoque.prateleira} - ${result.data.localizacao_estoque.posicao} `
+                
                 document.getElementById('precoCusto').value = result.data.lote.preco_custo_unitario
                 document.getElementById('precoVenda').value = result.data.preco_venda
                 document.getElementById('fornecedorNome').value = result.data.fornecedor_relacionado

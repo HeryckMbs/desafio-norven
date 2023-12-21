@@ -14,10 +14,11 @@
             </li>
             <li class="nav-item">
                 <a href="{{ route('categoria.index') }}" class="nav-link">
-                    <i class=" nav-icon fa-solid fa-list"></i>                    <p>
+                    <i class=" nav-icon fa-solid fa-list"></i>
+                    <p>
                         Categorias
                     </p>
-                    
+
                 </a>
             </li>
 
@@ -54,7 +55,14 @@
                     </p>
                 </a>
             </li>
-
+            <li class="nav-item">
+                <a href="{{ route('venda.index') }}" class="nav-link">
+                    <i class="nav-icon fa-solid fa-cart-shopping"></i>
+                    <p>
+                        Venda
+                    </p>
+                </a>
+            </li>
         </ul>
     </nav>
     <!-- /.sidebar-menu -->

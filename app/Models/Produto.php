@@ -46,4 +46,8 @@ class Produto extends Model
     {
         return $this->hasOne(Marca::class, 'id', 'marca_id');
     }
+
+    public function categoria(){
+        return $this->hasOne(Categoria::class,'id','categoria_id');
+    }
 }

@@ -60,10 +60,7 @@ class ProdutoController extends Controller
 
         Produto::create([
             "nome" => $request->nome,
-            "codigo" => $request->codigo,
             "unidade_medida" => $request->unidade_medida,
-            "preco_custo" => (float) $request->preco_custo,
-            "preco_venda" => (float) $request->preco_venda,
             "categoria_id" => (int) $request->categoria,
             "marca_id" => (int) $request->marca,
             "fornecedor_id" => (int) $request->fornecedor,
@@ -113,10 +110,8 @@ class ProdutoController extends Controller
     {
         Produto::find($id)->update([
             "nome" => $request->nome,
-            "codigo" => $request->codigo,
             "unidade_medida" => $request->unidade_medida,
-            "preco_custo" => (float) $request->preco_custo,
-            "preco_venda" => (float) $request->preco_venda,
+
             "categoria_id" => (int) $request->categoria,
             "marca_id" => (int) $request->marca,
             "fornecedor_id" => (int) $request->fornecedor,

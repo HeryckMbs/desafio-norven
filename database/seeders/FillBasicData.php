@@ -203,7 +203,8 @@ class FillBasicData extends Seeder
                 $estoque = Estoque::create([
                     'produto_id' => $produto->id,
                     'lote_id' => $lote->id,
-                    'preco_custo' => $lote->preco_custo_unitario,
+                    'preco_venda' => 15,
+
                 ]);
 
                 $localizacao = Localizacao::create([

@@ -16,12 +16,11 @@ return new class extends Migration
         Schema::create('estoques', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('produto_id');
-            $table->foreign('produto_id')->on('produtos')->references('id')->onDelete('cascade');
+            $table->foreign('produto_id')->on('produtos')->references('id');
             
             $table->unsignedBigInteger('lote_id');
-            $table->foreign('lote_id')->on('lotes')->references('id')->onDelete('cascade');
+            $table->foreign('lote_id')->on('lotes')->references('id');
             $table->boolean('vendido')->default(false);
-            $table->float('preco_custo');
             $table->float('preco_venda')->default(0);
             $table->softDeletes();
             

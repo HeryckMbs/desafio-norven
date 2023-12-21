@@ -4,7 +4,7 @@
 
 @section('content')
     <form enctype="multipart/form-data"
-        action="{{ isset($produto) ? route('produto.update', $produto->id) : route('produto.store') }}" method="POST">
+        action="{{ isset($produto) ? route('estoque.update', $produto->id) : route('estoque.store') }}" method="POST">
         @csrf
         @if (isset($produto))
             @method('PUT')
@@ -30,7 +30,7 @@
                 @enderror
             </div>
             <div class="col-3 ">
-                <label for="exampleInputEmail1" class="form-label">Categoria</label>
+                <label for="exampleInputEmail1" class="form-label">Produto</label>
                 <div class="input-group  ">
                     <select id="produto" name="produto"
                         value="{{ isset($produto) ? $produto->categoria_id : old('categoria') ?? '' }}"
@@ -39,20 +39,29 @@
 
                     </select>
                 </div>
-                @error('categoria')
-                    <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
-                @enderror
-            </div>
-            <div class="col-3">
-                <label for="exampleInputEmail1" class="form-label">Quantidade de Produtos</label>
-                <input type="number" name="nome"
-                    value="{{ isset($produto) ? $produto->nome : (isset($produto) ? $produto->nome : old('nome') ?? '') }}"
-                    class="form-control" id="codigoProduto">
-                @error('nome')
+                @error('produto')
                     <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
                 @enderror
             </div>
 
+            <div class="col-3">
+                <div class="form-group">
+                    <label for="dataValidade">Data de Validade</label>
+                    <input type="date" class="form-control" id="dataValidade" name="dataValidade">
+                    @error('dataValidade')
+                        <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label for="dataValidade">Data de Fabricação</label>
+                    <input type="date" class="form-control" id="dataFabricacao" name="dataFabricacao">
+                    @error('dataFabricacao')
+                        <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
+                    @enderror
+                </div>
+            </div>
             <div class="col-3">
                 <label for="exampleInputEmail1" class="form-label">Preço de custo</label>
                 <input type="number" name="preco_custo"
@@ -62,13 +71,28 @@
                     <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
                 @enderror
             </div>
-
-            <div class="col-6">
-                <label for="exampleInputEmail1" class="form-label">Responsável</label>
-                <input name="responsavel" class="form-control" id="responsavel" disabled value="{{ Auth::user()->name }}">
-                @error('responsavel')
+            <div class="col-3">
+                <label for="exampleInputEmail1" class="form-label">Preço de venda estimado</label>
+                <input type="number" name="preco_venda"
+                    value="{{ isset($produto) ? $produto->preco_custo : old('preco_venda') ?? '' }}" class="form-control"
+                    id="preco_venda">
+                @error('preco_venda')
                     <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
                 @enderror
+            </div>
+            <div class="col-3">
+                <label for="exampleInputEmail1" class="form-label">Quantidade de Produtos</label>
+                <input type="number" name="quantidade"
+                    value="{{ isset($produto) ? $produto->nome : (isset($produto) ? $produto->nome : old('quantidade') ?? '') }}"
+                    class="form-control" id="codigoProduto">
+                @error('quantidade')
+                    <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
+                @enderror
+            </div>
+            <div class="col-3">
+                <label for="exampleInputEmail1" class="form-label">Responsável</label>
+                <input name="responsavel" class="form-control" id="responsavel" disabled value="{{ Auth::user()->name }}">
+
             </div>
 
 

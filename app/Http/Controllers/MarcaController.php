@@ -19,7 +19,7 @@ class MarcaController extends Controller
         ->when(request()->has('search'), function ($query) {
             $request = request()->all();
             return $query->where('nome', 'like', '%' . $request['search'] . '%');
-        })->paginate(4);
+        })->paginate(request()->paginacao ?? 10);
         return view('marca.index', compact('marcas'));
     }
 

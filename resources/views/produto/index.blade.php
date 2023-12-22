@@ -9,21 +9,33 @@
 
 
 @section('content')
-    <div class="d-flex">
+    <form class="d-flex flex-row justify-content-around" id="formSearch" action="{{ route('produto.index') }}" method="GET">
 
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
-            </div>
-            <form class="mr-2" id="formSearch" action="{{ route('produto.index') }}" method="GET">
-                <input type="text" id="search" name="search" class="form-control" placeholder="" aria-label=""
+
+            <div  class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                </div>
+                <input value="{{$_GET['search'] ?? ''}}" style="max-width: 150px" type="text" id="search" name="search" class="form-control mr-2" placeholder="" aria-label=""
                     aria-describedby="basic-addon1">
-            </form>
-            <a href="{{ route('produto.index') }}" class="btn btn-primary">Limpar busca</a>
+                <a href="{{ route('produto.index') }}" class="btn btn-primary">Limpar busca</a>
 
-        </div>
-        {{ $produtos->links() }}
-    </div>
+            </div>
+            <div class="d-flex">
+                <div class="input-group  ">
+                    <select id="paginacao" name="paginacao"
+                        class="custom-select mr-2" style="min-width: 80px" id="inputGroupSelect01">
+                        <option value="10" {{isset($_GET['paginacao']) && $_GET['paginacao'] == '10' ? 'selected':''}}>10</option>
+                        <option value="20" {{isset($_GET['paginacao']) && $_GET['paginacao'] == '20' ? 'selected':''}}>20</option>
+                        <option value="30" {{isset($_GET['paginacao']) && $_GET['paginacao'] == '30' ? 'selected':''}}>30</option>
+
+
+                    </select>
+                </div>
+                {{ $produtos->links() }}
+            </div>
+    </form>
+
     <table id="produtosTable" class="table table-striped table-hover">
         <thead>
             <tr>
@@ -84,16 +96,16 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="produtoModalLabel">
-                        <b><span id="nomeProduto"></span></b>
+                    <h5 class="modal-title" id="produtoModalLabel">Informações do produto: <b><span
+                                id="nomeProduto"></span></b>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="formProduto">
                         <div class="row">
-                            <div class="col-6">
-                                <label for="exampleInputEmail1" class="form-label">Código do Produto</label>
+                            <div class="col-2">
+                                <label for="exampleInputEmail1" class="form-label">Código</label>
                                 <input class="form-control" id="codigoProduto" disabled>
                             </div>
                             <div class="col-3">
@@ -101,15 +113,24 @@
                                 <input class="form-control" id="quantidadeEstoque" disabled>
                             </div>
                             <div class="col-3">
+                                <label for="exampleInputEmail1" class="form-label">Quantidade de entradas</label>
+                                <input class="form-control" id="qtdEntrada" disabled>
+                            </div>
+
+                            <div class="col-4">
+                                <label for="exampleInputEmail1" class="form-label">Quantidade de Saídas</label>
+                                <input class="form-control" id="qtdSaida" disabled>
+                            </div>
+                            <div class="col-3">
                                 <label for="exampleInputEmail1" class="form-label">Unidade de Medida</label>
                                 <input class="form-control" id="unidadeMedida" disabled>
                             </div>
 
-                            <div class="col-6">
+                            <div class="col-4">
                                 <label for="exampleInputEmail1" class="form-label">Fornecedor</label>
                                 <input class="form-control" id="fornecedorNome" disabled>
                             </div>
-                            <div class="col-6">
+                            <div class="col-5">
                                 <label for="exampleInputEmail1" class="form-label">Marca</label>
                                 <input class="form-control" id="marca" disabled>
                             </div>
@@ -145,8 +166,6 @@
     </div>
 
 
-
-
 @endsection
 
 @push('scripts')
@@ -155,12 +174,14 @@
             console.log(this)
             fetch(`/produtoIndividual/${this.dataset.id}`).then(async (response) => {
                 let result = await response.json();
-                console.log(result)
+
                 document.getElementById('nomeProduto').textContent = result.data.nome
 
                 document.getElementById('codigoProduto').value = result.data.id
                 document.getElementById('quantidadeEstoque').value = result.data.quantidadeEmEstoque
                 document.getElementById('unidadeMedida').value = result.data.unidade_medida
+                document.getElementById('qtdSaida').value = result.data.saidas
+                document.getElementById('qtdEntrada').value = result.data.entradas
 
                 document.getElementById('fornecedorNome').value = result.data.fornecedor.nome
                 document.getElementById('marca').value = result.data.marca.nome
@@ -182,6 +203,9 @@
             document.getElementById('formProduto').reset()
         })
         document.getElementById('search').addEventListener('change', function() {
+            document.getElementById('formSearch').submit()
+        })
+        document.getElementById('paginacao').addEventListener('change', function() {
             document.getElementById('formSearch').submit()
         })
     </script>

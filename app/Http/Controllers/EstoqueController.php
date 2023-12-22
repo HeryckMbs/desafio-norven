@@ -36,7 +36,7 @@ class EstoqueController extends Controller
             ->whereDoesntHave('lancamentos', function ($query3) {
                 $query3->where('tipo', 'Saida');
             })
-            ->paginate(8);
+            ->paginate(request()->paginacao ?? 10);
         return view('estoque.index', compact('produtosEmEstoque',));
     }
 

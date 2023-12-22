@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TipoLancamento;
 use App\Http\Requests\EstoqueRequest;
 use App\Models\Categoria;
-use App\Models\Estoque;
+use App\Models\Lancamento;
+use App\Models\ProdutoEstoque;
 use App\Models\Lote;
 use App\Models\Produto;
 use Carbon\Carbon;
@@ -21,7 +23,7 @@ class EstoqueController extends Controller
      */
     public function index()
     {
-        $produtosEmEstoque = Estoque::with(['produtoRelacionado', 'categoriaRelacionada'])->orderBy('id')
+        $produtosEmEstoque = ProdutoEstoque::with(['produtoRelacionado', 'categoriaRelacionada'])->orderBy('id')
             ->when(request()->has('search'), function ($query) {
                 $request = request()->all();
                 return $query->whereHas('categoriaRelacionada', function ($query1) use ($request) {
@@ -31,7 +33,9 @@ class EstoqueController extends Controller
                         ->orWhere('produtos.codigo', 'like', '%' . $request['search'] . '%');
                 });
             })
-            ->withTrashed()
+            ->whereDoesntHave('lancamentos', function ($query3) {
+                $query3->where('tipo', 'Saida');
+            })
             ->paginate(8);
         return view('estoque.index', compact('produtosEmEstoque',));
     }
@@ -61,18 +65,22 @@ class EstoqueController extends Controller
             $lote = Lote::create([
                 'data_fabricacao' => Carbon::parse($request->dataFabricacao),
                 'data_validade' => Carbon::parse($request->dataValidade),
-                'data_entrada' => Carbon::now(),
                 'preco_custo_unitario' => (float) $request->preco_custo,
                 'produto_id' => $produto->id,
                 'created_by' => Auth::id()
             ]);
 
             foreach (range(1, $request->quantidade) as $numero) {
-                Estoque::create([
+                $produtoEmEstoque = ProdutoEstoque::create([
                     'produto_id' => $produto->id,
                     'lote_id' => $lote->id,
-                    'preco_custo' => $lote->preco_custo_unitario,
                     'preco_venda' => $request->preco_venda,
+                ]);
+                Lancamento::create([
+                    'tipo' => TipoLancamento::Entrada,
+                    'produto_estoque_id'=> $produtoEmEstoque->id,
+                    'created_by' => Auth::id()
+
                 ]);
             }
 
@@ -131,19 +139,23 @@ class EstoqueController extends Controller
 
     public function getInfoProdutoEstoque(int $produto_estoque_id)
     {
-        $produto = Estoque::with([
+        $produto = ProdutoEstoque::with([
             'lote',
             'produtoRelacionado',
             'categoriaRelacionada',
-            'localizacaoEstoque',
             'marcaRelacionada',
             'fornecedorRelacionado'
-        ])
-            ->where('id', '=', $produto_estoque_id)->withTrashed()->first();
+        ])->where('id', '=', $produto_estoque_id)->withTrashed()->first();
         $produto->lucro = (($produto->preco_venda / $produto->lote->preco_custo_unitario) * 100) - 100;
-        $produto->diasVendido = Carbon::parse($produto->lote->data_entrada)->diffInDays($produto->deleted_at);
-        $produto->diasVencimento = Carbon::now()->diffInDays($produto->lote->data_validade);
+        $produto->diasVendido = Carbon::parse($produto->lote->data_entrada)->diffInDays($produto->data_venda);
 
         return response()->json(['success' => true, 'data' => $produto], 200);
+    }
+
+    public function getProduto(int $produto_estoque_id)
+    {
+        $produtoEstoque = ProdutoEstoque::with(['produtoRelacionado'])->where('id', $produto_estoque_id)->first();
+        $data = ['id' => $produtoEstoque->id, 'nome' => $produtoEstoque->produtoRelacionado->nome];
+        return response()->json(['success' => true, 'data' => $data], 200);
     }
 }

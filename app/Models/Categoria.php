@@ -18,7 +18,7 @@ class Categoria extends Model
     }
 
     public function produtosEmEstoquePorCategoria(){
-        return $this->hasManyThrough(Estoque::class,Produto::class);
+        return $this->hasManyThrough(ProdutoEstoque::class,Produto::class);
         // $produtosPorCategoria= [];
         // foreach($this->produtos as $produto){
         //     $produtosPorCategoria[$produto->id] = $produto->produtosEmEstoque;

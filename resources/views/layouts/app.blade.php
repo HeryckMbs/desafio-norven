@@ -84,8 +84,8 @@
                 <div class="content-header">
                     <div class="container-fluid">
                         <div class="row mb-2 d-flex justify-content-between">
-                            <div class="">
-                                <h1 class="m-0">@yield('title', 'Página Principal')</h1>
+                            <div class="d-flex justify-content around align-items-center">
+                                <h1 class="mr-3">@yield('title', 'Página Principal')</h1> @yield('tooltip')
                             </div><!-- /.col -->
                             <div class=" ">
                                 @yield('actions')

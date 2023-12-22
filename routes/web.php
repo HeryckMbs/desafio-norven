@@ -12,9 +12,12 @@ use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EstoqueController;
 use App\Http\Controllers\FornecedorController;
+use App\Http\Controllers\LancamentoController;
 use App\Http\Controllers\ProdutoController;
+use App\Http\Controllers\VendaController;
 use App\Models\Manutencao;
 use App\Models\Marca;
+use App\Models\ProdutoEstoque;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +34,7 @@ use Illuminate\Support\Facades\DB;
 */
 
 Route::get('/', function () {
-    return view('auth.login');
+    
 });
 Route::get('/welcome', function () {
     return view('welcome');
@@ -67,7 +70,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('marca',MarcaController::class);
     Route::resource('produto',ProdutoController::class);
     Route::resource('estoque',EstoqueController::class);
-    
+    Route::resource('venda',VendaController::class);
+    Route::resource('lancamento',LancamentoController::class);
+
     Route::get('/produtoEstoqueInfo/{produto_estoque_id}',[EstoqueController::class,'getInfoProdutoEstoque']);
+    Route::get('/getProduto/{produto_estoque_id}',[EstoqueController::class,'getProduto']);
 
 });

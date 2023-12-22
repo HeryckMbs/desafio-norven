@@ -13,16 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('lotes', function (Blueprint $table) {
+        Schema::create('lancamentos', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('data_fabricacao');
-            $table->dateTime('data_validade');
-            $table->float('preco_custo_unitario');
-            $table->unsignedBigInteger('produto_id');
-            $table->foreign('produto_id')->on('produtos')->references('id')->onDelete('cascade');
-            $table->unsignedBigInteger('created_by');
+            $table->enum('tipo', ['Entrada', 'Saida']);
+            $table->unsignedBigInteger('produto_estoque_id');
+            $table->foreign('produto_estoque_id')->on('produto_estoques')->references('id');
             $table->foreign('created_by')->on('users')->references('id');
-            $table->softDeletes();
+            $table->unsignedBigInteger('created_by');
+
             $table->timestamps();
         });
     }
@@ -34,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lotes');
+        Schema::dropIfExists('lancamentos');
     }
 };

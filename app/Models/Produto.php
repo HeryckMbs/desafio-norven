@@ -25,12 +25,12 @@ class Produto extends Model
     use HasFactory;
     public function getQuantidadeEmEstoqueAttribute()
     {
-        return Estoque::where('produto_id',$this->id)->count();
+        return ProdutoEstoque::where('produto_id',$this->id)->count();
     }
 
     public function produtosEmEstoque()
     {
-        return $this->hasMany(Estoque::class,)->where('deleted_at','=',null);
+        return $this->hasMany(ProdutoEstoque::class,)->where('deleted_at','=',null);
     }
 
     public function responsavel()

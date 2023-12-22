@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Estoque extends Model
+class ProdutoEstoque extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
     protected $guarded = [];
     protected $appends = ['diasAteVencimento'];
     use HasFactory;
@@ -34,11 +35,12 @@ class Estoque extends Model
         return $this->hasOneThrough(Categoria::class,Produto::class,'id','id','produto_id','categoria_id');
     }
 
-    public function localizacaoEstoque(){
-        return $this->hasOne(Localizacao::class);
-    }
 
     public function lote(){
         return $this->hasOne(Lote::class,'id','lote_id');
+    }
+
+    public function lancamentos(){
+        return $this->hasMany(Lancamento::class);
     }
 }

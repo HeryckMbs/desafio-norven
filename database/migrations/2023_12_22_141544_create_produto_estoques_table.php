@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('estoques', function (Blueprint $table) {
+        Schema::create('produto_estoques', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('produto_id');
             $table->foreign('produto_id')->on('produtos')->references('id');
-            
+            $table->dateTime('data_venda')->nullable();
             $table->unsignedBigInteger('lote_id');
             $table->foreign('lote_id')->on('lotes')->references('id');
             $table->boolean('vendido')->default(false);
@@ -35,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('estoques');
+        Schema::dropIfExists('produto_estoques');
     }
 };

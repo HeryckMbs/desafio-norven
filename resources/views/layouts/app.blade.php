@@ -69,10 +69,10 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color:#1e0535">
             <!-- Brand Logo -->
-            <a href="/home" class="brand-link">
-                <img src="{{ asset('images/AdminLTELogo.png') }}" alt="AdminLTE Logo"
-                    class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">Controle de Estoque</span>
+            <a  href="/home" class="brand-link  d-flex align-items-center flex-column">
+                <img   src="https://norven.com.br/wp-content/themes/norven/images/logo-footer.png" alt="AdminLTE Logo"
+                    class="" style="opacity: .8">
+                <span class="brand-text d-none text-center font-weight-light">Controle de Estoque</span>
             </a>
 
             @include('layouts.navigation')

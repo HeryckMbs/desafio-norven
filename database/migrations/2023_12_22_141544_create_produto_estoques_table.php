@@ -17,10 +17,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('produto_id');
             $table->foreign('produto_id')->on('produtos')->references('id');
-            $table->dateTime('data_venda')->nullable();
             $table->unsignedBigInteger('lote_id');
             $table->foreign('lote_id')->on('lotes')->references('id');
-            $table->boolean('vendido')->default(false);
             $table->float('preco_venda')->default(0);
             $table->softDeletes();
             

@@ -14,7 +14,7 @@
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text" id="basic-addon1">Código do produto
-                
+
                 </span>
             </div>
             <form class="mr-2" id="formSearch" action="{{ route('lancamento.index') }}" method="GET">
@@ -54,10 +54,10 @@
                         {{ str_pad($lancamento->produto_estoque_id, 4, '0', STR_PAD_LEFT) }}
                     </td>
                     <td>
-                        {{$lancamento->produtoEmEstoque->produtoRelacionado->nome}}
+                        {{ $lancamento->produtoEmEstoque->produtoRelacionado->nome }}
                     </td>
                     <td>
-                        {{\Carbon\Carbon::parse($lancamento->created_at)->format('d/m/Y H:i')}}
+                        {{ \Carbon\Carbon::parse($lancamento->created_at)->format('d/m/Y H:i') }}
                     </td>
                 </tr>
             @endforeach
@@ -206,27 +206,26 @@
                 let dataValidade = new Date(Date.parse(result.data.lote.data_validade));
                 document.getElementById('dataValidade').value =
                     `${dataValidade.getDate()}/${dataValidade.getMonth()}/${dataValidade.getFullYear()}`
-                if (result.data.vendido) {
-                    const lucro = result.data.lucro
-                    if (lucro > 0) {
-                        document.getElementById('lucroVenda').classList.add("bg-success")
-                        document.getElementById('lucroVenda').textContent =
-                            `Lucro de ${lucro.toFixed(2)}%`
-                    } else {
-                        document.getElementById('lucroVenda').classList.add("bg-danger")
-                        document.getElementById('lucroVenda').textContent =
-                            `Prejuízo de ${lucro.toFixed(2)}%`
-                    }
-
-                    let date = new Date(Date.parse(result.data.deleted_at));
-                    document.getElementById('dataVenda').value =
-                        `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
-
-                    document.getElementById('lucroVenda').classList.remove("d-none")
-                    document.getElementById('diasVendido').textContent = result.data.diasVendido;
-                    document.getElementById('diasVendido').parentNode.classList.remove("d-none")
-
+                const lucro = result.data.lucro
+                if (lucro > 0) {
+                    document.getElementById('lucroVenda').classList.add("bg-success")
+                    document.getElementById('lucroVenda').textContent =
+                        `Lucro de ${lucro.toFixed(2)}%`
+                } else {
+                    document.getElementById('lucroVenda').classList.add("bg-danger")
+                    document.getElementById('lucroVenda').textContent =
+                        `Prejuízo de ${lucro.toFixed(2)}%`
                 }
+
+                let date = new Date(Date.parse(result.data.deleted_at));
+                document.getElementById('dataVenda').value =
+                    `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+
+                document.getElementById('lucroVenda').classList.remove("d-none")
+                document.getElementById('diasVendido').textContent = result.data.diasVendido;
+                document.getElementById('diasVendido').parentNode.classList.remove("d-none")
+
+
 
                 if (result.data.diasVencimento <= 0) {
                     document.getElementById('produtoVencido').classList.add("bg-danger")

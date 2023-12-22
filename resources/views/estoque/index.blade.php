@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Estoque de produtos')
 @section('tooltip' )
-<i class="fa-solid fa-2x fa-circle-info"></i>
+<i class="fa-solid fa-2x fa-circle-info" data-toggle="tooltip"
+data-placement="top" title="Produtos que estão em estoque (sem lançamento de saída)"></i>
 @endsection
 @section('actions')
     <a href="{{ route('estoque.create') }}" class="btn btn-primary">
@@ -80,7 +81,7 @@
                 <div class="modal-body">
                     <form id="formProduto">
                         <div class="row">
-                            <div class="col-1">
+                            <div class="col-3">
                                 <label for="exampleInputEmail1" class="form-label">Código</label>
                                 <input class="form-control" id="codigoProduto" disabled>
                             </div>
@@ -98,11 +99,11 @@
                                 <input class="form-control" id="unidadeMedida" disabled>
                             </div>
 
-                            <div class="col-3">
+                            <div class="col-2">
                                 <label for="exampleInputEmail1" class="form-label">Preço de custo</label>
                                 <input class="form-control" id="precoCusto" disabled>
                             </div>
-                            <div class="col-3">
+                            <div class="col-2">
                                 <label for="exampleInputEmail1" class="form-label">Preço de Venda</label>
                                 <input class="form-control" id="precoVenda" disabled>
                             </div>
@@ -127,15 +128,12 @@
                                 <label for="exampleInputEmail1" class="form-label">Data de validade</label>
                                 <input class="form-control" id="dataValidade" disabled>
                             </div>
-                            <div class="col-3">
+                            <div class="col-6">
                                 <label for="exampleInputEmail1" class="form-label">Data de Entrada</label>
                                 <input class="form-control" id="dataEntrada" disabled>
                             </div>
 
-                            <div class="col-3">
-                                <label for="exampleInputEmail1" class="form-label">Data de Venda</label>
-                                <input class="form-control" id="dataVenda" disabled>
-                            </div>
+                           
 
                             <div class="col-6 ">
                                 <div class="form-floating">
@@ -152,9 +150,7 @@
 
                         </div>
                         <div class=" d-flex flex-row bg-light mt-2 p-2 rounded">
-                            <div class="d-none bg-success rounded px-2 py-1 mr-1">Vendido em <span
-                                    id="diasVendido"></span> dia(s)
-                            </div>
+          
                             <div class="d-none  rounded px-2 py-1 mr-1" id="lucroVenda"> </div>
                             <div class="d-none  rounded px-2 py-1 mr-1" id="produtoVencido"></div>
 
@@ -196,14 +192,14 @@
                 document.getElementById('marca').value = result.data.marca_relacionada.nome
                 document.getElementById('categoriaProduto').value = result.data.categoria_relacionada
                     .nome
-                let dataEntrada = new Date(Date.parse(result.data.lote.data_entrada));
+                let dataEntrada = new Date(Date.parse(result.data.lote.created_at));
                 document.getElementById('dataEntrada').value =
                     `${dataEntrada.getDate()}/${dataEntrada.getMonth()}/${dataEntrada.getFullYear()}`
 
                 let dataValidade = new Date(Date.parse(result.data.lote.data_validade));
                 document.getElementById('dataValidade').value =
                     `${dataValidade.getDate()}/${dataValidade.getMonth()}/${dataValidade.getFullYear()}`
-                if (result.data.vendido) {
+
                     const lucro = result.data.lucro
                     if (lucro > 0) {
                         document.getElementById('lucroVenda').classList.add("bg-success")
@@ -214,18 +210,12 @@
                         document.getElementById('lucroVenda').textContent =
                             `Prejuízo de ${lucro.toFixed(2)}%`
                     }
-
-                    let date = new Date(Date.parse(result.data.deleted_at));
-                    document.getElementById('dataVenda').value =
-                        `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
-
                     document.getElementById('lucroVenda').classList.remove("d-none")
-                    document.getElementById('diasVendido').textContent = result.data.diasVendido;
-                    document.getElementById('diasVendido').parentNode.classList.remove("d-none")
+             
 
-                }
+                
 
-                if (result.data.diasVencimento <= 0) {
+                if (result.data.diasAteVencimento <= 0) {
                     document.getElementById('produtoVencido').classList.add("bg-danger")
                     document.getElementById('produtoVencido').classList.remove("bg-info")
 
@@ -236,7 +226,7 @@
                     document.getElementById('produtoVencido').classList.remove("bg-danger")
 
                     document.getElementById('produtoVencido').textContent =
-                        `Vence em ${result.data.diasVencimento} dia(s)`
+                        `Vence em ${result.data.diasAteVencimento} dia(s)`
                 }
                 document.getElementById('produtoVencido').classList.remove("d-none")
 
@@ -256,7 +246,6 @@
         document.getElementById('produtoModal').addEventListener('hide.bs.modal', function() {
             console.log('a')
             document.getElementById('formProduto').reset()
-            document.getElementById('diasVendido').parentNode.classList.add("d-none")
             document.getElementById('lucroVenda').classList.add("d-none")
             document.getElementById('produtoVencido').classList.add("d-none")
 

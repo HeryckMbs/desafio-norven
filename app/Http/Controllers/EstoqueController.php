@@ -147,7 +147,6 @@ class EstoqueController extends Controller
             'fornecedorRelacionado'
         ])->where('id', '=', $produto_estoque_id)->withTrashed()->first();
         $produto->lucro = (($produto->preco_venda / $produto->lote->preco_custo_unitario) * 100) - 100;
-        $produto->diasVendido = Carbon::parse($produto->lote->data_entrada)->diffInDays($produto->data_venda);
 
         return response()->json(['success' => true, 'data' => $produto], 200);
     }

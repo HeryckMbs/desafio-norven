@@ -14,7 +14,7 @@ class CategoriaController extends Controller
     public function produtosCategoriaEmEstoque(int $categoria_id)
     {
         $categoria = Categoria::find($categoria_id);
-        $produtosCategoria = $categoria->produtosEmEstoquePorCategoria->unique('produto_id');
+        $produtosCategoria = $categoria->produtos;
 
         return view('produtosCategoria.index', compact('produtosCategoria', 'categoria'));
     }

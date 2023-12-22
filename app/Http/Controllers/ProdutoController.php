@@ -140,7 +140,10 @@ class ProdutoController extends Controller
 
     public function getProdutoIndividual(int $produto_id)
     {
-        $produto = Produto::with(['fornecedor', 'marca', 'responsavel'])->where('id', '=', $produto_id)->first();
+        $produto = Produto::with(['fornecedor', 'marca', 'responsavel']
+        )->where('id', '=', $produto_id)->first();
+        $produto->saidas = $produto->produtosSairamEstoque->count();
+        $produto->entradas = $produto->produtosEntraramEstoque->count();
         return response()->json(['success' => true, 'data' => $produto], 200);
     }
 }

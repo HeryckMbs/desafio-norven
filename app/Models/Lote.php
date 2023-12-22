@@ -10,4 +10,9 @@ class Lote extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function responsavel()
+    {
+        return $this->hasOne(User::class, 'id', 'created_by');
+    }
 }

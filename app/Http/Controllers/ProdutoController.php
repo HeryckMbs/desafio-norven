@@ -25,10 +25,11 @@ class ProdutoController extends Controller
             ->when(request()->has('search') && request()->search != '', function ($query) {
                 $request = request()->all();
                 return $query->where('nome', 'like', '%' . $request['search'] . '%')
-                    ->orWhere('codigo', 'like', '%' . $request['search'] . '%')
                     ->orWhere('descricao', 'like', '%' . $request['search'] . '%')
                     ->orWhereHas('responsavel', function ($query) use ($request) {
                         $query->where('nome', 'like', '%' . $request['search'] . '%');
+                    })->orWhereHas('categoria',function($query) use($request){
+                        $query->where('categorias.nome', 'like', '%' . $request['search'] . '%');
                     });
             })
             ->withTrashed()

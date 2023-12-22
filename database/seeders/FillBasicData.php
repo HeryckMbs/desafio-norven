@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Enums\TipoLancamento;
 use App\Models\Categoria;
-use App\Models\Estoque;
+use App\Models\ProdutoEstoque;
 use App\Models\Fornecedor;
-use App\Models\Localizacao;
+use App\Models\Lancamento;
 use App\Models\Lote;
 use App\Models\Marca;
 use App\Models\Produto;
@@ -159,59 +160,53 @@ class FillBasicData extends Seeder
         foreach ($marcas_alimenticias as $marca) {
             Marca::create($marca);
         }
+        $produtos = [
+            1 => 'Sucrilhos',
+            2 => 'Couve',
+            3 => 'Maçã',
+            4 => 'Feijão',
+            5 => 'Picanha',
+            6 => 'Queijo',
+            7 => 'Azeite',
+            8 => 'Açucar mascavo'
+        ];
+
         $produtosCadastrados = [];
-        foreach (range(1, 9) as $numero) {
+        foreach (range(1, 8) as $numero) {
             $produto = [
-                'nome' => 'Produto' . $numero,
-                'descricao' => 'Descrição do Produto ' . $numero,
+                'nome' =>  $produtos[$numero],
+                'descricao' => 'Descrição do '. $produtos[$numero],
                 'unidade_medida' => 'kg',
                 'fornecedor_id' => $numero,
                 'marca_id' => $numero,
                 'categoria_id' => $numero,
 
-                'informacao_nutricional' => 'Informações nutricionais do Produto ' . $numero,
+                'informacao_nutricional' => 'Informações nutricionais do Produto ' .  $produtos[$numero],
                 'created_by' => 1
             ];
 
             $produtosCadastrados[] = Produto::create($produto);
         }
-        foreach (range(9, 1) as $numero) {
-            $produto = [
-                'nome' => 'Produto Inverso' . $numero,
-                'descricao' => 'Descrição do Produto Inverso' . $numero,
-                'unidade_medida' => 'kg',
-                'fornecedor_id' => $numero,
-                'marca_id' => $numero,
-                'categoria_id' => $numero,
 
-                'informacao_nutricional' => 'Informações nutricionais do Produto Inverso' . $numero,
-                'created_by' => 1
-            ];
-
-            $produtosCadastrados[] = Produto::create($produto);
-        }
         foreach ($produtosCadastrados as $produto) {
             $lote = Lote::create([
                 'data_fabricacao' => Carbon::now()->subDays(3),
                 'data_validade' => Carbon::now()->addDays(4),
-                'data_entrada' => Carbon::now(),
                 'preco_custo_unitario' => 10,
                 'produto_id' => $produto->id,
                 'created_by' => 1
             ]);
             foreach (range(1, 4) as $numero) {
-                $estoque = Estoque::create([
+                $estoque = ProdutoEstoque::create([
                     'produto_id' => $produto->id,
                     'lote_id' => $lote->id,
                     'preco_venda' => 15,
-
                 ]);
+                $lancamento = Lancamento::create([
+                    'tipo' => TipoLancamento::Entrada,
+                    'produto_estoque_id' => $estoque->id,
+                    'created_by' => 1
 
-                $localizacao = Localizacao::create([
-                    'categoria_id' => $produto->categoria_id,
-                    'prateleira' => $produto->categoria_id,
-                    'posicao' => $numero,
-                    'estoque_id' => $estoque->id
                 ]);
             }
         }

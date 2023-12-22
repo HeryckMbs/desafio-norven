@@ -1,60 +1,63 @@
 @extends('layouts.app')
-@section('title', 'Estoque de produtos')
-@section('tooltip' )
-<i class="fa-solid fa-2x fa-circle-info"></i>
-@endsection
+@section('title', 'Lançamentos')
+
 @section('actions')
-    <a href="{{ route('estoque.create') }}" class="btn btn-primary">
-        Cadastrar produto no estoque
+    <a href="{{ route('lancamento.create') }}" class="btn btn-primary">
+        Cadastrar saída
     </a>
 @endsection
 
 
 @section('content')
     <div class="d-flex">
+
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                <span class="input-group-text" id="basic-addon1">Código do produto
+                
+                </span>
             </div>
-            <form class="mr-2" id="formSearch" action="{{ route('estoque.index') }}" method="GET">
+            <form class="mr-2" id="formSearch" action="{{ route('lancamento.index') }}" method="GET">
                 <input type="text" id="search" name="search" class="form-control" placeholder="" aria-label=""
                     aria-describedby="basic-addon1">
             </form>
-            <a href="{{ route('estoque.index') }}" class="btn btn-primary">Limpar busca</a>
+            <a href="{{ route('lancamento.index') }}" class="btn btn-primary">Limpar busca</a>
 
         </div>
 
-        {{ $produtosEmEstoque->links() }}
+        {{ $lancamentos->links() }}
     </div>
     <table id="produtosTable" class="table table-striped table-hover">
         <thead>
             <tr>
                 <th> Código</th>
-                <th>Nome</th>
-                <th>Preço de custo</th>
-                <th>Preço de venda</th>
-                <th>Data de entrada</th>
+                <th>Tipo</th>
+                <th>Código do produto</th>
+                <th>Nome do produto</th>
+
+                <th>Data Operação</th>
 
 
 
-                <th class="text-center">Ações</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($produtosEmEstoque as $produto)
+            @foreach ($lancamentos as $lancamento)
                 <tr>
-                    <td>{{ str_pad($produto->id , 4 , '0' , STR_PAD_LEFT) }}</td>
+                    <td>{{ str_pad($lancamento->id, 4, '0', STR_PAD_LEFT) }}</td>
 
-                    <td>{{ $produto->produtoRelacionado->nome }}</td>
-                    <td>{{ $produto->lote->preco_custo_unitario }}</td>
-                    <td>{{ $produto->preco_venda }}</td>
-                    <td>{{ \Carbon\Carbon::parse($produto->lote->created_at)->format('d/m/Y H:i') }}</td>
-
-                    <td class="d-flex  justify-content-around">
-                        <button data-id="{{ $produto->id }}" type="button" class="btn btn-primary infoProduto mr-1">
-                            <i class="fas fa-info"></i>
-                        </button>
-
+                    <td>{!! \App\Enums\TipoLancamento::from($lancamento->tipo) == \App\Enums\TipoLancamento::Entrada
+                        ? '<span class="bg-success p-1 rounded">Entrada</span>'
+                        : '<span class="bg-danger p-1 rounded">Saída</span>' !!}</td>
+                    </td>
+                    <td>
+                        {{ str_pad($lancamento->produto_estoque_id, 4, '0', STR_PAD_LEFT) }}
+                    </td>
+                    <td>
+                        {{$lancamento->produtoEmEstoque->produtoRelacionado->nome}}
+                    </td>
+                    <td>
+                        {{\Carbon\Carbon::parse($lancamento->created_at)->format('d/m/Y H:i')}}
                     </td>
                 </tr>
             @endforeach
@@ -184,7 +187,7 @@
                     .nome
 
                 document.getElementById('codigoProduto').value = result.data.id
-                
+
                 document.getElementById('precoCusto').value = result.data.lote.preco_custo_unitario
                 document.getElementById('precoVenda').value = result.data.preco_venda
                 document.getElementById('fornecedorNome').value = result.data.fornecedor_relacionado
@@ -265,7 +268,5 @@
         document.getElementById('search').addEventListener('change', function() {
             document.getElementById('formSearch').submit()
         })
-
-
     </script>
 @endpush

@@ -56,10 +56,9 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('venda.index') }}" class="nav-link">
-                    <i class="nav-icon fa-solid fa-cart-shopping"></i>
-                    <p>
-                        Venda
+                <a href="{{ route('lancamento.index') }}" class="nav-link">
+                    <i class="nav-icon fa-solid fa-truck-ramp-box"></i>                    <p>
+                        Lançamentos
                     </p>
                 </a>
             </li>

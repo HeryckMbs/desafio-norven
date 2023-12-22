@@ -13,27 +13,26 @@
             <tr>
                 <th>Id</th>
                 <th>Produto</th>
-                <th>Código</th>
-                <th>Data de Validade</th>
-                <th>Lote</th>
-                <th>Responsável</th>
-                <th>Quantidade em estoque</th>
+                <th>Marca</th>
+                <th>Fornecedor</th>
+                <th>Criado por</th>
+
                 <th class="d-flex justify-content-center">Informações</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($produtosCategoria as $produtoEmEstoque)
+            @foreach ($produtosCategoria as $produto)
                 <tr>
-                    <td>{{ $produtoEmEstoque->id }}</td>
-                    <td>{{ $produtoEmEstoque->produtoRelacionado->nome }}</td>
-                    <td>{{ $produtoEmEstoque->produtoRelacionado->codigo }}</td>
-                    <td>{{ \Carbon\Carbon::parse($produtoEmEstoque->produtoRelacionado->data_validade)->format('d/m/Y') }}</td>
-                    <td>{{ $produtoEmEstoque->produtoRelacionado->lote }}</td>
-                    <td>{{ $produtoEmEstoque->produtoRelacionado->responsavel->name }}</td>
-                    <td>{{ $produtoEmEstoque->produtoRelacionado->produtosEmEstoque->count() }}</td>
+                    <td>{{ $produto->id }}</td>
+                    <td>{{ $produto->nome }}</td>
+                    <td>{{ $produto->marca->nome }}</td>
+
+                    <td>{{ $produto->fornecedor->nome }}</td>
+
+                    <td>{{ $produto->responsavel->name }}</td>
+
                     <td class="d-flex  justify-content-center">
-                        <button data-id="{{ $produtoEmEstoque->produto_id }}" type="button"
-                            class="btn btn-primary infoProduto">
+                        <button data-id="{{ $produto->id }}" type="button" class="btn btn-primary infoProduto">
                             <i class="fas fa-info"></i>
                         </button>
                     </td>
@@ -43,6 +42,10 @@
     </table>
     <!-- Button trigger modal -->
 
+    {{-- <td>{{ $produto->quantidadeEmEstoque }}</td>
+    <td>{{ $produto->produtosEntraramEstoque->count()}}</td>
+    <td>{{ $produto->produtosSairamEstoque->count()}}</td>
+     --}}
 
     <!-- Modal -->
     <div class="modal fade" id="produtoModal" tabindex="-1" aria-labelledby="produtoModalLabel" aria-hidden="true">
@@ -56,9 +59,9 @@
                 </div>
                 <div class="modal-body">
                     <form id="formProduto">
-                    <div class="row">
-                            <div class="col-6">
-                                <label for="exampleInputEmail1" class="form-label">Código do Produto</label>
+                        <div class="row">
+                            <div class="col-2">
+                                <label for="exampleInputEmail1" class="form-label">Código</label>
                                 <input class="form-control" id="codigoProduto" disabled>
                             </div>
                             <div class="col-3">
@@ -66,24 +69,24 @@
                                 <input class="form-control" id="quantidadeEstoque" disabled>
                             </div>
                             <div class="col-3">
+                                <label for="exampleInputEmail1" class="form-label">Quantidade de entradas</label>
+                                <input class="form-control" id="qtdEntrada" disabled>
+                            </div>
+
+                            <div class="col-4">
+                                <label for="exampleInputEmail1" class="form-label">Quantidade de Saídas</label>
+                                <input class="form-control" id="qtdSaida" disabled>
+                            </div>
+                            <div class="col-3">
                                 <label for="exampleInputEmail1" class="form-label">Unidade de Medida</label>
                                 <input class="form-control" id="unidadeMedida" disabled>
                             </div>
-    
-                            <div class="col-3">
-                                <label for="exampleInputEmail1" class="form-label">Preço de custo</label>
-                                <input class="form-control" id="precoCusto" disabled>
-                            </div>
-                            <div class="col-3">
-                                <label for="exampleInputEmail1" class="form-label">Preço de Venda</label>
-                                <input class="form-control" id="precoVenda" disabled>
-                            </div>
-    
-                            <div class="col-6">
+
+                            <div class="col-4">
                                 <label for="exampleInputEmail1" class="form-label">Fornecedor</label>
                                 <input class="form-control" id="fornecedorNome" disabled>
                             </div>
-                            <div class="col-6">
+                            <div class="col-5">
                                 <label for="exampleInputEmail1" class="form-label">Marca</label>
                                 <input class="form-control" id="marca" disabled>
                             </div>
@@ -91,7 +94,7 @@
                                 <label for="exampleInputEmail1" class="form-label">Data de cadastro</label>
                                 <input class="form-control" id="dataCadastro" disabled>
                             </div>
-                            <div class="col-12">
+                            <div class="col-6">
                                 <label for="exampleInputEmail1" class="form-label">Responsável</label>
                                 <input class="form-control" id="responsavel" disabled>
                             </div>
@@ -107,7 +110,7 @@
                                     <textarea class="form-control" disabled id="informacaoNutricional" style="height: 100px;resize:none"></textarea>
                                 </div>
                             </div>
-    
+
                         </div>
                     </form>
                     <div class="modal-footer">
@@ -117,39 +120,41 @@
             </div>
         </div>
     </div>
-    @endsection
+@endsection
 
-    @push('scripts')
-        <script>
+@push('scripts')
+    <script>
+        $('.infoProduto').on('click', function() {
+            console.log(this)
+            fetch(`/produtoIndividual/${this.dataset.id}`).then(async (response) => {
+                let result = await response.json();
 
-            $('.infoProduto').on('click', function() {
-                console.log(this)
-                fetch(`/produtoIndividual/${this.dataset.id}`).then(async (response) => {
-                    let result = await response.json();
+                document.getElementById('nomeProduto').textContent = result.data.nome
 
-                    document.getElementById('nomeProduto').textContent = result.data.nome
+                document.getElementById('codigoProduto').value = result.data.id
+                document.getElementById('quantidadeEstoque').value = result.data.quantidadeEmEstoque
+                document.getElementById('unidadeMedida').value = result.data.unidade_medida
+                document.getElementById('qtdSaida').value = result.data.saidas
+                document.getElementById('qtdEntrada').value = result.data.entradas
 
-                    document.getElementById('codigoProduto').value = result.data.codigo
-                    document.getElementById('quantidadeEstoque').value = result.data.quantidadeEmEstoque
-                    document.getElementById('unidadeMedida').value = result.data.unidade_medida
-                    document.getElementById('precoCusto').value = result.data.preco_custo
-                    document.getElementById('precoVenda').value = result.data.preco_venda
-                    document.getElementById('fornecedorNome').value = result.data.fornecedor.nome
-                    document.getElementById('marca').value = result.data.marca.nome
-                    
-                    let date = new Date( Date.parse(result.data.created_at) );
+                document.getElementById('fornecedorNome').value = result.data.fornecedor.nome
+                document.getElementById('marca').value = result.data.marca.nome
 
-                    document.getElementById('dataCadastro').value = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
-                    document.getElementById('responsavel').value = result.data.responsavel.name
-                    document.getElementById('descricaoProduto').value = result.data.descricao
-                    document.getElementById('informacaoNutricional').value = result.data.informacao_nutricional
-                    $('#produtoModal').modal('show')
-                })
+                let date = new Date(Date.parse(result.data.created_at));
 
+                document.getElementById('dataCadastro').value =
+                    `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+                document.getElementById('responsavel').value = result.data.responsavel.name
+                document.getElementById('descricaoProduto').value = result.data.descricao
+                document.getElementById('informacaoNutricional').value = result.data
+                    .informacao_nutricional
+                $('#produtoModal').modal('show')
             })
 
-            document.getElementById('produtoModal').addEventListener('hide.bs.modal',function(){
-                document.getElementById('formProduto').reset()
-            })
-        </script>
-    @endpush
+        })
+
+        document.getElementById('produtoModal').addEventListener('hide.bs.modal', function() {
+            document.getElementById('formProduto').reset()
+        })
+    </script>
+@endpush

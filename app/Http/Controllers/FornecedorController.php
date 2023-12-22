@@ -20,7 +20,7 @@ class FornecedorController extends Controller
             $request = request()->all();
             return $query->where('nome', 'like', '%' . $request['search'] . '%')
                 ->orWhere('cnpj', 'like', '%' . $request['search'] . '%');
-        })->paginate(8);
+        })->paginate(request()->paginacao ?? 10);
         return view('fornecedor.index', compact('fornecedores'));
     }
 

@@ -32,7 +32,7 @@ class CategoriaController extends Controller
                 $request = request()->all();
                 return $query->where('nome', 'like', '%' . $request['search'] . '%')
                     ->orWhere('descricao', 'like', '%' . $request['search'] . '%');
-            })->paginate(8);
+            })->paginate(request()->paginacao ?? 10);
         return view('categoria.index', compact('categorias'));
     }
 

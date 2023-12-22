@@ -19,7 +19,7 @@ class LancamentoController extends Controller
     {
         $lancamentos = Lancamento::with(['produtoEmEstoque'])->when(request()->search != null,function($query){
             return $query->where('produto_estoque_id',(int)request()->search);
-        })->paginate(10);
+        })->paginate(request()->paginacao ?? 10);
 
         return view('lancamento.index',compact('lancamentos'));
     }

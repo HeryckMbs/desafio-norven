@@ -22,7 +22,7 @@ class ProdutoController extends Controller
     {
         $produtos = Produto::with(['fornecedor', 'marca', 'responsavel'])
             ->orderBy('id')
-            ->when(request()->has('search'), function ($query) {
+            ->when(request()->has('search') && request()->search != '', function ($query) {
                 $request = request()->all();
                 return $query->where('nome', 'like', '%' . $request['search'] . '%')
                     ->orWhere('codigo', 'like', '%' . $request['search'] . '%')
@@ -32,7 +32,7 @@ class ProdutoController extends Controller
                     });
             })
             ->withTrashed()
-            ->paginate(8);
+            ->paginate(request()->paginacao ?? 10);
         return view('produto.index', compact('produtos'));
     }
 

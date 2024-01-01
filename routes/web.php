@@ -34,7 +34,8 @@ use Illuminate\Support\Facades\DB;
 */
 
 Route::get('/', function () {
-    
+    return redirect('/home');
+
 });
 Route::get('/welcome', function () {
     return view('welcome');

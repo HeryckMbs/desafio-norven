@@ -28,7 +28,7 @@ class ProdutoController extends Controller
                     ->orWhere('descricao', 'like', '%' . $request['search'] . '%')
                     ->orWhereHas('responsavel', function ($query) use ($request) {
                         $query->where('nome', 'like', '%' . $request['search'] . '%');
-                    })->orWhereHas('categoria',function($query) use($request){
+                    })->orWhereHas('categoria', function ($query) use ($request) {
                         $query->where('categorias.nome', 'like', '%' . $request['search'] . '%');
                     });
             })
@@ -58,7 +58,12 @@ class ProdutoController extends Controller
      */
     public function store(ProdutoRequest $request)
     {
-
+        $informacaoNutricional = [
+            "porcao" => $request->porcao,
+            "proteina" => $request->proteina,
+            "carboidrato" => $request->carboidrato,
+            "gordura_total" => $request->gordura_total,
+        ];
         Produto::create([
             "nome" => $request->nome,
             "unidade_medida" => $request->unidade_medida,
@@ -66,8 +71,8 @@ class ProdutoController extends Controller
             "marca_id" => (int) $request->marca,
             "fornecedor_id" => (int) $request->fornecedor,
             "descricao" => $request->descricao,
-            "informacao_nutricional" => $request->informacaoNutricional,
-            "created_by" => Auth::id()
+            "informacao_nutricional" => $informacaoNutricional,
+            "created_by" => Auth::id(),
         ]);
         return redirect(route('produto.index'))->with('messages', ['success' => ['Produto criado com sucesso!']]);
     }
@@ -109,6 +114,12 @@ class ProdutoController extends Controller
      */
     public function update(ProdutoRequest $request, $id)
     {
+        $informacaoNutricional = [
+            "porcao" => $request->porcao,
+            "proteina" => $request->proteina,
+            "carboidrato" => $request->carboidrato,
+            "gordura_total" => $request->gordura_total,
+        ];
         Produto::find($id)->update([
             "nome" => $request->nome,
             "unidade_medida" => $request->unidade_medida,
@@ -117,7 +128,7 @@ class ProdutoController extends Controller
             "marca_id" => (int) $request->marca,
             "fornecedor_id" => (int) $request->fornecedor,
             "descricao" => $request->descricao,
-            "informacao_nutricional" => $request->informacaoNutricional,
+            "informacao_nutricional" => $informacaoNutricional,
             "created_by" => Auth::id()
         ]);
         return redirect(route('produto.index'))->with('messages', ['success' => ['Produto atualizado com sucesso!']]);
@@ -141,7 +152,8 @@ class ProdutoController extends Controller
 
     public function getProdutoIndividual(int $produto_id)
     {
-        $produto = Produto::with(['fornecedor', 'marca', 'responsavel']
+        $produto = Produto::with(
+            ['fornecedor', 'marca', 'responsavel']
         )->where('id', '=', $produto_id)->first();
         $produto->saidas = $produto->produtosSairamEstoque->count();
         $produto->entradas = $produto->produtosEntraramEstoque->count();

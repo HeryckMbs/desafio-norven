@@ -173,6 +173,12 @@ class FillBasicData extends Seeder
 
         $produtosCadastrados = [];
         foreach (range(1, 8) as $numero) {
+            $informacaoNutricional = [
+                "porcao" => $numero * 7,
+                "proteina" => $numero * 7,
+                "carboidrato" => $numero * 7,
+                "gordura_total" => $numero * 7,
+            ];
             $produto = [
                 'nome' =>  $produtos[$numero],
                 'descricao' => 'Descrição do '. $produtos[$numero],
@@ -181,7 +187,7 @@ class FillBasicData extends Seeder
                 'marca_id' => $numero,
                 'categoria_id' => $numero,
 
-                'informacao_nutricional' => 'Informações nutricionais do Produto ' .  $produtos[$numero],
+                'informacao_nutricional' => $informacaoNutricional,
                 'created_by' => 1
             ];
 

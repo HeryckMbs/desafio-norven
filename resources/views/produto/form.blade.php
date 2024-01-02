@@ -3,6 +3,7 @@
 
 
 @section('content')
+
     <form enctype="multipart/form-data"
         action="{{ isset($produto) ? route('produto.update', $produto->id) : route('produto.store') }}" method="POST">
         @csrf
@@ -14,8 +15,7 @@
                 <div class="row">
                     <div class="col-12">
                         <label for="exampleInputEmail1" class="form-label">Nome</label>
-                        <input name="nome"
-                            value="{{ isset($produto) ? $produto->nome : (isset($produto) ? $produto->nome : old('nome') ?? '') }}"
+                        <input name="nome" value="{{ isset($produto) ? $produto->nome : old('nome') ?? '' }}"
                             class="form-control" id="codigoProduto">
                         @error('nome')
                             <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
@@ -112,17 +112,43 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-12 ">
-                        <div class="form-floating">
-                            <label for="floatingTextarea2">Informações Nutricionais</label>
-                            <textarea name="informacaoNutricional" value="" class="form-control" id="informacaoNutricional"
-                                style="height: 100px;resize:none">{{ isset($produto) ? $produto->informacao_nutricional : old('informacaoNutricional') ?? '' }}</textarea>
-                            @error('informacaoNutricional')
+
+                </div>
+                
+                <h5  class=" mt-3">Informações Nutricionais</h5>
+                <div class=" mt-1 p-2 rounded" style="background-color:#F4F6F9;">
+                    <div class="row">
+                        <div class="col-2">
+                            <label for="exampleInputEmail1" class="form-label">Porção</label>
+                            <input type="number" name="porcao" value="{{isset($produto) ? $produto->informacao_nutricional['porcao']: (old('porcao') ?? '')}}" class="form-control">
+                            @error('porcao')
                                 <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
                             @enderror
                         </div>
-                    </div>
 
+                        <div class="col-2">
+                            <label for="exampleInputEmail1" class="form-label">Proteína (g)</label>
+                            <input type="number" name="proteina" value="{{isset($produto) ? $produto->informacao_nutricional['proteina']: (old('proteina') ?? '')}}" class="form-control">
+                            @error('proteina')
+                                <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
+                            @enderror
+                        </div>
+                        <div class="col-3">
+                            <label for="exampleInputEmail1" class="form-label">Carboidratos (g)</label>
+                            <input type="number" name="carboidrato" value="{{isset($produto) ? $produto->informacao_nutricional['carboidrato']: (old('carboidrato') ?? '')}}" class="form-control">
+                            @error('carboidrato')
+                                <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
+                            @enderror
+                        </div>
+                        <div class="col-3">
+                            <label for="exampleInputEmail1" class="form-label">Gorduras Totais (g)</label>
+                            <input type="number" name="gordura_total" value="{{isset($produto) ? $produto->informacao_nutricional['gordura_total']: (old('gordura_total') ?? '')}}" class="form-control">
+                            @error('gordura_total')
+                                <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
+                            @enderror
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -133,3 +159,11 @@
 
 
 @endsection
+{{-- <div class="form-floating">
+                            <label for="floatingTextarea2">Informações Nutricionais</label>
+                            <textarea name="informacaoNutricional" value="" class="form-control" id="informacaoNutricional"
+                                style="height: 100px;resize:none">{{ isset($produto) ? $produto->informacao_nutricional : old('informacaoNutricional') ?? '' }}</textarea>
+                            @error('informacaoNutricional')
+                                <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
+                            @enderror
+                        </div> --}}

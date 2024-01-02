@@ -23,15 +23,12 @@ class EstoqueController extends Controller
      */
     public function index()
     {
-        $produtosEmEstoque = ProdutoEstoque::with(['produtoRelacionado', 'categoriaRelacionada'])->orderBy('id')
+        $produtosEmEstoque = ProdutoEstoque::with(['produtoRelacionado'])->orderBy('id')
             ->when(request()->has('search'), function ($query) {
                 $request = request()->all();
-                return $query->whereHas('categoriaRelacionada', function ($query1) use ($request) {
-                    $query1->where('categorias.nome', 'like', '%' . $request['search'] . '%');
-                })->orWhereHas('produtoRelacionado', function ($query2) use ($request) {
-                    $query2->where('produtos.nome', 'like', '%' . $request['search'] . '%')
-                        ->orWhere('produtos.codigo', 'like', '%' . $request['search'] . '%');
-                });
+                return $query->whereHas('produtoRelacionado', function ($query2) use ($request) {
+                    $query2->where('produtos.nome', 'like', '%' . $request['search'] . '%');
+                })->orWhere('id', 'like', '%' . $request['search'] . '%');
             })
             ->whereDoesntHave('lancamentos', function ($query3) {
                 $query3->where('tipo', 'Saida');

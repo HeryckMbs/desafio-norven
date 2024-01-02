@@ -43,7 +43,7 @@
         <tbody>
             @foreach ($produtosEmEstoque as $produto)
                 <tr>
-                    <td>{{ str_pad($produto->id , 4 , '0' , STR_PAD_LEFT) }}</td>
+                    <td>{{ $produto->id }}</td>
 
                     <td>{{ $produto->produtoRelacionado->nome }}</td>
                     <td>{{ $produto->lote->preco_custo_unitario }}</td>
@@ -51,8 +51,8 @@
                     <td>{{ \Carbon\Carbon::parse($produto->lote->created_at)->format('d/m/Y H:i') }}</td>
 
                     <td class="d-flex  justify-content-around">
-                        <button data-id="{{ $produto->id }}" type="button" class="btn btn-primary infoProduto mr-1">
-                            <i class="fas fa-info"></i>
+                        <button data-id="{{ $produto->id }}" type="button" class="btn btn-primary btn-sm infoProduto mr-1">
+                            <i class="fas  fa-info"></i>
                         </button>
 
                     </td>
@@ -80,18 +80,13 @@
                 <div class="modal-body">
                     <form id="formProduto">
                         <div class="row">
-                            <div class="col-1">
+                            <div class="col-2">
                                 <label for="exampleInputEmail1" class="form-label">Código</label>
                                 <input class="form-control" id="codigoProduto" disabled>
                             </div>
-                            <div class="col-3">
-                                <label for="exampleInputEmail1" class="form-label" data-toggle="tooltip"
-                                    data-placement="top" title="Código da categoria - Prateleira - Posição">Posição no
-                                    estoque</label>
-                                <input data-toggle="tooltip" data-placement="top"
-                                    title="Código da categoria - Prateleira - Posição" class="form-control"
-                                    id="posicaoEstoque" disabled>
-
+                            <div class="col-2">
+                                <label for="exampleInputEmail1" class="form-label">Lote</label>
+                                <input class="form-control" id="loteProduto" disabled>
                             </div>
                             <div class="col-2">
                                 <label for="exampleInputEmail1" class="form-label">Unidade</label>
@@ -119,34 +114,42 @@
                                 <label for="exampleInputEmail1" class="form-label">Categoria</label>
                                 <input class="form-control" id="categoriaProduto" disabled>
                             </div>
-                            <div class="col-2">
-                                <label for="exampleInputEmail1" class="form-label">Lote</label>
-                                <input class="form-control" id="loteProduto" disabled>
-                            </div>
-                            <div class="col-4">
+                           
+                            <div class="col-6">
                                 <label for="exampleInputEmail1" class="form-label">Data de validade</label>
                                 <input class="form-control" id="dataValidade" disabled>
                             </div>
-                            <div class="col-3">
+                            <div class="col-6">
                                 <label for="exampleInputEmail1" class="form-label">Data de Entrada</label>
                                 <input class="form-control" id="dataEntrada" disabled>
                             </div>
 
-                            <div class="col-3">
-                                <label for="exampleInputEmail1" class="form-label">Data de Venda</label>
-                                <input class="form-control" id="dataVenda" disabled>
-                            </div>
-
-                            <div class="col-6 ">
+                            <div class="col-12 ">
                                 <div class="form-floating">
                                     <label for="floatingTextarea2">Descrição</label>
                                     <textarea class="form-control" id="descricaoProduto" disabled style="height: 100px;resize:none"></textarea>
                                 </div>
                             </div>
-                            <div class="col-6">
-                                <div class="form-floating">
-                                    <label for="floatingTextarea2">Informações Nutricionais</label>
-                                    <textarea class="form-control" disabled id="informacaoNutricional" style="height: 100px;resize:none"></textarea>
+                            <div class="col-12 mt-1">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label for="exampleInputEmail1" class="form-label">Porção</label>
+                                        <input disabled id="porcao" value="" class="form-control">
+                                    </div>
+            
+                                    <div class="col-3">
+                                        <label for="exampleInputEmail1" class="form-label">Proteína (g)</label>
+                                        <input disabled id="proteina" value="" class="form-control">
+                                    </div>
+                                    <div class="col-3">
+                                        <label for="exampleInputEmail1" class="form-label">Carboidratos (g)</label>
+                                        <input disabled id="carboidrato" value="" class="form-control">
+                                    </div>
+                                    <div class="col-3">
+                                        <label for="exampleInputEmail1" class="form-label">Gorduras Totais (g)</label>
+                                        <input disabled id="gordura_total" value="" class="form-control">
+                                    </div>
+            
                                 </div>
                             </div>
 
@@ -155,7 +158,6 @@
                             <div class="d-none bg-success rounded px-2 py-1 mr-1">Vendido em <span
                                     id="diasVendido"></span> dia(s)
                             </div>
-                            <div class="d-none  rounded px-2 py-1 mr-1" id="lucroVenda"> </div>
                             <div class="d-none  rounded px-2 py-1 mr-1" id="produtoVencido"></div>
 
                         </div>
@@ -196,34 +198,22 @@
                 document.getElementById('marca').value = result.data.marca_relacionada.nome
                 document.getElementById('categoriaProduto').value = result.data.categoria_relacionada
                     .nome
-                let dataEntrada = new Date(Date.parse(result.data.lote.data_entrada));
-                document.getElementById('dataEntrada').value =
-                    `${dataEntrada.getDate()}/${dataEntrada.getMonth()}/${dataEntrada.getFullYear()}`
+                let dataEntrada = new Date(Date.parse(result.data.lote.created_at));
+                let dia = dataEntrada.getDate().toString().padStart(2, '0');
+                let mes = (dataEntrada.getMonth() + 1).toString().padStart(2, '0');
+                let ano = dataEntrada.getFullYear();
+                document.getElementById('dataEntrada').value =`${dia}/${mes}/${ano}`
 
                 let dataValidade = new Date(Date.parse(result.data.lote.data_validade));
-                document.getElementById('dataValidade').value =
-                    `${dataValidade.getDate()}/${dataValidade.getMonth()}/${dataValidade.getFullYear()}`
-                if (result.data.vendido) {
-                    const lucro = result.data.lucro
-                    if (lucro > 0) {
-                        document.getElementById('lucroVenda').classList.add("bg-success")
-                        document.getElementById('lucroVenda').textContent =
-                            `Lucro de ${lucro.toFixed(2)}%`
-                    } else {
-                        document.getElementById('lucroVenda').classList.add("bg-danger")
-                        document.getElementById('lucroVenda').textContent =
-                            `Prejuízo de ${lucro.toFixed(2)}%`
-                    }
+                dia = dataValidade.getDate().toString().padStart(2, '0');
+                mes = (dataValidade.getMonth() + 1).toString().padStart(2, '0');
+                ano = dataValidade.getFullYear();
+                document.getElementById('dataValidade').value =`${dia}/${mes}/${ano}`
 
-                    let date = new Date(Date.parse(result.data.deleted_at));
-                    document.getElementById('dataVenda').value =
-                        `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
-
-                    document.getElementById('lucroVenda').classList.remove("d-none")
-                    document.getElementById('diasVendido').textContent = result.data.diasVendido;
-                    document.getElementById('diasVendido').parentNode.classList.remove("d-none")
-
-                }
+                document.getElementById('porcao').value = result.data.produto_relacionado.informacao_nutricional.porcao
+                document.getElementById('proteina').value = result.data.produto_relacionado.informacao_nutricional.proteina
+                document.getElementById('carboidrato').value = result.data.produto_relacionado.informacao_nutricional.carboidrato
+                document.getElementById('gordura_total').value = result.data.produto_relacionado.informacao_nutricional.gordura_total
 
                 if (result.data.diasVencimento <= 0) {
                     document.getElementById('produtoVencido').classList.add("bg-danger")
@@ -236,7 +226,7 @@
                     document.getElementById('produtoVencido').classList.remove("bg-danger")
 
                     document.getElementById('produtoVencido').textContent =
-                        `Vence em ${result.data.diasVencimento} dia(s)`
+                        `Vence em ${result.data.diasAteVencimento} dia(s)`
                 }
                 document.getElementById('produtoVencido').classList.remove("d-none")
 
@@ -246,8 +236,7 @@
 
                 document.getElementById('descricaoProduto').value = result.data.produto_relacionado
                     .descricao
-                document.getElementById('informacaoNutricional').value = result.data.produto_relacionado
-                    .informacao_nutricional
+           
                 $('#produtoModal').modal('show')
             })
 

@@ -29,7 +29,7 @@ return new class extends Migration
             $table->foreign('categoria_id')->on('categorias')->references('id')->onDelete('cascade');
             $table->foreign('created_by')->on('users')->references('id');
             
-            $table->text('informacao_nutricional')->nullable();
+            $table->json('informacao_nutricional')->nullable();
 
             $table->softDeletes();
 

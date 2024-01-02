@@ -58,7 +58,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formProduto">
+                    <form id="formProduto" class="mb-2">
                         <div class="row">
                             <div class="col-2">
                                 <label for="exampleInputEmail1" class="form-label">Código</label>
@@ -98,18 +98,35 @@
                                 <label for="exampleInputEmail1" class="form-label">Responsável</label>
                                 <input class="form-control" id="responsavel" disabled>
                             </div>
-                            <div class="col-6 mt-1">
+                            <div class="col-12 mt-1">
                                 <div class="form-floating">
                                     <label for="floatingTextarea2">Descrição</label>
                                     <textarea class="form-control" id="descricaoProduto" disabled style="height: 100px;resize:none"></textarea>
                                 </div>
                             </div>
-                            <div class="col-6 mt-1">
-                                <div class="form-floating">
-                                    <label for="floatingTextarea2">Informações Nutricionais</label>
-                                    <textarea class="form-control" disabled id="informacaoNutricional" style="height: 100px;resize:none"></textarea>
+                            <div class="col-12 mt-1">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label for="exampleInputEmail1" class="form-label">Porção</label>
+                                        <input disabled id="porcao" value="" class="form-control">
+                                    </div>
+            
+                                    <div class="col-3">
+                                        <label for="exampleInputEmail1" class="form-label">Proteína (g)</label>
+                                        <input disabled id="proteina" value="" class="form-control">
+                                    </div>
+                                    <div class="col-3">
+                                        <label for="exampleInputEmail1" class="form-label">Carboidratos (g)</label>
+                                        <input disabled id="carboidrato" value="" class="form-control">
+                                    </div>
+                                    <div class="col-3">
+                                        <label for="exampleInputEmail1" class="form-label">Gorduras Totais (g)</label>
+                                        <input disabled id="gordura_total" value="" class="form-control">
+                                    </div>
+            
                                 </div>
                             </div>
+
 
                         </div>
                     </form>
@@ -139,15 +156,21 @@
 
                 document.getElementById('fornecedorNome').value = result.data.fornecedor.nome
                 document.getElementById('marca').value = result.data.marca.nome
-
+             
                 let date = new Date(Date.parse(result.data.created_at));
+                let dia = date.getDate().toString().padStart(2, '0');
+                let mes = (date.getMonth() + 1).toString().padStart(2, '0');
+                let ano = date.getFullYear();
+                document.getElementById('dataCadastro').value = `${dia}/${mes}/${ano}`
 
-                document.getElementById('dataCadastro').value =
-                    `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
                 document.getElementById('responsavel').value = result.data.responsavel.name
                 document.getElementById('descricaoProduto').value = result.data.descricao
-                document.getElementById('informacaoNutricional').value = result.data
-                    .informacao_nutricional
+          
+                document.getElementById('porcao').value = result.data.informacao_nutricional.porcao
+                document.getElementById('proteina').value = result.data.informacao_nutricional.proteina
+                document.getElementById('carboidrato').value = result.data.informacao_nutricional.carboidrato
+                document.getElementById('gordura_total').value = result.data.informacao_nutricional.gordura_total
+
                 $('#produtoModal').modal('show')
             })
 

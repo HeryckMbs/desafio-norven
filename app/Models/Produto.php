@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Produto extends Model
 {
     use SoftDeletes;
+    protected $casts = [
+        'informacao_nutricional' => 'array'
+    ];
     protected $fillable = [
         "nome",
         "unidade_medida",

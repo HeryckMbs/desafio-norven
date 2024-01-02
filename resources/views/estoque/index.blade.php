@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Estoque de produtos')
-@section('tooltip' )
-<i class="fa-solid fa-2x fa-circle-info"></i>
+@section('tooltip')
+    <i class="fa-solid fa-2x fa-circle-info"></i>
 @endsection
 @section('actions')
     <a href="{{ route('estoque.create') }}" class="btn btn-primary">
@@ -26,44 +26,49 @@
 
         {{ $produtosEmEstoque->links() }}
     </div>
-    <table id="produtosTable" class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th> Código</th>
-                <th>Nome</th>
-                <th>Preço de custo</th>
-                <th>Preço de venda</th>
-                <th>Data de entrada</th>
-
-
-
-                <th class="text-center">Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($produtosEmEstoque as $produto)
+    @if (!$produtosEmEstoque->isEmpty())
+        <table id="produtosTable" class="table table-striped table-hover">
+            <thead>
                 <tr>
-                    <td>{{ $produto->id }}</td>
+                    <th> Código</th>
+                    <th>Nome</th>
+                    <th>Preço de custo</th>
+                    <th>Preço de venda</th>
+                    <th>Data de entrada</th>
 
-                    <td>{{ $produto->produtoRelacionado->nome }}</td>
-                    <td>{{ $produto->lote->preco_custo_unitario }}</td>
-                    <td>{{ $produto->preco_venda }}</td>
-                    <td>{{ \Carbon\Carbon::parse($produto->lote->created_at)->format('d/m/Y H:i') }}</td>
 
-                    <td class="d-flex  justify-content-around">
-                        <button data-id="{{ $produto->id }}" type="button" class="btn btn-primary btn-sm infoProduto mr-1">
-                            <i class="fas  fa-info"></i>
-                        </button>
 
-                    </td>
+                    <th class="text-center">Ações</th>
                 </tr>
-            @endforeach
-        <tfoot>
+            </thead>
+            <tbody>
+                @foreach ($produtosEmEstoque as $produto)
+                    <tr>
+                        <td>{{ $produto->id }}</td>
+
+                        <td>{{ $produto->produtoRelacionado->nome }}</td>
+                        <td>{{ $produto->lote->preco_custo_unitario }}</td>
+                        <td>{{ $produto->preco_venda }}</td>
+                        <td>{{ \Carbon\Carbon::parse($produto->lote->created_at)->format('d/m/Y H:i') }}</td>
+
+                        <td class="d-flex  justify-content-around">
+                            <button data-id="{{ $produto->id }}" type="button"
+                                class="btn btn-primary btn-sm infoProduto mr-1">
+                                <i class="fas  fa-info"></i>
+                            </button>
+
+                        </td>
+                    </tr>
+                @endforeach
+            <tfoot>
 
 
-        </tfoot>
-        </tbody>
-    </table>
+            </tfoot>
+            </tbody>
+        </table>
+    @else
+        <x-not-found />
+    @endif
     <!-- Button trigger modal -->
 
 
@@ -114,7 +119,7 @@
                                 <label for="exampleInputEmail1" class="form-label">Categoria</label>
                                 <input class="form-control" id="categoriaProduto" disabled>
                             </div>
-                           
+
                             <div class="col-6">
                                 <label for="exampleInputEmail1" class="form-label">Data de validade</label>
                                 <input class="form-control" id="dataValidade" disabled>
@@ -136,7 +141,7 @@
                                         <label for="exampleInputEmail1" class="form-label">Porção</label>
                                         <input disabled id="porcao" value="" class="form-control">
                                     </div>
-            
+
                                     <div class="col-3">
                                         <label for="exampleInputEmail1" class="form-label">Proteína (g)</label>
                                         <input disabled id="proteina" value="" class="form-control">
@@ -149,7 +154,7 @@
                                         <label for="exampleInputEmail1" class="form-label">Gorduras Totais (g)</label>
                                         <input disabled id="gordura_total" value="" class="form-control">
                                     </div>
-            
+
                                 </div>
                             </div>
 
@@ -186,7 +191,7 @@
                     .nome
 
                 document.getElementById('codigoProduto').value = result.data.id
-                
+
                 document.getElementById('precoCusto').value = result.data.lote.preco_custo_unitario
                 document.getElementById('precoVenda').value = result.data.preco_venda
                 document.getElementById('fornecedorNome').value = result.data.fornecedor_relacionado
@@ -202,18 +207,22 @@
                 let dia = dataEntrada.getDate().toString().padStart(2, '0');
                 let mes = (dataEntrada.getMonth() + 1).toString().padStart(2, '0');
                 let ano = dataEntrada.getFullYear();
-                document.getElementById('dataEntrada').value =`${dia}/${mes}/${ano}`
+                document.getElementById('dataEntrada').value = `${dia}/${mes}/${ano}`
 
                 let dataValidade = new Date(Date.parse(result.data.lote.data_validade));
                 dia = dataValidade.getDate().toString().padStart(2, '0');
                 mes = (dataValidade.getMonth() + 1).toString().padStart(2, '0');
                 ano = dataValidade.getFullYear();
-                document.getElementById('dataValidade').value =`${dia}/${mes}/${ano}`
+                document.getElementById('dataValidade').value = `${dia}/${mes}/${ano}`
 
-                document.getElementById('porcao').value = result.data.produto_relacionado.informacao_nutricional.porcao
-                document.getElementById('proteina').value = result.data.produto_relacionado.informacao_nutricional.proteina
-                document.getElementById('carboidrato').value = result.data.produto_relacionado.informacao_nutricional.carboidrato
-                document.getElementById('gordura_total').value = result.data.produto_relacionado.informacao_nutricional.gordura_total
+                document.getElementById('porcao').value = result.data.produto_relacionado
+                    .informacao_nutricional.porcao
+                document.getElementById('proteina').value = result.data.produto_relacionado
+                    .informacao_nutricional.proteina
+                document.getElementById('carboidrato').value = result.data.produto_relacionado
+                    .informacao_nutricional.carboidrato
+                document.getElementById('gordura_total').value = result.data.produto_relacionado
+                    .informacao_nutricional.gordura_total
 
                 if (result.data.diasVencimento <= 0) {
                     document.getElementById('produtoVencido').classList.add("bg-danger")
@@ -236,7 +245,7 @@
 
                 document.getElementById('descricaoProduto').value = result.data.produto_relacionado
                     .descricao
-           
+
                 $('#produtoModal').modal('show')
             })
 
@@ -254,7 +263,5 @@
         document.getElementById('search').addEventListener('change', function() {
             document.getElementById('formSearch').submit()
         })
-
-
     </script>
 @endpush

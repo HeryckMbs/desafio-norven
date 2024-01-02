@@ -14,7 +14,7 @@
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text" id="basic-addon1">Código do produto
-                
+
                 </span>
             </div>
             <form class="mr-2" id="formSearch" action="{{ route('lancamento.index') }}" method="GET">
@@ -27,50 +27,50 @@
 
         {{ $lancamentos->links() }}
     </div>
-    <table id="produtosTable" class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th> Código</th>
-                <th>Tipo</th>
-                <th>Código do produto</th>
-                <th>Nome do produto</th>
-
-                <th>Data Operação</th>
-
-
-
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($lancamentos as $lancamento)
+    @if ($lancamentos->isNotEmpty())
+        <table id="produtosTable" class="table table-striped table-hover">
+            <thead>
                 <tr>
-                    <td>{{ str_pad($lancamento->id, 4, '0', STR_PAD_LEFT) }}</td>
+                    <th> Código</th>
+                    <th>Tipo</th>
+                    <th>Código do produto</th>
+                    <th>Nome do produto</th>
 
-                    <td>{!! \App\Enums\TipoLancamento::from($lancamento->tipo) == \App\Enums\TipoLancamento::Entrada
-                        ? '<span class="bg-success p-1 rounded">Entrada</span>'
-                        : '<span class="bg-danger p-1 rounded">Saída</span>' !!}</td>
-                    </td>
-                    <td>
-                        {{ str_pad($lancamento->produto_estoque_id, 4, '0', STR_PAD_LEFT) }}
-                    </td>
-                    <td>
-                        {{$lancamento->produtoEmEstoque->produtoRelacionado->nome}}
-                    </td>
-                    <td>
-                        {{\Carbon\Carbon::parse($lancamento->created_at)->format('d/m/Y H:i')}}
-                    </td>
+                    <th>Data Operação</th>
+
+
+
                 </tr>
-            @endforeach
-        <tfoot>
+            </thead>
+            <tbody>
+                @foreach ($lancamentos as $lancamento)
+                    <tr>
+                        <td>{{ str_pad($lancamento->id, 4, '0', STR_PAD_LEFT) }}</td>
+
+                        <td>{!! \App\Enums\TipoLancamento::from($lancamento->tipo) == \App\Enums\TipoLancamento::Entrada
+                            ? '<span class="bg-success p-1 rounded">Entrada</span>'
+                            : '<span class="bg-danger p-1 rounded">Saída</span>' !!}</td>
+                        </td>
+                        <td>
+                            {{ str_pad($lancamento->produto_estoque_id, 4, '0', STR_PAD_LEFT) }}
+                        </td>
+                        <td>
+                            {{ $lancamento->produtoEmEstoque->produtoRelacionado->nome }}
+                        </td>
+                        <td>
+                            {{ \Carbon\Carbon::parse($lancamento->created_at)->format('d/m/Y H:i') }}
+                        </td>
+                    </tr>
+                @endforeach
+            <tfoot>
 
 
-        </tfoot>
-        </tbody>
-    </table>
-    <!-- Button trigger modal -->
-
-
-    <!-- Modal -->
+            </tfoot>
+            </tbody>
+        </table>
+    @else
+        <x-not-found />
+    @endif
     <div class="modal fade" id="produtoModal" tabindex="-1" aria-labelledby="produtoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">

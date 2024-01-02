@@ -100,7 +100,7 @@ class ProdutoController extends Controller
 
         $categorias = Categoria::all();
         $marcas = Marca::all();
-        $fornecedores = Fornecedor::all();
+        $fornecedores = Fornecedor::where('ativo',true)->get();
         $produto = Produto::find($id);
         return view('produto.form', compact('produto', 'categorias', 'marcas', 'fornecedores'));
     }

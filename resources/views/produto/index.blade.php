@@ -20,7 +20,7 @@
                 class="form-control mr-2" placeholder="" aria-label="" aria-describedby="basic-addon1">
             <a href="{{ route('produto.index') }}" class="btn btn-primary">Limpar busca</a>
 
-        </div>
+        </div>\
         <div class="d-flex">
             <div class="input-group  ">
                 <select id="paginacao" name="paginacao" class="custom-select mr-2" style="min-width: 80px"

@@ -23,18 +23,8 @@ class EstoqueController extends Controller
      */
     public function index()
     {
-        $produtosEmEstoque = ProdutoEstoque::with(['produtoRelacionado'])->orderBy('id')
-            ->when(request()->has('search'), function ($query) {
-                $request = request()->all();
-                return $query->whereHas('produtoRelacionado', function ($query2) use ($request) {
-                    $query2->where('produtos.nome', 'like', '%' . $request['search'] . '%');
-                })->orWhere('id', 'like', '%' . $request['search'] . '%');
-            })
-            ->whereDoesntHave('lancamentos', function ($query3) {
-                $query3->where('tipo', 'Saida');
-            })
-            ->paginate(request()->paginacao ?? 10);
-        return view('estoque.index', compact('produtosEmEstoque',));
+        $produtosEmEstoque = ProdutoEstoque::index(request());
+        return view('estoque.index', compact('produtosEmEstoque'));
     }
 
     /**
@@ -136,16 +126,7 @@ class EstoqueController extends Controller
 
     public function getInfoProdutoEstoque(int $produto_estoque_id)
     {
-        $produto = ProdutoEstoque::with([
-            'lote',
-            'produtoRelacionado',
-            'categoriaRelacionada',
-            'marcaRelacionada',
-            'fornecedorRelacionado'
-        ])->where('id', '=', $produto_estoque_id)->withTrashed()->first();
-        $produto->lucro = (($produto->preco_venda / $produto->lote->preco_custo_unitario) * 100) - 100;
-        $produto->diasVendido = Carbon::parse($produto->lote->data_entrada)->diffInDays($produto->data_venda);
-
+        $produto = ProdutoEstoque::infoProdutoEstoque($produto_estoque_id);
         return response()->json(['success' => true, 'data' => $produto], 200);
     }
 

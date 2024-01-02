@@ -13,4 +13,11 @@ class Marca extends Model
     use SoftDeletes;
 
     protected $fillable = ['nome'];
+
+    public function scopeIndex($query, $request){
+      return  $query->orderBy('id')->withTrashed()
+        ->when($request->has('search'), function ($query) use ($request) {
+            return $query->where('nome', 'like', '%' . $request->search . '%');
+        })->paginate($request->paginacao ?? 10);
+    }
 }

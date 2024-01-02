@@ -15,11 +15,7 @@ class MarcaController extends Controller
      */
     public function index()
     {
-        $marcas = Marca::orderBy('id')->withTrashed()
-        ->when(request()->has('search'), function ($query) {
-            $request = request()->all();
-            return $query->where('nome', 'like', '%' . $request['search'] . '%');
-        })->paginate(request()->paginacao ?? 10);
+        $marcas = Marca::index(request());
         return view('marca.index', compact('marcas'));
     }
 

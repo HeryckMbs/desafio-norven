@@ -2,7 +2,7 @@
 @section('title', 'Categorias')
 
 @section('actions')
-    <a href="{{ route('categoria.form') }}" class="btn btn-primary">
+    <a href="{{ route('categoria.create') }}" class="btn btn-primary">
         Cadastrar categoria
     </a>
 @endsection
@@ -45,9 +45,9 @@
                                 class="btn btn-primary infoFoto mr-1">
                                 <i class="fas fa-info"></i>
                             </button>
-                            <a href="{{ route('categoria.form', $categoria->id) }}" type="button"
+                            <a href="{{ route('categoria.edit', $categoria->id) }}" type="button"
                                 class="btn btn-warning mr-1 editModal"><i class="fas fa-edit"></i></a>
-                            <form method="POST" action="{{ route('categoria.delete', $categoria->id) }}"
+                            <form method="POST" action="{{ route('categoria.destroy', $categoria->id) }}"
                                 enctype="multipart/form-data">
                                 @method('DELETE')
                                 @csrf

@@ -21,8 +21,7 @@
             </div>
             <div class="col-6">
                 <label for="exampleInputEmail1" class="form-label">Url da foto</label>
-                {{-- <input type="file" value="{{ isset($categoria) ? $categoria->url_capa : '' }}" class="form-control"
-                    name="url_capa" id="url_capa"> --}}
+    
                 <div class="custom-file">
                     <input name="url_capa" type="file" class="custom-file-input" id="imageCategoria"
                         aria-describedby="inputGroupFileAddon01">

@@ -108,7 +108,7 @@
         document.getElementById('categoria').addEventListener('change', function() {
             console.log(this)
             if (this.value != -1) {
-                fetch(`/produtosCategoria/${this.value}`).then(async (response) => {
+                fetch(`/categoria/${this.value}`).then(async (response) => {
                     let result = await response.json();
 
                     $('#produto').empty();

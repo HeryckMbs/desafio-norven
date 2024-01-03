@@ -184,7 +184,7 @@
     <script>
         $('.infoProduto').on('click', function() {
             console.log(this)
-            fetch(`/produtoEstoqueInfo/${this.dataset.id}`).then(async (response) => {
+            fetch(`/api/produtoEstoqueInfo/${this.dataset.id}`).then(async (response) => {
                 let result = await response.json();
                 console.log(result)
                 document.getElementById('nomeProduto').textContent = result.data.produto_relacionado

@@ -85,9 +85,11 @@ class EstoqueController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($produto_estoque_id)
     {
-        //
+        $produtoEstoque = ProdutoEstoque::with(['produtoRelacionado'])->where('id', $produto_estoque_id)->first();
+        $data = ['id' => $produtoEstoque->id, 'nome' => $produtoEstoque->produtoRelacionado->nome];
+        return response()->json(['success' => true, 'data' => $data], 200);
     }
 
     /**
@@ -132,8 +134,6 @@ class EstoqueController extends Controller
 
     public function getProduto(int $produto_estoque_id)
     {
-        $produtoEstoque = ProdutoEstoque::with(['produtoRelacionado'])->where('id', $produto_estoque_id)->first();
-        $data = ['id' => $produtoEstoque->id, 'nome' => $produtoEstoque->produtoRelacionado->nome];
-        return response()->json(['success' => true, 'data' => $data], 200);
+       
     }
 }

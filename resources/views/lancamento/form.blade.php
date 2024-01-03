@@ -72,7 +72,7 @@
         let products = [];
         document.getElementById('codigoProduto').addEventListener('change', function() {
             if (!products.includes(this.value)) {
-                fetch(`/getProduto/${this.value}`).then(async (response) => {
+                fetch(`/estoque/${this.value}`).then(async (response) => {
                     let result = await response.json();
                     console.log(result)
                     const nextRow = `<tr>

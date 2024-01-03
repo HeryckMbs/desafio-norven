@@ -20,7 +20,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::get('/her',function(){
+    dd('oi');
+});
 Route::middleware('auth')->group(function () {
-    Route::get('/produtoIndividual/{produto_id}', [ProdutoController::class, 'getProdutoIndividual'])->name('produto.produto');
-    Route::get('/produtoEstoqueInfo/{produto_estoque_id}', [EstoqueController::class, 'getInfoProdutoEstoque']);
 });

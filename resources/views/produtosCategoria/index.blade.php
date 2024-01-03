@@ -143,7 +143,7 @@
     <script>
         $('.infoProduto').on('click', function() {
             console.log(this)
-            fetch(`/api/produtoIndividual/${this.dataset.id}`).then(async (response) => {
+            fetch(`/produtoIndividual/${this.dataset.id}`).then(async (response) => {
                 let result = await response.json();
 
                 document.getElementById('nomeProduto').textContent = result.data.nome

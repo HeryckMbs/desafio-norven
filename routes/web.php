@@ -28,11 +28,7 @@ use Illuminate\Support\Facades\DB;
 
 Route::get('/', function () {
     return redirect('/home');
-});
-Route::get('/welcome', function () {
-    return view('welcome');
-});
-
+}); 
 
 Auth::routes();
 
@@ -40,13 +36,15 @@ Auth::routes();
 
 Route::middleware('auth')->group(function () {
 
-    Route::view('about', 'about')->name('about');
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     
     Route::get('/produtosCategoriaEmEstoque/{categoria_id}', [CategoriaController::class, 'produtosCategoriaEmEstoque'])->name('produtosCategoria.index');
+    
+    Route::get('/produtoIndividual/{produto_id}', [ProdutoController::class, 'getProdutoIndividual'])->name('produto.produto');
+    Route::get('/produtoEstoqueInfo/{produto_estoque_id}', [EstoqueController::class, 'getInfoProdutoEstoque']);
 
     Route::resource('fornecedor', FornecedorController::class);
     Route::resource('marca', MarcaController::class);

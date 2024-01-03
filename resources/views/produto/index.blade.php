@@ -20,16 +20,19 @@
                 class="form-control mr-2" placeholder="" aria-label="" aria-describedby="basic-addon1">
             <a href="{{ route('produto.index') }}" class="btn btn-primary">Limpar busca</a>
 
-        </div>\
+        </div>
         <div class="d-flex">
             <div class="input-group  ">
                 <select id="paginacao" name="paginacao" class="custom-select mr-2" style="min-width: 80px"
                     id="inputGroupSelect01">
-                    <option value="10" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '10' ? 'selected' : '' }}>10
+                    <option value="10" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '10' ? 'selected' : '' }}>
+                        10
                     </option>
-                    <option value="20" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '20' ? 'selected' : '' }}>20
+                    <option value="20" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '20' ? 'selected' : '' }}>
+                        20
                     </option>
-                    <option value="30" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '30' ? 'selected' : '' }}>30
+                    <option value="30" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '30' ? 'selected' : '' }}>
+                        30
                     </option>
 
 
@@ -176,9 +179,16 @@
 
                         </div>
                     </form>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <div class=" d-flex flex-row bg-light rounded">
+                        <div id="status" class=" bg-success rounded px-2 py-1 mr-1">
+                            
+                        </div>
+
+
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                 </div>
             </div>
         </div>
@@ -197,7 +207,33 @@
                 document.getElementById('nomeProduto').textContent = result.data.nome
 
                 document.getElementById('codigoProduto').value = result.data.id
-                document.getElementById('quantidadeEstoque').value = result.data.quantidadeEmEstoque
+                document.getElementById('quantidadeEstoque').value = result.data.quantidadeEmEstoque;
+
+                const status = document.getElementById('status');
+                const classesArray = Array.from(status.classList);
+
+                classesArray.forEach(classe => {
+                    if (classe.startsWith('bg')) {
+                        status.classList.remove(classe);
+                    }
+                });
+                let bgClass = '';
+                let text = '';
+                
+                if (valor < 100) {
+                    bgClass = 'bg-danger';
+                    text = 'Estoque baixo'
+                } else if (valor > 100 && valor < 300) {
+                    bgClass = 'bg-warning';
+                    text = 'Estoque médio'
+                } else if (valor > 300) {
+                    bgClass = 'bg-success';
+                    text = 'Estoque Alto'
+                }
+                status.textContent = text;
+                status.classList.add(bgClass)
+
+                let classQtd = '';
                 document.getElementById('unidadeMedida').value = result.data.unidade_medida
                 document.getElementById('qtdSaida').value = result.data.saidas
                 document.getElementById('qtdEntrada').value = result.data.entradas

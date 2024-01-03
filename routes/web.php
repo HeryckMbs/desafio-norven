@@ -45,7 +45,6 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/produtoIndividual/{produto_id}', [ProdutoController::class, 'getProdutoIndividual'])->name('produto.produto');
     Route::get('/produtoEstoqueInfo/{produto_estoque_id}', [EstoqueController::class, 'getInfoProdutoEstoque']);
-
     Route::resource('fornecedor', FornecedorController::class);
     Route::resource('marca', MarcaController::class);
     Route::resource('categoria', CategoriaController::class);
@@ -54,3 +53,4 @@ Route::middleware('auth')->group(function () {
     Route::resource('lancamento', LancamentoController::class);
 
 });
+ 

@@ -1,8 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <!-- Main content -->
-
+    
     <div class="row">
         @foreach ($categorias as $categoria)
             <div class="col-4">

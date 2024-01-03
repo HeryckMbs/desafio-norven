@@ -2,29 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CategoriaRequest;
 use App\Models\Categoria;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class CategoriaController extends Controller
 {
-    public function produtosCategoriaEmEstoque(int $categoria_id)
-    {
-        $categoria = Categoria::find($categoria_id);
-        $produtosCategoria = $categoria->produtos;
-
-        return view('produtosCategoria.index', compact('produtosCategoria', 'categoria'));
-    }
-    public function produtosCategoria(int $categoria_id)
-    {
-        $categoria = Categoria::find($categoria_id);
-        $produtosCategoria = $categoria->produtos->map->only(['id','nome']);
-        return ['success' => true, 'data' => $produtosCategoria];
-    }
-
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         $categorias = Categoria::orderBy('id')->withTrashed()
@@ -36,7 +24,23 @@ class CategoriaController extends Controller
         return view('categoria.index', compact('categorias'));
     }
 
-    public function store(CategoriaRequest $request)
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('categoria.form');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
         $imageLink = Storage::putFile('imagensCategoria', $request->url_capa);
         $imageLink = ENV('APP_URL') . '/' . $imageLink;
@@ -47,27 +51,40 @@ class CategoriaController extends Controller
         ]);
         return redirect(route('categoria.index'))->with('messages', ['success' => ['Categoria criada com sucesso!']]);
     }
-    public function delete(int $categoria_id)
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($categoria_id)
     {
-        try {
-            Categoria::findOrFail($categoria_id)->delete();
-        } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Requisição inválida!']]);
-        }
-        return back()->with('messages', ['success' => ['Categoria excluída com sucesso!']]);
+        $categoria = Categoria::find($categoria_id);
+        $produtosCategoria = $categoria->produtos->map->only(['id','nome']);
+        return ['success' => true, 'data' => $produtosCategoria];
     }
 
-    public function getCategoria(int $categoria_id)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($categoria_id)
     {
-        try {
-            $categoria = Categoria::findOrFail($categoria_id);
-            return response()->json(['success' => true, 'data' => $categoria]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'data' => '']);
-        }
+        $categoria = Categoria::find($categoria_id);
+        return view('categoria.form', compact('categoria'));
     }
 
-    public function update(int $categoria_id, CategoriaRequest $request)
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $categoria_id)
     {
         try {
             $categoria = Categoria::findOrFail($categoria_id);
@@ -86,18 +103,33 @@ class CategoriaController extends Controller
             }
 
             $categoria->update($arrayUpdate);
+            return redirect(route('categoria.index'))->with('messages', ['success' => ['Categoria atualizada com sucesso!']]);
         } catch (\Exception $e) {
             return back()->with('messages', ['error' => ['Requisição inválida!']]);
         }
-        return redirect(route('categoria.index'))->with('messages', ['success' => ['Categoria atualizada com sucesso!']]);
     }
 
-    public function categoriaForm(int $categoria_id = null)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($categoria_id)
     {
-        if ($categoria_id == null) {
-            return view('categoria.form');
+        try {
+            Categoria::findOrFail($categoria_id)->delete();
+        } catch (\Exception $e) {
+            return back()->with('messages', ['error' => ['Requisição inválida!']]);
         }
+        return back()->with('messages', ['success' => ['Categoria excluída com sucesso!']]);
+    }
+
+    public function produtosCategoriaEmEstoque(int $categoria_id)
+    {
         $categoria = Categoria::find($categoria_id);
-        return view('categoria.form', compact('categoria'));
+        $produtosCategoria = $categoria->produtos;
+
+        return view('produtosCategoria.index', compact('produtosCategoria', 'categoria'));
     }
 }

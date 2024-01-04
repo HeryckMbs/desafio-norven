@@ -16,8 +16,9 @@ return new class extends Migration
         Schema::create('lancamentos', function (Blueprint $table) {
             $table->id();
             $table->enum('tipo', ['Entrada', 'Saida']);
-            $table->unsignedBigInteger('produto_estoque_id');
-            $table->foreign('produto_estoque_id')->on('produto_estoques')->references('id');
+            $table->unsignedBigInteger('lote_id');
+            $table->integer('quantidade');
+            $table->foreign('lote_id')->on('lotes')->references('id');
             $table->foreign('created_by')->on('users')->references('id');
             $table->unsignedBigInteger('created_by');
 

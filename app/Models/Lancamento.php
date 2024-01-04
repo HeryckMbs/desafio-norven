@@ -9,7 +9,7 @@ class Lancamento extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    public function produtoEmEstoque(){
-        return $this->hasOne(ProdutoEstoque::class,'id','produto_estoque_id');
+    public function lote(){
+        return $this->hasOne(Lote::class,'id','lote_id');
     }
 }

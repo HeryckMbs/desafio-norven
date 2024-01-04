@@ -13,7 +13,7 @@
 
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon1">Código do produto
+                <span class="input-group-text" id="basic-addon1">Código do lote
 
                 </span>
             </div>
@@ -31,12 +31,13 @@
         <table id="produtosTable" class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th> Código</th>
+                    <th>Lançamento</th>
                     <th>Tipo</th>
-                    <th>Código do produto</th>
+                    <th>Código do Lote</th>
                     <th>Nome do produto</th>
+                    <th>Quantidade</th>
 
-                    <th>Data Operação</th>
+                    <th>Data de Operação</th>
 
 
 
@@ -52,10 +53,13 @@
                             : '<span class="bg-danger p-1 rounded">Saída</span>' !!}</td>
                         </td>
                         <td>
-                            {{ str_pad($lancamento->produto_estoque_id, 4, '0', STR_PAD_LEFT) }}
+                            {{ str_pad($lancamento->lote_id, 4, '0', STR_PAD_LEFT) }}
                         </td>
                         <td>
-                            {{ $lancamento->produtoEmEstoque->produtoRelacionado->nome }}
+                            {{ $lancamento->lote->produto->nome }}
+                        </td>
+                        <td>
+                            {{ $lancamento->quantidade }}
                         </td>
                         <td>
                             {{ \Carbon\Carbon::parse($lancamento->created_at)->format('d/m/Y H:i') }}

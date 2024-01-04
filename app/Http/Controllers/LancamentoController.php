@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Enums\TipoLancamento;
 use App\Http\Requests\LancamentoRequest;
 use App\Models\Lancamento;
+use App\Models\Lote;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,11 +19,11 @@ class LancamentoController extends Controller
      */
     public function index()
     {
-        $lancamentos = Lancamento::with(['produtoEmEstoque'])->when(request()->search != null,function($query){
-            return $query->where('produto_estoque_id',(int)request()->search);
+        $lancamentos = Lancamento::with(['lote'])->when(request()->search != null, function ($query) {
+            return $query->where('lote_id', (int)request()->search);
         })->paginate(request()->paginacao ?? 10);
 
-        return view('lancamento.index',compact('lancamentos'));
+        return view('lancamento.index', compact('lancamentos'));
     }
 
     /**
@@ -31,8 +33,8 @@ class LancamentoController extends Controller
      */
     public function create()
     {
-        $lancamentosEmAberto = Lancamento::where('tipo',TipoLancamento::Entrada)->get();
-        return view('lancamento.form',compact('lancamentosEmAberto'));
+        $lancamentosEmAberto = Lancamento::where('tipo', TipoLancamento::Entrada)->get();
+        return view('lancamento.form', compact('lancamentosEmAberto'));
     }
 
     /**
@@ -43,15 +45,25 @@ class LancamentoController extends Controller
      */
     public function store(LancamentoRequest $request)
     {
-        $idsProdutos = explode(',',$request->produtosSaida);
-        foreach($idsProdutos as $id){
+
+        try {
+           $lote =  Lote::findOrFail($request->lote_id);
+
             Lancamento::create([
                 'tipo' => TipoLancamento::Saida,
-                'produto_estoque_id'=> $id,
+                'lote_id' => $request->lote_id,
+                'quantidade' => $request->quantidade,
                 'created_by' => Auth::id()
             ]);
+            return redirect(route('lancamento.index'))->with('messages', ['success' => ['Saídas lançadas com sucesso!']]);
+        } catch (\Exception $e) {
+            if($e instanceof ModelNotFoundException){
+                return back()->with('messages', ['error' => ['Lote não encontrado!']]);
+
+            }
+            return back()->with('messages', ['error' => ['Requisição inválida!']]);
+
         }
-        return redirect(route('lancamento.index'))->with('messages', ['success' => ['Saídas lançadas com sucesso!']]);
     }
 
     /**

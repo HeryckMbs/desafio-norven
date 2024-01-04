@@ -193,28 +193,26 @@ class FillBasicData extends Seeder
 
             $produtosCadastrados[] = Produto::create($produto);
         }
-
+        $lotes = [];
         foreach ($produtosCadastrados as $produto) {
-            $lote = Lote::create([
-                'data_fabricacao' => Carbon::now()->subDays(3),
-                'data_validade' => Carbon::now()->addDays(4),
-                'preco_custo_unitario' => 10,
+            $lotes[] = Lote::create([
+                'data_fabricacao' => Carbon::now()->subDays(3)->startOfDay(),
+                'data_validade' => Carbon::now()->addDays(5)->startOfDay(),
+                'preco_custo' => 10,
+                'preco_venda' => 15,
                 'produto_id' => $produto->id,
                 'created_by' => 1
             ]);
-            foreach (range(1, 4) as $numero) {
-                $estoque = ProdutoEstoque::create([
-                    'produto_id' => $produto->id,
-                    'lote_id' => $lote->id,
-                    'preco_venda' => 15,
-                ]);
-                $lancamento = Lancamento::create([
-                    'tipo' => TipoLancamento::Entrada,
-                    'produto_estoque_id' => $estoque->id,
-                    'created_by' => 1
+        }
+        foreach ($lotes as $lote) {
+ 
+            $lancamento = Lancamento::create([
+                'tipo' => TipoLancamento::Entrada,
+                'lote_id' => $lote->id,
+                'quantidade' => 130,
+                'created_by' => 1
 
-                ]);
-            }
+            ]);
         }
     }
 }

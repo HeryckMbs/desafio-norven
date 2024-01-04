@@ -4,21 +4,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Controle de estoque') }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}" />
+
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"
         integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"
-        integrity="sha512-d4KkQohk+HswGs6A1d6Gak6Bb9rMWtxjOa0IiY49Q3TeFd5xAzjWXDCBW9RS7m86FQ4RzM2BdHmdJnnKRYknxw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     @notifyCss
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
-
     <link rel="stylesheet" href="{{ asset('css/fontawesome.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('css/adminlte.min.css') }}">
@@ -69,8 +66,8 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color:#1e0535">
             <!-- Brand Logo -->
-            <a  href="/home" class="brand-link  d-flex align-items-center flex-column">
-                <img   src="https://norven.com.br/wp-content/themes/norven/images/logo-footer.png" alt="AdminLTE Logo"
+            <a href="/home" class="brand-link  d-flex align-items-center flex-column">
+                <img src="https://norven.com.br/wp-content/themes/norven/images/logo-footer.png" alt="AdminLTE Logo"
                     class="" style="opacity: .8">
                 <span class="brand-text d-none text-center font-weight-light">Controle de Estoque</span>
             </a>
@@ -116,7 +113,7 @@
         <!-- /.content-wrapper -->
 
         <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark" >
+        <aside class="control-sidebar control-sidebar-dark">
             <!-- Control sidebar content goes here -->
             <div class="p-3">
                 <h5>Title</h5>
@@ -137,24 +134,17 @@
     </div>
     <!-- ./wrapper -->
 
-    <!-- REQUIRED SCRIPTS -->
     @if (\Session::has('messages'))
         <input type="hidden" name="messages" id="messages" value="{{ json_encode(\Session::get('messages')) }}">
     @endif
 
     @vite('resources/js/app.js')
-    {{-- <script src="http://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js" defer></script> --}}
-    <!-- AdminLTE App -->
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
-    <script src="/vendor/datatables/buttons.server-side.js"></script>
+
     <script src="{{ asset('js/adminlte.min.js') }}" defer></script>
 
-    @include('notify::components.notify')
     @yield('scripts')
-    @notifyJs
     @stack('scripts')
 
     <script>
@@ -164,23 +154,21 @@
 
         const Toast = Swal.mixin({
             toast: true,
-            position: "top-end",
-            showConfirmButton: true,
-            timer: 5000,
+            position: 'top-end',
+            iconColor: 'white',
+            customClass: {
+                popup: 'colored-toast',
+            },
+            animation: true,
+            showConfirmButton: false,
+            timer: 1500,
             timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-            }
-        });
+        })
+
         if (document.getElementById('messages') != null) {
             const messages = JSON.parse(document.getElementById('messages').value);
             for (let item in messages) {
                 for (let message of messages[item]) {
-                    console.log({
-                        icon: `${item}`,
-                        title: `${message}`
-                    })
                     Toast.fire({
                         heightAuto: false,
 
@@ -196,10 +184,6 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
-        $('#fecha').on('click', function() {
-            $('#modalRequest').modal('hide');
-        })
     </script>
 
 </body>

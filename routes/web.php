@@ -4,7 +4,7 @@ use App\Http\Controllers\MarcaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ServicoController;
-use App\Http\Controllers\EstoqueController;
+use App\Http\Controllers\LoteController;
 use App\Http\Controllers\FornecedorController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LancamentoController;
@@ -44,13 +44,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/produtosCategoriaEmEstoque/{categoria_id}', [CategoriaController::class, 'produtosCategoriaEmEstoque'])->name('produtosCategoria.index');
     
     Route::get('/produtoIndividual/{produto_id}', [ProdutoController::class, 'getProdutoIndividual'])->name('produto.produto');
-    Route::get('/produtoEstoqueInfo/{produto_estoque_id}', [EstoqueController::class, 'getInfoProdutoEstoque']);
+    Route::get('/produtoEstoqueInfo/{produto_estoque_id}', [LoteController::class, 'getInfoProdutoEstoque']);
 
     Route::resource('fornecedor', FornecedorController::class);
     Route::resource('marca', MarcaController::class);
     Route::resource('categoria', CategoriaController::class);
     Route::resource('produto', ProdutoController::class);
-    Route::resource('estoque', EstoqueController::class);
+    Route::resource('lote', LoteController::class);
     Route::resource('lancamento', LancamentoController::class);
 
 });

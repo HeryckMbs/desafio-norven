@@ -98,102 +98,7 @@
     @else
         <x-not-found />
     @endif
-    <div class="modal fade" id="produtoModal" tabindex="-1" aria-labelledby="produtoModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="produtoModalLabel">Informações do produto: <b><span
-                                id="nomeProduto"></span></b>
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formProduto" class="mb-2">
-                        <div class="row">
-                            <div class="col-2">
-                                <label for="exampleInputEmail1" class="form-label">Código</label>
-                                <input class="form-control" id="codigoProduto" disabled>
-                            </div>
-                            <div class="col-3">
-                                <label for="exampleInputEmail1" class="form-label">Quantidade em estoque</label>
-                                <input class="form-control" id="quantidadeEstoque" disabled>
-                            </div>
-                            <div class="col-3">
-                                <label for="exampleInputEmail1" class="form-label">Quantidade de entradas</label>
-                                <input class="form-control" id="qtdEntrada" disabled>
-                            </div>
-
-                            <div class="col-4">
-                                <label for="exampleInputEmail1" class="form-label">Quantidade de Saídas</label>
-                                <input class="form-control" id="qtdSaida" disabled>
-                            </div>
-                            <div class="col-3">
-                                <label for="exampleInputEmail1" class="form-label">Unidade de Medida</label>
-                                <input class="form-control" id="unidadeMedida" disabled>
-                            </div>
-
-                            <div class="col-4">
-                                <label for="exampleInputEmail1" class="form-label">Fornecedor</label>
-                                <input class="form-control" id="fornecedorNome" disabled>
-                            </div>
-                            <div class="col-5">
-                                <label for="exampleInputEmail1" class="form-label">Marca</label>
-                                <input class="form-control" id="marca" disabled>
-                            </div>
-                            <div class="col-6">
-                                <label for="exampleInputEmail1" class="form-label">Data de cadastro</label>
-                                <input class="form-control" id="dataCadastro" disabled>
-                            </div>
-                            <div class="col-6">
-                                <label for="exampleInputEmail1" class="form-label">Responsável</label>
-                                <input class="form-control" id="responsavel" disabled>
-                            </div>
-                            <div class="col-12 mt-1">
-                                <div class="form-floating">
-                                    <label for="floatingTextarea2">Descrição</label>
-                                    <textarea class="form-control" id="descricaoProduto" disabled style="height: 100px;resize:none"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-12 mt-1">
-                                <div class="row">
-                                    <div class="col-3">
-                                        <label for="exampleInputEmail1" class="form-label">Porção</label>
-                                        <input disabled id="porcao" value="" class="form-control">
-                                    </div>
-
-                                    <div class="col-3">
-                                        <label for="exampleInputEmail1" class="form-label">Proteína (g)</label>
-                                        <input disabled id="proteina" value="" class="form-control">
-                                    </div>
-                                    <div class="col-3">
-                                        <label for="exampleInputEmail1" class="form-label">Carboidratos (g)</label>
-                                        <input disabled id="carboidrato" value="" class="form-control">
-                                    </div>
-                                    <div class="col-3">
-                                        <label for="exampleInputEmail1" class="form-label">Gorduras Totais (g)</label>
-                                        <input disabled id="gordura_total" value="" class="form-control">
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-                    </form>
-                    <div class=" d-flex flex-row bg-light rounded">
-                        <div id="status" class=" bg-success rounded px-2 py-1 mr-1">
-                            
-                        </div>
-
-
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+@include('produto.modalInfo')
 
 @endsection
 
@@ -201,42 +106,14 @@
     <script>
         $('.infoProduto').on('click', function() {
             console.log(this)
-            fetch(`/produtoIndividual/${this.dataset.id}`).then(async (response) => {
+            fetch(`/produto/${this.dataset.id}`).then(async (response) => {
                 let result = await response.json();
-
+              console.log(result)
                 document.getElementById('nomeProduto').textContent = result.data.nome
 
                 document.getElementById('codigoProduto').value = result.data.id
-                document.getElementById('quantidadeEstoque').value = result.data.quantidadeEmEstoque;
 
-                const status = document.getElementById('status');
-                const classesArray = Array.from(status.classList);
-
-                classesArray.forEach(classe => {
-                    if (classe.startsWith('bg')) {
-                        status.classList.remove(classe);
-                    }
-                });
-                let bgClass = '';
-                let text = '';
-                
-                if (valor < 100) {
-                    bgClass = 'bg-danger';
-                    text = 'Estoque baixo'
-                } else if (valor > 100 && valor < 300) {
-                    bgClass = 'bg-warning';
-                    text = 'Estoque médio'
-                } else if (valor > 300) {
-                    bgClass = 'bg-success';
-                    text = 'Estoque Alto'
-                }
-                status.textContent = text;
-                status.classList.add(bgClass)
-
-                let classQtd = '';
                 document.getElementById('unidadeMedida').value = result.data.unidade_medida
-                document.getElementById('qtdSaida').value = result.data.saidas
-                document.getElementById('qtdEntrada').value = result.data.entradas
 
                 document.getElementById('porcao').value = result.data.informacao_nutricional.porcao
                 document.getElementById('proteina').value = result.data.informacao_nutricional.proteina

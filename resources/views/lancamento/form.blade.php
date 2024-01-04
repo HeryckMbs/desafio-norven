@@ -9,39 +9,34 @@
             @method('PUT')
         @endif
         <div class="row">
-            <div class="col-3">
-                <label for="exampleInputEmail1" class="form-label">Código do produto</label>
-                <input type="number" value="" class="form-control" id="codigoProduto">
+            <div class="col-4">
+                <label for="exampleInputEmail1" class="form-label">Código do Lote</label>
+                <input type="number" value="" name="lote_id" class="form-control" id="codigoProduto">
+                @error('lote_id')
+                    <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
+                @enderror
+                <label for="exampleInputEmail1" class="form-label">Quantidade de Produtos</label>
+                <input type="number" name="quantidade" value="" class="form-control" id="quantidade">
+                @error('quantidade')
+                    <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
+                @enderror
                 <div class="mt-1">
                     <label for="exampleInputEmail1" class="form-label">Responsável</label>
                     <input name="responsavel" class="form-control" id="responsavel" disabled
                         value="{{ Auth::user()->name }}">
 
                 </div>
-                <button type="submit" class="btn btn-primary mt-3">Salvar</button>
+                <button id="submitButton" type="submit" class="btn btn-primary mt-3">Salvar</button>
 
             </div>
-            <div class="col-9">
-                <label for="exampleInputEmail1" class="form-label">Lista de saída</label> 
-                @error('produtosSaida')
-                    <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
-                @enderror
-                <input type="hidden" id="produtosSaida" name="produtosSaida">
-                <table id="produtosTable" class="table table-striped table-hover rounded">
-                    <thead>
-                        <tr>
-                            <th>Código do produto</th>
-                            <th class="text-center">Nome</th>
-                            <th class="text-center">Ação</th>
+            <div class="col-4 bg-info rounded my-5 mx-2 p-3" id="infoLote" style="height: 20%">
+                <strong>Informações do Lote</strong><i class="fa fa-info-circle ml-2" aria-hidden="true"></i>
 
+                <hr class="my-1">
+                <div> Código do lote: <span id="codigoLote"> </span></div>
+                <div> Nome do produto: <span id="nomeProduto"> </span></div>
+                <div> Quantidade em estoque: <span id="quantidadeEstoque"> </span></div>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-
-
-                    </tbody>
-                </table>
             </div>
 
         </div>
@@ -52,45 +47,45 @@
 
 
     </form>
-
+    <input type="hidden"  id="quantidadeAtual">
 
     <script>
-        // document.getElementById('imageCategoria').addEventListener('change', function(event) {
-        //     let output = document.getElementById('previewImage');
-        //     output.src = URL.createObjectURL(event.target.files[0]);
-        //     output.onload = function() {
-        //         URL.revokeObjectURL(output.src) // free memory
-        //     }
-        // })
-
-        function killMe(element, id) {
-            element.parentNode.remove()
-            products = products.filter((element, index) => {
-                return element != id
-            })
-        }
         let products = [];
         document.getElementById('codigoProduto').addEventListener('change', function() {
-            if (!products.includes(this.value)) {
-                fetch(`/estoque/${this.value}`).then(async (response) => {
-                    let result = await response.json();
-                    console.log(result)
-                    const nextRow = `<tr>
-                                        <td>${result.data.id}</td>
-                                        <td class="text-center">${result.data.nome} </td>
-                                        <td class="text-right" onclick="killMe(this,${result.data.id})"><div class="btn btn-ganger"><i class="fa fa-trash"></i></div></td>
-                                    </tr>`;
-                    $('#produtosTable tbody').append(nextRow)
-                    this.value = ''
-                })
-                products.push(this.value)
-                document.getElementById('produtosSaida').value = products
-            } else {
+            fetch(`/lote/${this.value}`).then(async (response) => {
+                let result = await response.json();
+                console.log(response)
+                if(response.status == 400){
+                    Toast.fire({
+                    heightAuto: true,
+                    icon: 'error',
+                    title: result.message
+                });
+                }else{      
+                    console.log(response)
+                    document.getElementById('codigoLote').textContent = result.data.id
+                    document.getElementById('nomeProduto').textContent = result.data.produto.nome
+                    document.getElementById('quantidadeEstoque').textContent = result.data.quantidadeAtual
+                    document.getElementById('quantidadeAtual').value = result.data.quantidadeAtual
+
+                }
+            })
+
+        })
+
+        document.getElementById('quantidade').addEventListener('change', function() {
+            let valorMaximo = parseInt(document.getElementById('quantidadeAtual').value);
+            let valorRetirada = parseInt(this.value)
+            if(valorRetirada > valorMaximo){
                 Toast.fire({
                     heightAuto: true,
-                    icon: 'warning',
-                    title: 'Ops! Este produto já foi inserido na lista de produtos'
+                    icon: 'error',
+                    title: 'A quantidade a ser retirada não pode ser maior que a quantidade em estoque atual!'
                 });
+                document.getElementById('submitButton').setAttribute('disabled','')
+            }else{
+                document.getElementById('submitButton').removeAttribute('disabled')
+
             }
         })
     </script>

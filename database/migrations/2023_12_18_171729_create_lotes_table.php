@@ -17,7 +17,9 @@ return new class extends Migration
             $table->id();
             $table->dateTime('data_fabricacao');
             $table->dateTime('data_validade');
-            $table->float('preco_custo_unitario');
+            $table->float('preco_custo');
+            $table->float('preco_venda')->default(0);
+            $table->boolean('vencido')->default(false);
             $table->unsignedBigInteger('produto_id');
             $table->foreign('produto_id')->on('produtos')->references('id')->onDelete('cascade');
             $table->unsignedBigInteger('created_by');

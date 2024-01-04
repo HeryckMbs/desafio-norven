@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class EstoqueRequest extends FormRequest
+class LoteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +25,8 @@ class EstoqueRequest extends FormRequest
     {
         return [ 
             'produto' => 'required|gt:0',
-            'dataValidade' => 'required',
-            'dataFabricacao' => 'required',
+            'dataFabricacao' => 'required|date',
+            'dataValidade' => 'required|date|after:dataFabricacao|after:today',
             'preco_custo' => 'required',
             'preco_venda' => 'required',
             "quantidade" => "gt:0",
@@ -45,6 +45,9 @@ class EstoqueRequest extends FormRequest
             'produto.gt' => 'Obrigatório',
             'dataValidade.required' => 'Obrigatório',
             'dataFabricacao.required' => 'Obrigatório',
+            'dataFabricacao.date' => 'Informe uma data válida',
+            'dataFabricacao.after' => 'Não é permitido entrada de produtos vencidos',
+            'dataValidade.after' => 'A data de validade deve ser maior que a data de fabricação e maior que a data atual',
             'preco_custo.required' => 'Obrigatório',
             'preco_venda.required' => 'Obrigatório',
             "quantidade.gt" => "Deve ser maior que 0",

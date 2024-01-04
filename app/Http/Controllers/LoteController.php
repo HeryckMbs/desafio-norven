@@ -3,18 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Enums\TipoLancamento;
-use App\Http\Requests\EstoqueRequest;
+use App\Http\Requests\LoteRequest;
 use App\Models\Categoria;
 use App\Models\Lancamento;
 use App\Models\ProdutoEstoque;
 use App\Models\Lote;
 use App\Models\Produto;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class EstoqueController extends Controller
+class LoteController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,8 +24,8 @@ class EstoqueController extends Controller
      */
     public function index()
     {
-        $produtosEmEstoque = ProdutoEstoque::index(request());
-        return view('estoque.index', compact('produtosEmEstoque'));
+        $produtosEmEstoque = Lote::paginate(10);
+        return view('lote.index', compact('produtosEmEstoque'));
     }
 
     /**
@@ -35,7 +36,7 @@ class EstoqueController extends Controller
     public function create()
     {
         $categorias = Categoria::all();
-        return view('estoque.form', compact('categorias'));
+        return view('lote.form', compact('categorias'));
     }
 
     /**
@@ -44,35 +45,32 @@ class EstoqueController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(EstoqueRequest $request)
+    public function store(LoteRequest $request)
     {
         $produto = Produto::find($request->produto);
         try {
             DB::beginTransaction();
             $lote = Lote::create([
-                'data_fabricacao' => Carbon::parse($request->dataFabricacao),
-                'data_validade' => Carbon::parse($request->dataValidade),
-                'preco_custo_unitario' => (float) $request->preco_custo,
+                'data_fabricacao' => Carbon::parse($request->dataFabricacao)->startOfDay(),
+                'data_validade' => Carbon::parse($request->dataValidade)->startOfDay(),
+                'preco_custo' => (float) $request->preco_custo,
+                'preco_venda' => $request->preco_venda,
                 'produto_id' => $produto->id,
                 'created_by' => Auth::id()
             ]);
 
-            foreach (range(1, $request->quantidade) as $numero) {
-                $produtoEmEstoque = ProdutoEstoque::create([
-                    'produto_id' => $produto->id,
-                    'lote_id' => $lote->id,
-                    'preco_venda' => $request->preco_venda,
-                ]);
-                Lancamento::create([
-                    'tipo' => TipoLancamento::Entrada,
-                    'produto_estoque_id'=> $produtoEmEstoque->id,
-                    'created_by' => Auth::id()
+            Lancamento::create([
+                'tipo' => TipoLancamento::Entrada,
+                'quantidade' => $request->quantidade,
+                'lote_id' => $lote->id,
+                'created_by' => Auth::id()
 
-                ]);
-            }
+            ]);
+
+
 
             DB::commit();
-            return redirect(route('estoque.index'))->with('messages', ['success' => ['Produtos cadastrados no estoque com sucesso!']]);
+            return redirect(route('lote.index'))->with('messages', ['success' => ['Produtos cadastrados no estoque com sucesso!']]);
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('messages', ['error' => ['Requisição inválida']]);
@@ -85,11 +83,18 @@ class EstoqueController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($produto_estoque_id)
+    public function show($lote_id)
     {
-        $produtoEstoque = ProdutoEstoque::with(['produtoRelacionado'])->where('id', $produto_estoque_id)->first();
-        $data = ['id' => $produtoEstoque->id, 'nome' => $produtoEstoque->produtoRelacionado->nome];
-        return response()->json(['success' => true, 'data' => $data], 200);
+        try {
+            $lote = Lote::with(['produto', 'produto.marca', 'produto.fornecedor', 'produto.categoria'])->findOrFail( $lote_id);
+            return response()->json(['success' => true, 'data' => $lote], 200);
+        } catch (\Exception $e) {
+            if ($e instanceof ModelNotFoundException) {
+                return response()->json(['success' => true, 'data' => null,'message' => 'Lote não encontrado'], 400);
+            }
+            return response()->json(['success' => true, 'data' => null,'message' => 'Erro ao processar requisição. Tente novamente mais tarde.'], 400);
+
+        }
     }
 
     /**
@@ -128,12 +133,11 @@ class EstoqueController extends Controller
 
     public function getInfoProdutoEstoque(int $produto_estoque_id)
     {
-        $produto = ProdutoEstoque::infoProdutoEstoque($produto_estoque_id);
+        $produto = Produto::infoProdutoEstoque($produto_estoque_id);
         return response()->json(['success' => true, 'data' => $produto], 200);
     }
 
     public function getProduto(int $produto_estoque_id)
     {
-       
     }
 }

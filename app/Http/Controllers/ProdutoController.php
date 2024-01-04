@@ -7,6 +7,7 @@ use App\Models\Categoria;
 use App\Models\Fornecedor;
 use App\Models\Marca;
 use App\Models\Produto;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -83,9 +84,22 @@ class ProdutoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($produto_id)
     {
-        //
+
+
+        try {
+            $produto = Produto::with(
+                ['fornecedor', 'marca', 'responsavel']
+            )->findOrFail($produto_id);
+
+            return response()->json(['success' => true, 'data' => $produto], 200);
+        } catch (\Exception $e) {
+            if ($e instanceof ModelNotFoundException) {
+                return response()->json(['success' => true, 'data' => null, 'message' => 'Produto não encontrado'], 400);
+            }
+            return response()->json(['success' => true, 'data' => null, 'message' => 'Erro ao processar requisição. Tente novamente mais tarde.'], 400);
+        }
     }
 
     /**
@@ -100,7 +114,7 @@ class ProdutoController extends Controller
 
         $categorias = Categoria::all();
         $marcas = Marca::all();
-        $fornecedores = Fornecedor::where('ativo',true)->get();
+        $fornecedores = Fornecedor::where('ativo', true)->get();
         $produto = Produto::find($id);
         return view('produto.form', compact('produto', 'categorias', 'marcas', 'fornecedores'));
     }
@@ -152,11 +166,5 @@ class ProdutoController extends Controller
 
     public function getProdutoIndividual(int $produto_id)
     {
-        $produto = Produto::with(
-            ['fornecedor', 'marca', 'responsavel']
-        )->where('id', '=', $produto_id)->first();
-        $produto->saidas = $produto->produtosSairamEstoque->count();
-        $produto->entradas = $produto->produtosEntraramEstoque->count();
-        return response()->json(['success' => true, 'data' => $produto], 200);
     }
 }

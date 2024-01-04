@@ -48,16 +48,17 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('estoque.index') }}" class="nav-link">
-                    <i class="nav-icon fa-solid fa-box-open"></i>
+                <a href="{{ route('lote.index') }}" class="nav-link">
+                    <i class="nav-icon  fa-solid fa-truck-ramp-box"></i>
                     <p>
-                        Estoque
+                        Lotes
                     </p>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="{{ route('lancamento.index') }}" class="nav-link">
-                    <i class="nav-icon fa-solid fa-truck-ramp-box"></i>                    <p>
+                  
+                    <i class=" nav-icon fa-solid fa-clock-rotate-left"></i>              <p>
                         Lançamentos
                     </p>
                 </a>

@@ -25,30 +25,8 @@ class Produto extends Model
         "informacao_nutricional",
         "created_by",
     ];
-    protected $appends = ['quantidadeEmEstoque',];
     use HasFactory;
-    public function getQuantidadeEmEstoqueAttribute()
-    {
-        return $this->produtosEmEstoque->count();
-    }
 
-    public function produtosEmEstoque()
-    {
-        return $this->hasMany(ProdutoEstoque::class)->where('deleted_at', '=', null)->whereDoesntHave('lancamentos', function ($query) {
-            return $query->where('tipo', TipoLancamento::Saida);
-        });
-    }
-
-    public function produtosSairamEstoque(){
-        return $this->hasMany(ProdutoEstoque::class)->where('deleted_at', '=', null)->whereHas('lancamentos', function ($query) {
-            return $query->where('tipo', TipoLancamento::Saida);
-        });
-    }
-    public function produtosEntraramEstoque(){
-        return $this->hasMany(ProdutoEstoque::class)->where('deleted_at', '=', null)->whereHas('lancamentos', function ($query) {
-            return $query->where('tipo', TipoLancamento::Entrada);
-        });
-    }
     public function responsavel()
     {
         return $this->hasOne(User::class, 'id', 'created_by');

@@ -4,7 +4,7 @@
 
 @section('content')
     <form enctype="multipart/form-data"
-        action="{{ isset($produto) ? route('estoque.update', $produto->id) : route('estoque.store') }}" method="POST">
+        action="{{ isset($produto) ? route('lote.update', $produto->id) : route('lote.store') }}" method="POST">
         @csrf
         @if (isset($produto))
             @method('PUT')
@@ -20,7 +20,6 @@
                         <option>
                             @foreach ($categorias as $categoria)
                         <option
-                            {{ isset($produto) ? ($produto->categoria_id == $categoria->id ? 'selected' : '') : (old('categoria') == $categoria->id ? 'selected' : '') }}
                             value="{{ $categoria->id }}">{{ $categoria->nome }}</option>
                         @endforeach
                     </select>
@@ -33,7 +32,7 @@
                 <label for="exampleInputEmail1" class="form-label">Produto</label>
                 <div class="input-group  ">
                     <select id="produto" name="produto"
-                        value="{{ isset($produto) ? $produto->categoria_id : old('categoria') ?? '' }}"
+                        
                         class="custom-select" id="inputGroupSelect01">
                         <option value="-1" selected>Selecione uma categoria
 
@@ -43,29 +42,29 @@
                     <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
                 @enderror
             </div>
-
-            <div class="col-3">
-                <div class="form-group">
-                    <label for="dataValidade">Data de Validade</label>
-                    <input type="date" class="form-control" id="dataValidade" name="dataValidade">
-                    @error('dataValidade')
-                        <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
-                    @enderror
-                </div>
-            </div>
             <div class="col-3">
                 <div class="form-group">
                     <label for="dataValidade">Data de Fabricação</label>
-                    <input type="date" class="form-control" id="dataFabricacao" name="dataFabricacao">
+                    <input type="date" value="{{old('dataFabricacao')  ?? ''}}" class="form-control" id="dataFabricacao" name="dataFabricacao">
                     @error('dataFabricacao')
                         <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
                     @enderror
                 </div>
             </div>
             <div class="col-3">
+                <div class="form-group">
+                    <label for="dataValidade">Data de Validade</label>
+                    <input value="{{old('dataValidade')  ?? ''}}" type="date" class="form-control" id="dataValidade" name="dataValidade">
+                    @error('dataValidade')
+                        <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
+                    @enderror
+                </div>
+            </div>
+        
+            <div class="col-3">
                 <label for="exampleInputEmail1" class="form-label">Preço de custo</label>
                 <input type="number" name="preco_custo"
-                    value="{{ isset($produto) ? $produto->preco_custo : old('preco_custo') ?? '' }}" class="form-control"
+                    value="{{ old('preco_custo') ?? '' }}" class="form-control"
                     id="preco_custo">
                 @error('preco_custo')
                     <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
@@ -74,7 +73,7 @@
             <div class="col-3">
                 <label for="exampleInputEmail1" class="form-label">Preço de venda estimado</label>
                 <input type="number" name="preco_venda"
-                    value="{{ isset($produto) ? $produto->preco_custo : old('preco_venda') ?? '' }}" class="form-control"
+                    value="{{ old('preco_venda') ?? '' }}" class="form-control"
                     id="preco_venda">
                 @error('preco_venda')
                     <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
@@ -83,7 +82,7 @@
             <div class="col-3">
                 <label for="exampleInputEmail1" class="form-label">Quantidade de Produtos</label>
                 <input type="number" name="quantidade"
-                    value="{{ isset($produto) ? $produto->nome : (isset($produto) ? $produto->nome : old('quantidade') ?? '') }}"
+                    value="{{old('quantidade') ?? '' }}"
                     class="form-control" id="codigoProduto">
                 @error('quantidade')
                     <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>

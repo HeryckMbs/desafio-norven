@@ -24,7 +24,8 @@ class LancamentoRequest extends FormRequest
     public function rules()
     {
         return [
-            'produtosSaida' => 'required',
+            'lote_id' => 'required',
+            'quantidade' => 'required|gt:0'
         ];
     }
 
@@ -36,7 +37,11 @@ class LancamentoRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'produtosSaida.required' => 'É necessário incluir ao menos um produto na lista de saída',
+            'lote_id.required' => 'É necessário informar o código do lote dos produtos a serem retirados',
+            'quantidade.required' => 'É necessário informar a quantidade de produtos a serem retirados',
+
+            'quantidade.gt' => 'Deve ser maior que 0',
+
         ];
     }
 }

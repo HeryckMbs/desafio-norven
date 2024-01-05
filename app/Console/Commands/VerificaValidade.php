@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Lote;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -28,7 +30,9 @@ class VerificaValidade extends Command
      */
     public function handle()
     {
-        Log::info('asdasd');
+        $lotes = Lote::whereDate('data_validade','<=',Carbon::now()->startOfDay())->where('vencido',false)->update(['vencido' => true]);
+
+        Log::info("$lotes registros atualizados");
         return Command::SUCCESS;
     }
 }

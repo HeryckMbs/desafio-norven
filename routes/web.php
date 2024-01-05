@@ -41,14 +41,11 @@ Route::middleware('auth')->group(function () {
     Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     
-    Route::get('/produtosCategoriaEmEstoque/{categoria_id}', [CategoriaController::class, 'produtosCategoriaEmEstoque'])->name('produtosCategoria.index');
-    
-    Route::get('/produtoIndividual/{produto_id}', [ProdutoController::class, 'getProdutoIndividual'])->name('produto.produto');
-    Route::get('/produtoEstoqueInfo/{produto_estoque_id}', [LoteController::class, 'getInfoProdutoEstoque']);
+    Route::get('/produtosCategoriaEmEstoque/{categoria_id}', [HomeController::class, 'produtosCategoriaEmEstoque'])->name('produtosCategoria.index');
 
+    Route::resource('categoria', CategoriaController::class);
     Route::resource('fornecedor', FornecedorController::class);
     Route::resource('marca', MarcaController::class);
-    Route::resource('categoria', CategoriaController::class);
     Route::resource('produto', ProdutoController::class);
     Route::resource('lote', LoteController::class);
     Route::resource('lancamento', LancamentoController::class);

@@ -25,7 +25,7 @@ class FornecedorRequest extends FormRequest
     {
         return [ 
             'nome' => 'required',
-            'cnpj' => 'required',
+            'cnpj' => 'required|unique:fornecedors,cnpj',
         ];
     }
 
@@ -38,7 +38,9 @@ class FornecedorRequest extends FormRequest
     {
         return [
             'nome.required' => 'O campo Nome é obrigatório',
-            'cnpj.required' => 'O campo CNPJ da capa é obrigatório',
+            'cnpj.required' => 'O campo CNPJ é obrigatório',
+            'cnpj.unique' => 'Não é permitido cadastro duplicado de CNPJ',
+
         ];
     }
 }

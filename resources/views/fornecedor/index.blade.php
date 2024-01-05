@@ -9,19 +9,41 @@
 
 
 @section('content')
-    <div class="d-flex">
+<form class="mr-2 d-flex justify-content-between" id="formSearch" action="{{ route('fornecedor.index') }}" method="GET">
+    <div class="d-flex ">
+
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
             </div>
-            <form class="mr-2" id="formSearch" action="{{ route('fornecedor.index') }}" method="GET">
-                <input value="{{ $_GET['search'] ?? '' }}" type="text" id="search" name="search" class="form-control"
-                    placeholder="" aria-label="" aria-describedby="basic-addon1">
-            </form>
+            <input value="{{ $_GET['search'] ?? '' }}" type="text" id="search" name="search" class="form-control"
+                placeholder="" aria-label="" aria-describedby="basic-addon1">
             <a href="{{ route('fornecedor.index') }}" class="btn btn-primary">Limpar busca</a>
+
         </div>
-        {{ $fornecedores->links() }}
     </div>
+    <div class="d-flex">
+        <div class="input-group  ">
+            <select id="paginacao" name="paginacao" class="custom-select mr-2" style="min-width: 80px"
+                id="inputGroupSelect01">
+                <option value="10" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '10' ? 'selected' : '' }}>
+                    10
+                </option>
+                <option value="20" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '20' ? 'selected' : '' }}>
+                    20
+                </option>
+                <option value="30" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '30' ? 'selected' : '' }}>
+                    30
+                </option>
+
+
+            </select>
+            {{ $fornecedores->links() }}
+
+        </div>
+    </div>
+</form>
+
     @if (!$fornecedores->isEmpty())
         <table id="fornecedorTable" class="table table-striped table-hover">
             <thead>
@@ -38,7 +60,7 @@
                     <tr class="{{ $fornecedor->deleted_at ? 'bg-danger' : '' }}">
                         <td>{{ $fornecedor->id }}</td>
                         <td>{{ $fornecedor->nome }}</td>
-                        <td>{{ $fornecedor->cnpj }}</td>
+                        <td>{{ formatCnpjCpf($fornecedor->cnpj) }}</td>
                         <td>{{ $fornecedor->ativo && $fornecedor->deleted_at == null ? 'Ativo' : 'Inativo' }}</td>
                         <td class="d-flex  justify-content-around">
                             @if ($fornecedor->deleted_at == null)
@@ -98,10 +120,8 @@
             document.getElementById('formSearch').submit()
         })
 
-        $('.infoFoto').on('click', function() {
-            $('#fotofornecedor').attr('src', this.dataset.url)
-            $('#nomeFotofornecedor').text(this.dataset.nome)
-            $('#fotoModal').modal('show')
+        document.getElementById('paginacao').addEventListener('change', function() {
+            document.getElementById('formSearch').submit()
         })
     </script>
 @endpush

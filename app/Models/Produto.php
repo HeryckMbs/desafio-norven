@@ -34,15 +34,32 @@ class Produto extends Model
 
     public function fornecedor()
     {
-        return $this->hasOne(Fornecedor::class, 'id', 'fornecedor_id');
+        return $this->hasOne(Fornecedor::class, 'id', 'fornecedor_id')->withTrashed();
     }
     public function marca()
     {
-        return $this->hasOne(Marca::class, 'id', 'marca_id');
+        return $this->hasOne(Marca::class, 'id', 'marca_id')->withTrashed();
     }
 
     public function categoria()
     {
-        return $this->hasOne(Categoria::class, 'id', 'categoria_id');
+        return $this->hasOne(Categoria::class, 'id', 'categoria_id')->withTrashed();
+    }
+
+    public function scopeIndex($query){
+        return $query->with(['fornecedor', 'marca', 'responsavel'])
+        ->orderBy('id')
+        ->when(request()->has('search') && request()->search != '', function ($query) {
+            $request = request()->all();
+            return $query->where('nome', 'like', '%' . $request['search'] . '%')
+                ->orWhere('descricao', 'like', '%' . $request['search'] . '%')
+                ->orWhereHas('responsavel', function ($query) use ($request) {
+                    $query->where('nome', 'like', '%' . $request['search'] . '%');
+                })->orWhereHas('categoria', function ($query) use ($request) {
+                    $query->where('categorias.nome', 'like', '%' . $request['search'] . '%');
+                });
+        })
+        ->withTrashed()
+        ->paginate(request()->paginacao ?? 10);
     }
 }

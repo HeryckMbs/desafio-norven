@@ -2,88 +2,65 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoriaRequest;
 use App\Models\Categoria;
+use App\Models\Produto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class CategoriaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        $categorias = Categoria::orderBy('id')->withTrashed()
-            ->when(request()->has('search'), function ($query) {
-                $request = request()->all();
-                return $query->where('nome', 'like', '%' . $request['search'] . '%')
-                    ->orWhere('descricao', 'like', '%' . $request['search'] . '%');
-            })->paginate(request()->paginacao ?? 10);
+        $categorias = Categoria::index();
         return view('categoria.index', compact('categorias'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('categoria.form');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(CategoriaRequest $request)
     {
-        $imageLink = Storage::putFile('imagensCategoria', $request->url_capa);
-        $imageLink = ENV('APP_URL') . '/' . $imageLink;
-        Categoria::create([
-            'nome' => $request->nome,
-            'descricao' => $request->descricao,
-            'url_capa' => $imageLink
-        ]);
-        return redirect(route('categoria.index'))->with('messages', ['success' => ['Categoria criada com sucesso!']]);
+        try {
+            $imageLink = Storage::putFile('imagensCategoria', $request->url_capa);
+            $imageLink = ENV('APP_URL') . '/' . $imageLink;
+            Categoria::create([
+                'nome' => $request->nome,
+                'descricao' => $request->descricao,
+                'url_capa' => $imageLink
+            ]);
+            return redirect(route('categoria.index'))->with('messages', ['success' => ['Categoria criada com sucesso!']]);
+        } catch (\Exception $e) {
+            return back()->with('messages', ['error' => ['Não foi possícel criar a categoria!']]);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($categoria_id)
     {
-        $categoria = Categoria::find($categoria_id);
-        $produtosCategoria = $categoria->produtos->map->only(['id','nome']);
-        return ['success' => true, 'data' => $produtosCategoria];
+
+        try{
+            $categoria = Categoria::findOrFail($categoria_id);
+            $produtosCategoria = $categoria->produtos->map->only(['id', 'nome']);
+            return ['success' => true, 'data' => $produtosCategoria];
+        }catch(\Exception $e){
+            return ['success' => false, 'data' => '','message'=> 'Não foi possível encontrar a categoria', 'error' => $e->getMessage()];
+
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($categoria_id)
     {
-        $categoria = Categoria::find($categoria_id);
-        return view('categoria.form', compact('categoria'));
+        try{
+            $categoria = Categoria::findOrFail($categoria_id);
+            return view('categoria.form', compact('categoria'));
+        }catch(\Exception $e){
+            return back()->with('messages', ['error' => ['Não foi possícel editar a categoria!']]);
+
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $categoria_id)
     {
         try {
@@ -105,16 +82,10 @@ class CategoriaController extends Controller
             $categoria->update($arrayUpdate);
             return redirect(route('categoria.index'))->with('messages', ['success' => ['Categoria atualizada com sucesso!']]);
         } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Requisição inválida!']]);
+            return back()->with('messages', ['error' => ['Não foi possível atualizar a categoria!']]);
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($categoria_id)
     {
         try {
@@ -125,11 +96,5 @@ class CategoriaController extends Controller
         return back()->with('messages', ['success' => ['Categoria excluída com sucesso!']]);
     }
 
-    public function produtosCategoriaEmEstoque(int $categoria_id)
-    {
-        $categoria = Categoria::find($categoria_id);
-        $produtosCategoria = $categoria->produtos;
-
-        return view('produtosCategoria.index', compact('produtosCategoria', 'categoria'));
-    }
+  
 }

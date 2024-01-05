@@ -4,28 +4,35 @@ namespace App\Http\Controllers;
 
 use App\DataTables\AgendamentosDataTable;
 use App\Models\Categoria;
+use App\Models\Produto;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function index( )
+    public function index()
     {
-        $categorias = Categoria::all();
+        $categorias = Categoria::indexHome();
         return view('home', compact('categorias'));
+    }
+
+    public function produtosCategoriaEmEstoque(int $categoria_id)
+    {
+        $produtosCategoria = Produto::when(request()->has('search'), function ($query) {
+            return  $query->whereHas('fornecedor', function ($query3) {
+                $query3->where('fornecedors.nome', 'like', '%' . request()->search . '%');
+            })->orWhereHas('marca', function ($query3) {
+                $query3->where('marcas.nome', 'like', '%' . request()->search . '%');
+            });
+        })->where('categoria_id', $categoria_id)
+            ->with(['categoria'])
+            ->paginate(request()->paginacao ?? 10);
+
+        $categoria = Categoria::find($categoria_id);
+        return view('produtosCategoria.index', compact('produtosCategoria', 'categoria'));
     }
 }

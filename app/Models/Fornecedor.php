@@ -12,4 +12,15 @@ class Fornecedor extends Model
     use SoftDeletes;
 
     protected $fillable = ['nome','cnpj','ativo'];
+
+
+    public function scopeIndex($query){
+        return $query->orderBy('id')->withTrashed()
+        ->when(request()->has('search'), function ($query) {
+            $request = request()->all();
+            $cnpj = preg_replace('/[.\/-]/', '', $request['search']);
+            return $query->where('nome', 'like', '%' . $request['search'] . '%')
+                ->orWhere('cnpj', 'like', '%' .  $cnpj . '%');
+        })->paginate(request()->paginacao ?? 10);
+    }
 }

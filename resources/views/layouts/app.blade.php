@@ -7,9 +7,11 @@
     <title>{{ config('app.name', 'Controle de estoque') }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
+    
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"
-        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-
+    integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @notifyCss
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -27,42 +29,44 @@
 <body class="hold-transition sidebar-mini sidebar-collapse">
     <div class="wrapper">
 
-        <!-- Navbar -->
-        <nav class="main-header navbar  navbar-white navbar-light">
-            <!-- Left navbar links -->
+        <nav class="main-header navbar navbar-expand navbar-light navbar-white d-flex justify-content-between">
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
-                </li>
-            </ul>
 
-            <!-- Right navbar links -->
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
+            </li>
+            </ul>
+            <div class="">
+
+                <!-- Right navbar links -->
+                <ul class="navbar-nav ml-auto">
+                  
                     <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa-solid fa-user mr-2"></i>
                         {{ Auth::user()->name }}
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right" style="left: inherit; right: 0px;">
-                        <a href="{{ route('profile.show') }}" class="dropdown-item">
-                            <i class="mr-2 fas fa-file"></i>
-                            {{ __('My profile') }}
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <a href="{{ route('logout') }}" class="dropdown-item"
-                                onclick="event.preventDefault(); this.closest('form').submit();">
-                                <i class="mr-2 fas fa-sign-out-alt"></i>
-                                {{ __('Log Out') }}
+                        <div class="dropdown-menu dropdown-menu-right" style="left: inherit; right: 0px;">
+                            <a href="{{ route('profile.show') }}" class="dropdown-item">
+                                <i class="mr-2 fas fa-file"></i>
+                                {{ __('Meu perfil') }}
                             </a>
-                        </form>
-                    </div>
-                </li>
-            </ul>
+                            <div class="dropdown-divider"></div>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <a href="{{ route('logout') }}" class="dropdown-item"
+                                    onclick="event.preventDefault(); this.closest('form').submit();">
+                                    <i class="mr-2 fas fa-sign-out-alt"></i>
+                                    {{ __('Log Out') }}
+                                </a>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </nav>
-        <!-- /.navbar -->
 
+        <!-- /.navbar -->
+   
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color:#1e0535">
             <!-- Brand Logo -->
@@ -161,7 +165,7 @@
             },
             animation: true,
             showConfirmButton: false,
-            timer: 1500,
+            timer: 3500,
             timerProgressBar: true,
         })
 
@@ -177,7 +181,6 @@
                     });
                 }
             }
-            console.log(messages)
         }
         $.ajaxSetup({
             headers: {

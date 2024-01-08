@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CategoriaRequest;
 use App\Models\Categoria;
 use App\Models\Produto;
+use App\Repositories\CategoriaRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,9 +13,14 @@ use Illuminate\Support\Facades\Storage;
 
 class CategoriaController extends Controller
 {
+    private CategoriaRepository $categoriaRepository;
+
+    public function __construct(CategoriaRepository $categoriaRepository)   {
+        $this->categoriaRepository = $categoriaRepository;
+    }
     public function index() : View
     {
-        $categorias = Categoria::index();
+        $categorias = $this->categoriaRepository->getIndex();
         return view('categoria.index', compact('categorias'));
     }
 
@@ -26,13 +32,7 @@ class CategoriaController extends Controller
     public function store(CategoriaRequest $request) : RedirectResponse
     {
         try {
-            $imageLink = Storage::putFile('imagensCategoria', $request->url_capa);
-            $imageLink = ENV('APP_URL') . '/' . $imageLink;
-            Categoria::create([
-                'nome' => $request->nome,
-                'descricao' => $request->descricao,
-                'url_capa' => $imageLink
-            ]);
+            $this->categoriaRepository->store($request);
             return redirect(route('categoria.index'))->with('messages', ['success' => ['Categoria criada com sucesso!']]);
         } catch (\Exception $e) {
             return back()->with('messages', ['error' => ['Não foi possícel criar a categoria!']]);
@@ -43,8 +43,7 @@ class CategoriaController extends Controller
     {
 
         try{
-            $categoria = Categoria::findOrFail($categoria_id);
-            $produtosCategoria = $categoria->produtos->map->only(['id', 'nome']);
+            $produtosCategoria = $this->categoriaRepository->getProdutosCategoria( $categoria_id ); 
             return ['success' => true, 'data' => $produtosCategoria];
         }catch(\Exception $e){
             return ['success' => false, 'data' => '','message'=> 'Não foi possível encontrar a categoria', 'error' => $e->getMessage()];
@@ -63,25 +62,10 @@ class CategoriaController extends Controller
         }
     }
 
-    public function update(Request $request, int $categoria_id) : RedirectResponse
+    public function update(CategoriaRequest $request, int $categoria_id) : RedirectResponse
     {
         try {
-            $categoria = Categoria::findOrFail($categoria_id);
-            $arrayUpdate = [
-                'nome' => $request->nome,
-                'descricao' => $request->descricao,
-            ];
-            if (isset($request->url_capa)) {
-                $nameOldFile = explode('/', $categoria->url_capa);
-                if (Storage::disk('imagensCategoria')->exists(end($nameOldFile))) {
-                    Storage::disk('imagensCategoria')->delete(end($nameOldFile));
-                }
-                $imageLink = Storage::putFile('imagensCategoria', $request->url_capa);
-                $imageLink = ENV('APP_URL') . '/' . $imageLink;
-                $arrayUpdate['url_capa'] = $imageLink;
-            }
-
-            $categoria->update($arrayUpdate);
+            $this->categoriaRepository->update($request, $categoria_id);
             return redirect(route('categoria.index'))->with('messages', ['success' => ['Categoria atualizada com sucesso!']]);
         } catch (\Exception $e) {
             return back()->with('messages', ['error' => ['Não foi possível atualizar a categoria!']]);
@@ -91,7 +75,7 @@ class CategoriaController extends Controller
     public function destroy(int $categoria_id) : RedirectResponse
     {
         try {
-            Categoria::findOrFail($categoria_id)->delete();
+            $this->categoriaRepository->destroy($categoria_id);
             return back()->with('messages', ['success' => ['Categoria excluída com sucesso!']]);
         } catch (\Exception $e) {
             return back()->with('messages', ['error' => ['Não foi possível excluir a categoria!']]);

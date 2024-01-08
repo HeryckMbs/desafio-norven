@@ -4,12 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CategoriaRequest;
 use App\Models\Categoria;
-use App\Models\Produto;
 use App\Repositories\CategoriaRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class CategoriaController extends Controller
 {

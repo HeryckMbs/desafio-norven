@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class Marca extends Model
 {
@@ -14,7 +15,8 @@ class Marca extends Model
 
     protected $fillable = ['nome'];
 
-    public function scopeIndex($query){
+    public function scopeIndex($query)
+    {
         return $query->orderBy('id')->withTrashed()
         ->when(request()->has('search'), function ($query) {
             $request = request()->all();

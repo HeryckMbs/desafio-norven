@@ -42,4 +42,12 @@ class Lote extends Model
     public function produto(){
         return $this->hasOne(Produto::class,'id','produto_id')->withTrashed();
     }
+
+    public function scopeIndex($query){
+        return $this->when(request()->has('search'),function($q){
+            return $q->whereHas('produto',function($q2){
+                $q2->where('nome','like','%'.request()->search.'%');
+            })->orWhere('id','like','%'.request()->search.'%');
+        })->paginate(request()->paginacao ?? 10);
+    }
 }

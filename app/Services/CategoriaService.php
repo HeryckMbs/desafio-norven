@@ -26,7 +26,6 @@ class CategoriaService
             }
             $imageLink = Storage::putFile('imagensCategoria', $request->url_capa);
             $request['imageLink'] =  ENV('APP_URL') . '/' . $imageLink;
-            $categoriaRepository->store($request);
         }
 
         $categoriaRepository->update($categoria, $request);

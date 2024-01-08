@@ -116,7 +116,7 @@
                 </div>
                 
                 <h5  class=" mt-3">Informações Nutricionais</h5>
-                <div class=" mt-1 p-2 rounded" style="background-color:#F4F6F9;">
+                <div class=" mt-1 p-2 rounded shadow" style="background-color:#F4F6F9;">
                     <div class="row">
                         <div class="col-2">
                             <label for="exampleInputEmail1" class="form-label">Porção</label>

@@ -18,22 +18,18 @@ class MarcaController extends Controller
     }
     public function index(): View|RedirectResponse
     {
-        try {
+        
             $marcas = $this->marcaRepository->getIndex();
             return view('marca.index', compact('marcas'));
-        } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Não foi possível acessar o menu->withInput($request->all()); marca!']]);
-        }
+     
 
     }
 
     public function create(): View|RedirectResponse
     {
-        try {
+       
             return view('marca.form');
-        } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Não foi possível acessar o cadastro marca!']]);
-        }
+       
     }
 
     public function store(MarcaRequest $request): RedirectResponse
@@ -44,10 +40,6 @@ class MarcaController extends Controller
         } catch (\Exception $e) {
             return back()->with('messages', ['error' => ['Não foi possível salvar a marca!']])->withInput($request->all());;
         }
-    }
-
-    public function show($id)
-    {
     }
 
     public function edit(int $id) : View|RedirectResponse

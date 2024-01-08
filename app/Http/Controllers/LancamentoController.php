@@ -25,23 +25,16 @@ class LancamentoController extends Controller
 
     public function index(): View|RedirectResponse
     {
-        try{
-            $lancamentos = $this->lancamentoRepository->getIndex();
-            return view('lancamento.index', compact('lancamentos'));
-        }catch(\Exception $e){
-            return back()->with('messages', ['error' => ['Não foi possível salvar o menu lançamento!']]);
-        }
-        
+
+        $lancamentos = $this->lancamentoRepository->getIndex();
+        return view('lancamento.index', compact('lancamentos'));
     }
 
 
     public function create(): View|RedirectResponse
     {
-        try{
-            return view('lancamento.form');
-        }catch(\Exception $e){
-            return back()->with('messages', ['error' => ['Não foi possível acessar o cadastro de lançamento!']]);
-        }
+
+        return view('lancamento.form');
     }
 
 
@@ -64,21 +57,5 @@ class LancamentoController extends Controller
             }
             return back()->with('messages', ['error' => ['Não foi possível salvar o lançamento!']])->withInput($request->all());;
         }
-    }
-
-    public function show(int $id)
-    {
-    }
-
-    public function edit(int $id)
-    {
-    }
-
-    public function update(Request $request, int $id)
-    {
-    }
-
-    public function destroy(int $id)
-    {
     }
 }

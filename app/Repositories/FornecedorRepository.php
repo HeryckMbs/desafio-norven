@@ -17,40 +17,23 @@ class FornecedorRepository implements FornecedorRepositoryInterface
 
     public function getIndex()
     {
-        try {
-            return $this->fornecedor->index();
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        return $this->fornecedor->index();
     }
 
     public function store(FornecedorRequest $request)
     {
-        try {
-            $cnpj = preg_replace('/[.\/-]/', '', $request->cnpj);
-            $this->fornecedor->create(['nome' => $request->nome, 'cnpj' => $cnpj]);
-        } catch (\Exception $e) {
-            throw $e;
-        }
+
+        $this->fornecedor->create($request->except(['_token']));
     }
 
     public function update(FornecedorRequest $request, int $id)
     {
-
-        try {
-            $cnpj = preg_replace('/[.\/-]/', '', $request->cnpj);
-            $this->fornecedor->findOrFail($id)->update(['nome' => $request->nome, 'cnpj' => $cnpj]);
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        $this->fornecedor->findOrFail($id)->update($request->except(['_token','_method']));
     }
 
     public function destroy(int $id)
     {
-        try {
-            $this->fornecedor->findOrFail($id)->delete();
-        } catch (\Exception $e) {
-            throw $e;
-        }
+
+        $this->fornecedor->findOrFail($id)->delete();
     }
 }

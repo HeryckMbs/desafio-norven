@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CategoriaRequest;
 use App\Models\Categoria;
 use App\Repositories\CategoriaRepository;
+use App\Services\CategoriaService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 
@@ -18,27 +19,21 @@ class CategoriaController extends Controller
     }
     public function index(): View|RedirectResponse
     {
-        try {
-            $categorias = $this->categoriaRepository->getIndex();
-            return view('categoria.index', compact('categorias'));
-        } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Não foi possível acessar o menu categoria!']]);
-        }
+
+        $categorias = $this->categoriaRepository->getIndex();
+        return view('categoria.index', compact('categorias'));
     }
 
     public function create(): View
     {
-        try {
-            return view('categoria.form');
-        } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Não foi possível acessar o menu categoria!']]);
-        }
+
+        return view('categoria.form');
     }
 
     public function store(CategoriaRequest $request): RedirectResponse
     {
         try {
-            $this->categoriaRepository->store($request);
+            CategoriaService::store($request, $this->categoriaRepository);
             return redirect(route('categoria.index'))->with('messages', ['success' => ['Categoria criada com sucesso!']]);
         } catch (\Exception $e) {
             return back()->with('messages', ['error' => ['Não foi possível criar a categoria!']])->withInput($request->all());;
@@ -69,7 +64,7 @@ class CategoriaController extends Controller
     public function update(CategoriaRequest $request, int $categoria_id): RedirectResponse
     {
         try {
-            $this->categoriaRepository->update($request, $categoria_id);
+            CategoriaService::update($request, $categoria_id, $this->categoriaRepository);
             return redirect(route('categoria.index'))->with('messages', ['success' => ['Categoria atualizada com sucesso!']]);
         } catch (\Exception $e) {
             return back()->with('messages', ['error' => ['Não foi possível atualizar a categoria!']])->withInput($request->all());;

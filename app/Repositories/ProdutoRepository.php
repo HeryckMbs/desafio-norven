@@ -18,86 +18,59 @@ class ProdutoRepository implements ProdutoRepositoryInterface
 
     public function getIndex()
     {
-          try {
-            return $this->produto->index();
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        return $this->produto->index();
     }
 
     public function getIndexHome(int $categoria_id)
     {
-          try {
-            return $this->produto->indexHome($categoria_id);
-        } catch (\Exception $e) {
-            dd($e);
-            throw $e;
-        }
+        return $this->produto->indexHome($categoria_id);
     }
     public function store(ProdutoRequest $request)
     {
-        try {
-            $informacaoNutricional = [
+        Produto::create([
+            "nome" => $request->nome,
+            "unidade_medida" => $request->unidade_medida,
+            "categoria_id" => (int) $request->categoria,
+            "marca_id" => (int) $request->marca,
+            "fornecedor_id" => (int) $request->fornecedor,
+            "descricao" => $request->descricao,
+            "created_by" => Auth::id(),
+            "informacao_nutricional" => [
                 "porcao" => $request->porcao,
                 "proteina" => $request->proteina,
                 "carboidrato" => $request->carboidrato,
                 "gordura_total" => $request->gordura_total,
-            ];
-            Produto::create([
-                "nome" => $request->nome,
-                "unidade_medida" => $request->unidade_medida,
-                "categoria_id" => (int) $request->categoria,
-                "marca_id" => (int) $request->marca,
-                "fornecedor_id" => (int) $request->fornecedor,
-                "descricao" => $request->descricao,
-                "informacao_nutricional" => $informacaoNutricional,
-                "created_by" => Auth::id(),
-            ]);
-        } catch (\Exception $e) {
-            throw $e;
-        }
+            ]
+        ]);
     }
 
     public function getProduto(int $produto_id)
     {
-        try {
-            return $this->produto->with(['fornecedor', 'marca', 'responsavel'])->withTrashed()->findOrFail($produto_id);
-        } catch (\Exception $e) {
-            throw $e;
-        }
+
+        return $this->produto->with(['fornecedor', 'marca', 'responsavel'])->withTrashed()->findOrFail($produto_id);
     }
 
     public function update(ProdutoRequest $request, int $id)
     {
-        try {
-            $informacaoNutricional = [
+        Produto::findOrFail($id)->update([
+            "nome" => $request->nome,
+            "unidade_medida" => $request->unidade_medida,
+            "categoria_id" => (int) $request->categoria,
+            "marca_id" => (int) $request->marca,
+            "fornecedor_id" => (int) $request->fornecedor,
+            "descricao" => $request->descricao,
+            "created_by" => Auth::id(),
+            "informacao_nutricional" => [
                 "porcao" => $request->porcao,
                 "proteina" => $request->proteina,
                 "carboidrato" => $request->carboidrato,
                 "gordura_total" => $request->gordura_total,
-            ];
-            Produto::findOrFail($id)->update([
-                "nome" => $request->nome,
-                "unidade_medida" => $request->unidade_medida,
-
-                "categoria_id" => (int) $request->categoria,
-                "marca_id" => (int) $request->marca,
-                "fornecedor_id" => (int) $request->fornecedor,
-                "descricao" => $request->descricao,
-                "informacao_nutricional" => $informacaoNutricional,
-                "created_by" => Auth::id()
-            ]);
-        } catch (\Exception $e) {
-            throw $e;
-        }
+            ]
+        ]);
     }
 
-    public function destroy(int $id) 
+    public function destroy(int $id)
     {
-        try {
-            $this->produto->findOrFail($id)->delete();
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        $this->produto->findOrFail($id)->delete();
     }
 }

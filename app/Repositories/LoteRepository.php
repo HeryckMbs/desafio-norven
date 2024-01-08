@@ -23,18 +23,14 @@ class  LoteRepository implements LoteRepositoryInterface
 
     public function getIndex()
     {
-        try {
-            return $this->lote->index();
-        } catch (\Exception $e) {
-            throw $e;
-        }
-
+        return $this->lote->index();
     }
     public function store(LoteRequest $request)
     {
         try {
             $produto = Produto::findOrFail($request->produto);
             DB::beginTransaction();
+
             $lote = Lote::create([
                 'data_fabricacao' => Carbon::parse($request->dataFabricacao)->startOfDay(),
                 'data_validade' => Carbon::parse($request->dataValidade)->startOfDay(),
@@ -44,7 +40,7 @@ class  LoteRepository implements LoteRepositoryInterface
                 'created_by' => Auth::id()
             ]);
 
-            LancamentoRepository::entrada($lote->id,$request->quantidade);
+            LancamentoRepository::entrada($lote->id, $request->quantidade);
 
             DB::commit();
         } catch (\Exception $e) {
@@ -55,10 +51,9 @@ class  LoteRepository implements LoteRepositoryInterface
 
     public function getLote(int $lote_id)
     {
-        try {
-            return $this->lote->with(['produto', 'produto.marca', 'produto.fornecedor', 'produto.categoria'])->findOrFail($lote_id);
-        } catch (\Exception $e) {
-            throw $e;
-        }
+
+        return $this->lote
+            ->with(['produto', 'produto.marca', 'produto.fornecedor', 'produto.categoria'])
+            ->findOrFail($lote_id);
     }
 }

@@ -44,7 +44,7 @@ class Lote extends Model
     }
 
     public function scopeIndex($query){
-        return $this->when(request()->has('search'),function($q){
+        return $this->orderBy('created_at','DESC')->when(request()->has('search'),function($q){
             return $q->whereHas('produto',function($q2){
                 $q2->where('nome','like','%'.request()->search.'%');
             })->orWhere('id','like','%'.request()->search.'%');

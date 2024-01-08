@@ -11,7 +11,6 @@ use App\Models\Produto;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use LancamentoRepository;
 
 class  LoteRepository implements LoteRepositoryInterface
 {

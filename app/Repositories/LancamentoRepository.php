@@ -1,5 +1,5 @@
 <?php
-
+namespace App\Repositories;
 use App\Enums\TipoLancamento;
 use App\Http\Requests\LancamentoRequest;
 use App\Models\Lancamento;

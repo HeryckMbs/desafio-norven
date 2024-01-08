@@ -6,12 +6,12 @@ use App\Enums\TipoLancamento;
 use App\Http\Requests\LancamentoRequest;
 use App\Models\Lancamento;
 use App\Models\Lote;
+use App\Repositories\LancamentoRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use LancamentoRepository;
 
 class LancamentoController extends Controller
 {

@@ -25,7 +25,7 @@ class LancamentoRepository
 
     public function saida(int $lote_id, int $quantidade)
     {
-        Lancamento::create([
+        $this->lancamento->create([
             'tipo' => TipoLancamento::Saida,
             'lote_id' => $lote_id,
             'quantidade' => $quantidade,

@@ -25,16 +25,26 @@ class LoteController extends Controller
     public function __construct(LoteRepository $loteRepository){
         $this->loteRepository = $loteRepository;
     }
-    public function index() : View
+    public function index() : View|RedirectResponse
     {
-        $lotes = $this->loteRepository->getIndex();
-        return view('lote.index', compact('lotes'));
+        try {
+            $lotes = $this->loteRepository->getIndex();
+            return view('lote.index', compact('lotes'));
+        } catch (\Exception $e) {
+            return back()->with('messages', ['error' => ['Não foi possível cadastrar o lote!']]);
+        }
+     
     }
 
-    public function create() : View
+    public function create() : View|RedirectResponse
     {
-        $categorias = Categoria::orderBy('nome')->get();
-        return view('lote.form', compact('categorias'));
+        try {
+            $categorias = Categoria::orderBy('nome')->get();
+            return view('lote.form', compact('categorias'));
+        } catch (\Exception $e) {
+            return back()->with('messages', ['error' => ['Não foi possível cadastrar o lote!']]);
+        }
+  
     }
 
     public function store(LoteRequest $request) : RedirectResponse
@@ -43,7 +53,7 @@ class LoteController extends Controller
             $this->loteRepository->store($request);
             return redirect(route('lote.index'))->with('messages', ['success' => ['Produtos cadastrados no estoque com sucesso!']]);
         } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Não foi possível cadastrar o lote!']]);
+            return back()->with('messages', ['error' => ['Não foi possível cadastrar o lote!']])->withInput($request->all());
         }
     }
 

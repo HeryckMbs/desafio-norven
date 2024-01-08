@@ -18,7 +18,20 @@ class ProdutoRepository implements ProdutoRepositoryInterface
 
     public function getIndex()
     {
-        return $this->produto->index();
+          try {
+            return $this->produto->index();
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function getIndexHome(int $categoria_id)
+    {
+          try {
+            return $this->produto->indexHome($categoria_id);
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
     public function store(ProdutoRequest $request)
     {

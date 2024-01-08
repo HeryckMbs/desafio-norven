@@ -15,7 +15,12 @@ class MarcaRepository implements MarcaRepositoryInterface
     }
     public function getIndex()
     {
-        return $this->marca->index();
+        try{
+            return $this->marca->index();
+        }catch(\Exception $e){
+            //LOG
+            throw $e;
+        }
     }
 
     public function store(MarcaRequest $request){

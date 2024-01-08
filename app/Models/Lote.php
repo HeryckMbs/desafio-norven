@@ -40,6 +40,6 @@ class Lote extends Model
     }
 
     public function produto(){
-        return $this->hasOne(Produto::class,'id','produto_id');
+        return $this->hasOne(Produto::class,'id','produto_id')->withTrashed();
     }
 }

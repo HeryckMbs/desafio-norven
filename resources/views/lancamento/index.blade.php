@@ -9,24 +9,39 @@
 
 
 @section('content')
-    <div class="d-flex">
+<form class="d-flex flex-row justify-content-around" id="formSearch" action="{{ route('lancamento.index') }}" method="GET">
 
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon1">Código do lote
 
-                </span>
-            </div>
-            <form class="mr-2" id="formSearch" action="{{ route('lancamento.index') }}" method="GET">
-                <input type="text" id="search" name="search" class="form-control" placeholder="" aria-label=""
-                    aria-describedby="basic-addon1">
-            </form>
-            <a href="{{ route('lancamento.index') }}" class="btn btn-primary">Limpar busca</a>
-
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Código do Lote</span>
         </div>
+        <input value="{{ $_GET['search'] ?? '' }}" style="max-width: 150px" type="text" id="search" name="search"
+            class="form-control mr-2" placeholder="" aria-label="" aria-describedby="basic-addon1">
+        <a href="{{ route('lancamento.index') }}" class="btn btn-primary">Limpar busca</a>
 
+    </div>
+    <div class="d-flex">
+        <div class="input-group  ">
+            <select id="paginacao" name="paginacao" class="custom-select mr-2" style="min-width: 80px"
+                id="inputGroupSelect01">
+                <option value="10" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '10' ? 'selected' : '' }}>
+                    10
+                </option>
+                <option value="20" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '20' ? 'selected' : '' }}>
+                    20
+                </option>
+                <option value="30" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '30' ? 'selected' : '' }}>
+                    30
+                </option>
+
+
+            </select>
+        </div>
         {{ $lancamentos->links() }}
     </div>
+</form>
+
     @if ($lancamentos->isNotEmpty())
         <table id="produtosTable" class="table table-striped table-hover">
             <thead>
@@ -84,6 +99,9 @@
     <script>
 
         document.getElementById('search').addEventListener('change', function() {
+            document.getElementById('formSearch').submit()
+        })
+        document.getElementById('paginacao').addEventListener('change', function() {
             document.getElementById('formSearch').submit()
         })
     </script>

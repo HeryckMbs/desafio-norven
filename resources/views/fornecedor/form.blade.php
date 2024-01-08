@@ -10,7 +10,6 @@
         @if (isset($fornecedor))
             @method('PUT')
         @endif
-        <div class="">
             <div class="form-group">
                 <label for="exampleInputEmail1" class="form-label">Nome</label>
                 <input value="{{ isset($fornecedor) ? $fornecedor->nome : '' }}" class="form-control" name="nome"
@@ -27,18 +26,20 @@
                     <span class="mt-1 text-red p-1 rounded"><small>{{ $message }}</small></span>
                 @enderror
             </div>
-            <div class="form-group form-check">
-                <input name="ativo" {{ isset($fornecedor) && $fornecedor->ativo ? 'checked' : '' }}
-                    class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                <label class="form-check-label" for="flexCheckChecked">
-                    Ativo
-                </label>
-            </div>
+
             <button type="submit" class="btn btn-primary">Salvar</button>
 
 
     </form>
 
 
-
+    <script>
+        $(document).ready(function ($) {
+      $('input[name=cnpj]').mask('99.999.999/9999-99')
+    })
+    </script>
 @endsection
+
+@push('scripts')
+
+@endpush

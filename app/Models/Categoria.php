@@ -19,11 +19,22 @@ class Categoria extends Model
 
     public function produtosEmEstoquePorCategoria(){
         return $this->hasManyThrough(ProdutoEstoque::class,Produto::class);
-        // $produtosPorCategoria= [];
-        // foreach($this->produtos as $produto){
-        //     $produtosPorCategoria[$produto->id] = $produto->produtosEmEstoque;
-        // }
-        // dd($produtosPorCategoria);
-        // return $produtosPorCategoria;
+    }
+
+    public function scopeIndex($query){
+        return $query->orderBy('id')->withTrashed()
+        ->when(request()->has('search'), function ($query) {
+            $request = request()->all();
+            return $query->where('nome', 'like', '%' . $request['search'] . '%')
+                ->orWhere('descricao', 'like', '%' . $request['search'] . '%');
+        })->paginate(request()->paginacao ?? 10);
+    }
+    public function scopeIndexHome($query){
+        return $query->orderBy('id')
+        ->when(request()->has('search'), function ($query) {
+            $request = request()->all();
+            return $query->where('nome', 'like', '%' . $request['search'] . '%')
+                ->orWhere('descricao', 'like', '%' . $request['search'] . '%');
+        })->paginate(request()->paginacao ?? 10);
     }
 }

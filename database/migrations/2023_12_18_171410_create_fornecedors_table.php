@@ -16,8 +16,7 @@ return new class extends Migration
         Schema::create('fornecedors', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->string('cnpj');
-            $table->boolean('ativo')->default(false);
+            $table->string('cnpj')->unique();
             $table->softDeletes();
 
             $table->timestamps();

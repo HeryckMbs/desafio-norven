@@ -7,9 +7,4 @@ enum TipoLancamento: String
     case Entrada = 'Entrada';
     case Saida = 'Saida';
 
-
-
-
-
-  
 }

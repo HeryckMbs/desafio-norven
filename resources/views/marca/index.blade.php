@@ -10,20 +10,41 @@
 
 @section('content')
 
-    <div class="d-flex">
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
-            </div>
-            <form class="mr-2" id="formSearch" action="{{ route('marca.index') }}" method="GET">
+
+    <form class="mr-2 d-flex justify-content-between" id="formSearch" action="{{ route('marca.index') }}" method="GET">
+        <div class="d-flex ">
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                </div>
                 <input value="{{ $_GET['search'] ?? '' }}" type="text" id="search" name="search" class="form-control"
                     placeholder="" aria-label="" aria-describedby="basic-addon1">
-            </form>
-            <a href="{{ route('marca.index') }}" class="btn btn-primary">Limpar busca</a>
+                <a href="{{ route('marca.index') }}" class="btn btn-primary">Limpar busca</a>
 
+            </div>
         </div>
-        {{ $marcas->links() }}
-    </div>
+        <div class="d-flex">
+            <div class="input-group  ">
+                <select id="paginacao" name="paginacao" class="custom-select mr-2" style="min-width: 80px"
+                    id="inputGroupSelect01">
+                    <option value="10" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '10' ? 'selected' : '' }}>
+                        10
+                    </option>
+                    <option value="20" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '20' ? 'selected' : '' }}>
+                        20
+                    </option>
+                    <option value="30" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '30' ? 'selected' : '' }}>
+                        30
+                    </option>
+
+
+                </select>
+                {{ $marcas->links() }}
+
+            </div>
+        </div>
+    </form>
     @if (!$marcas->isEmpty())
         <table id="marcaTable" class="table table-striped table-hover">
             <thead>
@@ -73,6 +94,9 @@
 @push('scripts')
     <script>
         document.getElementById('search').addEventListener('change', function() {
+            document.getElementById('formSearch').submit()
+        })
+        document.getElementById('paginacao').addEventListener('change', function() {
             document.getElementById('formSearch').submit()
         })
     </script>

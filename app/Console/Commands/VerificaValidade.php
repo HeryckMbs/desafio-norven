@@ -32,7 +32,7 @@ class VerificaValidade extends Command
     {
         $lotes = Lote::whereDate('data_validade','<=',Carbon::now()->startOfDay())->where('vencido',false)->update(['vencido' => true]);
 
-        Log::info("$lotes registros atualizados");
+        Log::info("$lotes registros atualizados:");
         return Command::SUCCESS;
     }
 }

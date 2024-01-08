@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('descricao')->nullable();
 
             $table->string('unidade_medida');
+            
             $table->unsignedBigInteger('fornecedor_id');
             $table->unsignedBigInteger('marca_id');
             $table->unsignedBigInteger('categoria_id');

@@ -20,7 +20,7 @@
                     name="search" class="form-control mr-2" placeholder="" aria-label="" aria-describedby="basic-addon1">
                 <a href="{{ route('produtosCategoria.index', $categoria->id) }}" class="btn btn-primary">Limpar busca</a>
             </div>
-            {{$produtosCategoria->appends(['paginacao' => $_GET['paginacao'] ?? 10])}}
+            {{-- {{$produtosCategoria->appends(['paginacao' => $_GET['paginacao'] ?? 10])}} --}}
         </div>
         @if ($produtosCategoria->isNotEmpty())
             <table id="produtosCategoriaTable" class="table shadow rounded table-striped table-hover">

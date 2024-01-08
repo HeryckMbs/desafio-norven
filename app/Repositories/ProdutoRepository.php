@@ -30,6 +30,7 @@ class ProdutoRepository implements ProdutoRepositoryInterface
           try {
             return $this->produto->indexHome($categoria_id);
         } catch (\Exception $e) {
+            dd($e);
             throw $e;
         }
     }

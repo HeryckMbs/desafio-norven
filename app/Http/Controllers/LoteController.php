@@ -22,32 +22,24 @@ class LoteController extends Controller
 {
     private LoteRepository $loteRepository;
 
-    public function __construct(LoteRepository $loteRepository){
+    public function __construct(LoteRepository $loteRepository)
+    {
         $this->loteRepository = $loteRepository;
     }
-    public function index() : View|RedirectResponse
+    public function index(): View|RedirectResponse
     {
-        try {
-            $lotes = $this->loteRepository->getIndex();
-            return view('lote.index', compact('lotes'));
-        } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Não foi possível cadastrar o lote!']]);
-        }
-     
+        $lotes = $this->loteRepository->getIndex();
+        return view('lote.index', compact('lotes'));
     }
 
-    public function create() : View|RedirectResponse
+    public function create(): View|RedirectResponse
     {
-        try {
-            $categorias = Categoria::orderBy('nome')->get();
-            return view('lote.form', compact('categorias'));
-        } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Não foi possível cadastrar o lote!']]);
-        }
-  
+
+        $categorias = Categoria::orderBy('nome')->get();
+        return view('lote.form', compact('categorias'));
     }
 
-    public function store(LoteRequest $request) : RedirectResponse
+    public function store(LoteRequest $request): RedirectResponse
     {
         try {
             $this->loteRepository->store($request);
@@ -57,32 +49,16 @@ class LoteController extends Controller
         }
     }
 
-    public function show(int $lote_id) : JsonResponse
+    public function show(int $lote_id): JsonResponse
     {
         try {
             $lote = $this->loteRepository->getLote($lote_id);
             return response()->json(['success' => true, 'data' => $lote], 200);
         } catch (\Exception $e) {
             if ($e instanceof ModelNotFoundException) {
-                return response()->json(['success' => true, 'data' => null,'message' => 'Lote não encontrado'], 400);
+                return response()->json(['success' => true, 'data' => null, 'message' => 'Lote não encontrado'], 400);
             }
-            return response()->json(['success' => true, 'data' => null,'message' => 'Erro ao processar requisição. Tente novamente mais tarde.'], 400);
-
+            return response()->json(['success' => true, 'data' => null, 'message' => 'Erro ao processar requisição. Tente novamente mais tarde.'], 400);
         }
     }
-
-    public function edit($id)
-    {
-    }
-
-    public function update(Request $request, $id)
-    {
-    }
-
-
-    public function destroy($id)
-    {
-    }
-
- 
 }

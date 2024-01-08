@@ -23,25 +23,20 @@ class ProdutoController extends Controller
     }
     public function index() : View|RedirectResponse
     {
-        try {
+ 
             $produtos = $this->produtoRepository->getIndex();
             return view('produto.index', compact('produtos'));
-        } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Não foi possível acessar o menu produto. Tente novamente mais tarde!']]);
-        }
-
+      
     }
 
     public function create() : View|RedirectResponse
     {
-        try {
+        
             $categorias = Categoria::orderBy('nome')->get();
             $marcas = Marca::orderBy('nome')->get();
             $fornecedores = Fornecedor::orderBy('nome')->get();
             return view('produto.form', compact('categorias', 'marcas', 'fornecedores'));
-        } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Não foi possível acessar o cadastro de produto. Tente novamente mais tarde!']]);
-        }
+      
        
     }
 

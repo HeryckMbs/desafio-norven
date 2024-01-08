@@ -4,15 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MarcaRequest;
 use App\Models\Marca;
+use App\Repositories\MarcaRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class MarcaController extends Controller
 {
+    private MarcaRepository $marcaRepository;
+
+    public function __construct(MarcaRepository $marcaRepository){
+        $this->marcaRepository = $marcaRepository;
+    }
     public function index(): View
     {
-        $marcas = Marca::index();
+        $marcas = $this->marcaRepository->getIndex();
         return view('marca.index', compact('marcas'));
     }
 
@@ -24,7 +30,7 @@ class MarcaController extends Controller
     public function store(MarcaRequest $request): RedirectResponse
     {
         try {
-            Marca::create($request->except('_token'));
+            $this->marcaRepository->store($request);
             return redirect(route('marca.index'))->with('messages', ['success' => ['Marca criada com sucesso!']]);
         } catch (\Exception $e) {
             return back()->with('messages', ['error' => ['Não foi possível salvar a marca!']]);
@@ -36,7 +42,7 @@ class MarcaController extends Controller
     {
     }
 
-    public function edit($id) : View|RedirectResponse
+    public function edit(int $id) : View|RedirectResponse
     {
         try {
             $marca = Marca::findOrFail($id);
@@ -46,20 +52,20 @@ class MarcaController extends Controller
         }
     }
 
-    public function update(MarcaRequest $request, $id) : RedirectResponse
+    public function update(MarcaRequest $request, int $id) : RedirectResponse
     {
         try {
-            Marca::findOrFail($id)->update($request->except(['_token', '_method']));
+            $this->marcaRepository->update($request,$id);
             return redirect(route('marca.index'))->with('messages', ['success' => ['Marca atualizada com sucesso!']]);
         } catch (\Exception $e) {
             return back()->with('messages', ['error' => ['Não foi possível atualizar a marca!']]);
         }
     }
 
-    public function destroy($id) : RedirectResponse
+    public function destroy(int $id) : RedirectResponse
     {
         try {
-            Marca::findOrFail($id)->delete();
+            $this->marcaRepository->destroy($id);
             return back()->with('messages', ['success' => ['Marca excluída com sucesso!']]);
         } catch (\Exception $e) {
             return back()->with('messages', ['error' => ['Não foi possível excluir a marca!']]);

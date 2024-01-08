@@ -24,9 +24,9 @@ class HomeController extends Controller
     {
         $produtosCategoria = Produto::when(request()->has('search'), function ($query) {
             return  $query->whereHas('fornecedor', function ($query3) {
-                $query3->where('fornecedors.nome', 'like', '%' . request()->search . '%');
-            })->orWhereHas('marca', function ($query3) {
-                $query3->where('marcas.nome', 'like', '%' . request()->search . '%');
+                $query3->where('nome', 'like', '%' . request()->search . '%');
+            })->orWhereHas('marca', function ($query4) {
+                $query4->where('nome', 'like', '%' . request()->search . '%');
             });
         })->where('categoria_id', $categoria_id)
             ->with(['categoria'])

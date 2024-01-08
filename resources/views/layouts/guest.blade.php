@@ -18,7 +18,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
-        <a href="/">{{ config('app.name', 'Laravel') }}</a>
+        <a href="/">Controle de estoque</a>
     </div>
     <!-- /.login-logo -->
     <div class="card">

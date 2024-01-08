@@ -16,11 +16,6 @@ class Categoria extends Model
     public function produtos(){
         return $this->hasMany(Produto::class);
     }
-
-    public function produtosEmEstoquePorCategoria(){
-        return $this->hasManyThrough(ProdutoEstoque::class,Produto::class);
-    }
-
     public function scopeIndex($query){
         return $query->orderBy('id')->withTrashed()
         ->when(request()->has('search'), function ($query) {

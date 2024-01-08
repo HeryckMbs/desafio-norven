@@ -55,7 +55,7 @@ class MarcaController extends Controller
             Marca::findOrFail($id)->delete();
             return back()->with('messages', ['success' => ['Marca excluída com sucesso!']]);
         } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Requisição inválida!']]);
+            return back()->with('messages', ['error' => ['Não foi possível excluir a marca!']]);
         }
     }
 }

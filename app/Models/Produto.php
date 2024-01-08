@@ -53,10 +53,10 @@ class Produto extends Model
             $request = request()->all();
             return $query->where('nome', 'like', '%' . $request['search'] . '%')
                 ->orWhere('descricao', 'like', '%' . $request['search'] . '%')
-                ->orWhereHas('responsavel', function ($query) use ($request) {
-                    $query->where('nome', 'like', '%' . $request['search'] . '%');
-                })->orWhereHas('categoria', function ($query) use ($request) {
-                    $query->where('categorias.nome', 'like', '%' . $request['search'] . '%');
+                ->orWhereHas('responsavel', function ($query2) use ($request) {
+                    $query2->where('nome', 'like', '%' . $request['search'] . '%');
+                })->orWhereHas('categoria', function ($query3) use ($request) {
+                    $query3->where('nome', 'like', '%' . $request['search'] . '%');
                 });
         })
         ->withTrashed()

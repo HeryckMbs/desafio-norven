@@ -90,10 +90,10 @@ class CategoriaController extends Controller
     {
         try {
             Categoria::findOrFail($categoria_id)->delete();
+            return back()->with('messages', ['success' => ['Categoria excluída com sucesso!']]);
         } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Requisição inválida!']]);
+            return back()->with('messages', ['error' => ['Não foi possível excluir a categoria!']]);
         }
-        return back()->with('messages', ['success' => ['Categoria excluída com sucesso!']]);
     }
 
   

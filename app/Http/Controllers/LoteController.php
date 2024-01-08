@@ -6,7 +6,6 @@ use App\Enums\TipoLancamento;
 use App\Http\Requests\LoteRequest;
 use App\Models\Categoria;
 use App\Models\Lancamento;
-use App\Models\ProdutoEstoque;
 use App\Models\Lote;
 use App\Models\Produto;
 use Carbon\Carbon;
@@ -20,8 +19,12 @@ class LoteController extends Controller
 
     public function index()
     {
-        $produtosEmEstoque = Lote::paginate(request()->paginacao ?? 10);
-        return view('lote.index', compact('produtosEmEstoque'));
+        $lotes = Lote::when(request()->has('search'),function($q){
+            return $q->whereHas('produto',function($q2){
+                $q2->where('nome','like','%'.request()->search.'%');
+            })->orWhere('id','like','%'.request()->search.'%');
+        })->paginate(request()->paginacao ?? 10);
+        return view('lote.index', compact('lotes'));
     }
 
     public function create()
@@ -56,7 +59,7 @@ class LoteController extends Controller
             return redirect(route('lote.index'))->with('messages', ['success' => ['Produtos cadastrados no estoque com sucesso!']]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('messages', ['error' => ['Requisição inválida']]);
+            return back()->with('messages', ['error' => ['Não foi possível cadastrar o lote!']]);
         }
     }
 

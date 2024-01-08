@@ -4,16 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\FornecedorRequest;
 use App\Models\Fornecedor;
+use App\Repositories\FornecedorRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class FornecedorController extends Controller
 {
+    private FornecedorRepository $fornecedorRepository;
 
+    public function __construct(FornecedorRepository $fornecedorRepository){
+        $this->fornecedorRepository = $fornecedorRepository;
+    }
     public function index() : View
     {
-        $fornecedores = Fornecedor::index();
+        $fornecedores = $this->fornecedorRepository->getIndex();
         return view('fornecedor.index', compact('fornecedores'));
     }
 
@@ -29,8 +34,9 @@ class FornecedorController extends Controller
             if(!validar_cnpj($request->cnpj)){
                 return back()->with('messages', ['error' => ['CNPJ Inválido!']])->withInput($request->all());
             }
-            $cnpj = preg_replace('/[.\/-]/', '', $request->cnpj);
-            Fornecedor::create(['nome' => $request->nome, 'cnpj' => $cnpj]);
+
+            $this->fornecedorRepository->store($request);
+
             return redirect(route('fornecedor.index'))->with('messages', ['success' => ['Fornecedor criado com sucesso!']]);
         } catch (\Exception $e) {
             return back()->with('messages', ['error' => ['Não foi possível criar o fornecedor!']]);
@@ -55,7 +61,7 @@ class FornecedorController extends Controller
     public function update(FornecedorRequest $request, int $id) : RedirectResponse
     {
         try {
-            Fornecedor::find($id)->update(['nome' => $request->nome, 'cnpj' => $request->cnpj]);
+            $this->fornecedorRepository->update($request, $id);
             return redirect(route('fornecedor.index'))->with('messages', ['success' => ['Fornecedor atualizado com sucesso!']]);
         } catch (\Exception $e) {
             return back()->with('messages', ['error' => ['Não foi possível atualizar o fornecedor!'.$e->getMessage()]]);
@@ -66,7 +72,7 @@ class FornecedorController extends Controller
     public function destroy(int $id) : RedirectResponse
     {
         try {
-            Fornecedor::findOrFail($id)->delete();
+            $this->fornecedorRepository->destroy( $id );
             return back()->with('messages', ['success' => ['Fornecedor excluído com sucesso!']]);
         } catch (\Exception $e) {
             return back()->with('messages', ['error' => ['Requisição inválida!']]);

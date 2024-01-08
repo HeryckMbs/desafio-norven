@@ -17,7 +17,11 @@ class FornecedorRepository implements FornecedorRepositoryInterface
 
     public function getIndex()
     {
-        return $this->fornecedor->index();
+        try {
+            return $this->fornecedor->index();
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 
     public function store(FornecedorRequest $request)

@@ -12,9 +12,19 @@ class CategoriaRepository implements CategoriaRepositoryInterface{
         $this->categoria = $model;
     }
     public function getIndex(){
-        return $this->categoria->index();
+        try{
+            return $this->categoria->index();
+        }catch(\Exception $e){
+            throw $e;
+        }
     }   
-
+    public  function getIndexHome(){
+        try{
+            return $this->categoria->indexHome();
+        }catch(\Exception $e){
+            throw $e;
+        }
+    }   
     public function store(CategoriaRequest $request){
         try{
             $imageLink = Storage::putFile('imagensCategoria', $request->url_capa);
@@ -32,7 +42,11 @@ class CategoriaRepository implements CategoriaRepositoryInterface{
     }
 
     public function getProdutosCategoria(int $categoria_id){
-        return $this->categoria->findOrFail($categoria_id)->produtos->map->only(['id', 'nome']);
+        try{
+            return $this->categoria->findOrFail($categoria_id)->produtos->map->only(['id', 'nome']);
+        }catch(\Exception $e){
+            throw $e;
+        }
     }
 
     public function update(CategoriaRequest $request, int $categoria_id){

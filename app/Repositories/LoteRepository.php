@@ -11,6 +11,7 @@ use App\Models\Produto;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use LancamentoRepository;
 
 class  LoteRepository implements LoteRepositoryInterface
 {
@@ -23,13 +24,12 @@ class  LoteRepository implements LoteRepositoryInterface
 
     public function getIndex()
     {
-        return $this->lote->index();
-    }
-    public function update(LoteRequest $request, int $id)
-    {
-    }
-    public function destroy(int $id)
-    {
+        try {
+            return $this->lote->index();
+        } catch (\Exception $e) {
+            throw $e;
+        }
+
     }
     public function store(LoteRequest $request)
     {
@@ -45,13 +45,7 @@ class  LoteRepository implements LoteRepositoryInterface
                 'created_by' => Auth::id()
             ]);
 
-            Lancamento::create([
-                'tipo' => TipoLancamento::Entrada,
-                'quantidade' => $request->quantidade,
-                'lote_id' => $lote->id,
-                'created_by' => Auth::id()
-
-            ]);
+            LancamentoRepository::entrada($lote->id,$request->quantidade);
 
             DB::commit();
         } catch (\Exception $e) {

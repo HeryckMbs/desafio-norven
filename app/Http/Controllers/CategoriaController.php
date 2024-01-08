@@ -12,64 +12,71 @@ class CategoriaController extends Controller
 {
     private CategoriaRepository $categoriaRepository;
 
-    public function __construct(CategoriaRepository $categoriaRepository)   {
+    public function __construct(CategoriaRepository $categoriaRepository)
+    {
         $this->categoriaRepository = $categoriaRepository;
     }
-    public function index() : View
+    public function index(): View|RedirectResponse
     {
-        $categorias = $this->categoriaRepository->getIndex();
-        return view('categoria.index', compact('categorias'));
+        try {
+            $categorias = $this->categoriaRepository->getIndex();
+            return view('categoria.index', compact('categorias'));
+        } catch (\Exception $e) {
+            return back()->with('messages', ['error' => ['Não foi possível acessar o menu categoria!']]);
+        }
     }
 
-    public function create() : View
+    public function create(): View
     {
-        return view('categoria.form');
+        try {
+            return view('categoria.form');
+        } catch (\Exception $e) {
+            return back()->with('messages', ['error' => ['Não foi possível acessar o menu categoria!']]);
+        }
     }
 
-    public function store(CategoriaRequest $request) : RedirectResponse
+    public function store(CategoriaRequest $request): RedirectResponse
     {
         try {
             $this->categoriaRepository->store($request);
             return redirect(route('categoria.index'))->with('messages', ['success' => ['Categoria criada com sucesso!']]);
         } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Não foi possícel criar a categoria!']]);
+            return back()->with('messages', ['error' => ['Não foi possível criar a categoria!']])->withInput($request->all());;
         }
     }
 
-    public function show(int $categoria_id) : Array
+    public function show(int $categoria_id): array
     {
 
-        try{
-            $produtosCategoria = $this->categoriaRepository->getProdutosCategoria( $categoria_id ); 
+        try {
+            $produtosCategoria = $this->categoriaRepository->getProdutosCategoria($categoria_id);
             return ['success' => true, 'data' => $produtosCategoria];
-        }catch(\Exception $e){
-            return ['success' => false, 'data' => '','message'=> 'Não foi possível encontrar a categoria', 'error' => $e->getMessage()];
-
+        } catch (\Exception $e) {
+            return ['success' => false, 'data' => '', 'message' => 'Não foi possível encontrar a categoria', 'error' => $e->getMessage()];
         }
     }
 
-    public function edit(int $categoria_id) : View|RedirectResponse
+    public function edit(int $categoria_id): View|RedirectResponse
     {
-        try{
+        try {
             $categoria = Categoria::findOrFail($categoria_id);
             return view('categoria.form', compact('categoria'));
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return back()->with('messages', ['error' => ['Não foi possícel editar a categoria!']]);
-
         }
     }
 
-    public function update(CategoriaRequest $request, int $categoria_id) : RedirectResponse
+    public function update(CategoriaRequest $request, int $categoria_id): RedirectResponse
     {
         try {
             $this->categoriaRepository->update($request, $categoria_id);
             return redirect(route('categoria.index'))->with('messages', ['success' => ['Categoria atualizada com sucesso!']]);
         } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Não foi possível atualizar a categoria!']]);
+            return back()->with('messages', ['error' => ['Não foi possível atualizar a categoria!']])->withInput($request->all());;
         }
     }
 
-    public function destroy(int $categoria_id) : RedirectResponse
+    public function destroy(int $categoria_id): RedirectResponse
     {
         try {
             $this->categoriaRepository->destroy($categoria_id);
@@ -78,6 +85,4 @@ class CategoriaController extends Controller
             return back()->with('messages', ['error' => ['Não foi possível excluir a categoria!']]);
         }
     }
-
-  
 }

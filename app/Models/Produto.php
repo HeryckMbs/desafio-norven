@@ -66,14 +66,10 @@ class Produto extends Model
 
     public function scopeIndexHome($query, int $categoria_id)
     {
-        return $query->when(request()->has('search'), function ($query) {
-            return  $query->whereHas('fornecedor', function ($query3) {
-                $query3->where('nome', 'like', '%' . request()->search . '%');
-            })->orWhereHas('marca', function ($query4) {
-                $query4->where('nome', 'like', '%' . request()->search . '%');
-            });
-        })->where('categoria_id', $categoria_id)
-            ->with(['categoria'])
-            ->paginate(request()->paginacao ?? 10);
+        $a = $query->with(['categoria'])
+        ->when(request()->has('search'), function ($query) {
+            return  $query->where('nome', 'like', '%' . request()->search . '%');
+        })->where('categoria_id','=', $categoria_id)->get();
+        return $a;
     }
 }

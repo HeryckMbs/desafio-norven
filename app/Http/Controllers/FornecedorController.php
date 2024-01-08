@@ -8,6 +8,7 @@ use App\Repositories\FornecedorRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class FornecedorController extends Controller
 {
@@ -16,15 +17,24 @@ class FornecedorController extends Controller
     public function __construct(FornecedorRepository $fornecedorRepository){
         $this->fornecedorRepository = $fornecedorRepository;
     }
-    public function index() : View
+    public function index() : View|RedirectResponse
     {
-        $fornecedores = $this->fornecedorRepository->getIndex();
-        return view('fornecedor.index', compact('fornecedores'));
+        try {
+            $fornecedores = $this->fornecedorRepository->getIndex();
+            return view('fornecedor.index', compact('fornecedores'));
+        } catch (\Exception $e) {
+            return back()->with('messages', ['error' => ['Não foi possível encontrar o fornecedor!']]);
+        }
+   
     }
 
-    public function create() : View
+    public function create() : View|RedirectResponse
     {
-        return view('fornecedor.form');
+        try {
+            return view('fornecedor.form');
+        } catch (\Exception $e) {
+            return back()->with('messages', ['error' => ['Não foi possível encontrar o fornecedor!']]);
+        }
     }
 
 
@@ -39,7 +49,7 @@ class FornecedorController extends Controller
 
             return redirect(route('fornecedor.index'))->with('messages', ['success' => ['Fornecedor criado com sucesso!']]);
         } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Não foi possível criar o fornecedor!']]);
+            return back()->with('messages', ['error' => ['Não foi possível criar o fornecedor!']])->withInput($request->all());;
         }
     }
 
@@ -64,7 +74,7 @@ class FornecedorController extends Controller
             $this->fornecedorRepository->update($request, $id);
             return redirect(route('fornecedor.index'))->with('messages', ['success' => ['Fornecedor atualizado com sucesso!']]);
         } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Não foi possível atualizar o fornecedor!'.$e->getMessage()]]);
+            return back()->with('messages', ['error' => ['Não foi possível atualizar o fornecedor!']])->withInput($request->all());
         }
 
     }

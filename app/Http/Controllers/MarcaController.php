@@ -16,15 +16,24 @@ class MarcaController extends Controller
     public function __construct(MarcaRepository $marcaRepository){
         $this->marcaRepository = $marcaRepository;
     }
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
-        $marcas = $this->marcaRepository->getIndex();
-        return view('marca.index', compact('marcas'));
+        try {
+            $marcas = $this->marcaRepository->getIndex();
+            return view('marca.index', compact('marcas'));
+        } catch (\Exception $e) {
+            return back()->with('messages', ['error' => ['Não foi possível acessar o menu->withInput($request->all()); marca!']]);
+        }
+
     }
 
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
-        return view('marca.form');
+        try {
+            return view('marca.form');
+        } catch (\Exception $e) {
+            return back()->with('messages', ['error' => ['Não foi possível acessar o cadastro marca!']]);
+        }
     }
 
     public function store(MarcaRequest $request): RedirectResponse
@@ -33,8 +42,7 @@ class MarcaController extends Controller
             $this->marcaRepository->store($request);
             return redirect(route('marca.index'))->with('messages', ['success' => ['Marca criada com sucesso!']]);
         } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Não foi possível salvar a marca!']]);
-
+            return back()->with('messages', ['error' => ['Não foi possível salvar a marca!']])->withInput($request->all());;
         }
     }
 
@@ -58,7 +66,7 @@ class MarcaController extends Controller
             $this->marcaRepository->update($request,$id);
             return redirect(route('marca.index'))->with('messages', ['success' => ['Marca atualizada com sucesso!']]);
         } catch (\Exception $e) {
-            return back()->with('messages', ['error' => ['Não foi possível atualizar a marca!']]);
+            return back()->with('messages', ['error' => ['Não foi possível atualizar a marca!']])->withInput($request->all());;
         }
     }
 

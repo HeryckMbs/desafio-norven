@@ -8,6 +8,7 @@ use App\Models\Categoria;
 use App\Models\Lancamento;
 use App\Models\Lote;
 use App\Models\Produto;
+use App\Repositories\LoteRepository;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -19,14 +20,14 @@ use Illuminate\Support\Facades\DB;
 
 class LoteController extends Controller
 {
+    private LoteRepository $loteRepository;
 
+    public function __construct(LoteRepository $loteRepository){
+        $this->loteRepository = $loteRepository;
+    }
     public function index() : View
     {
-        $lotes = Lote::when(request()->has('search'),function($q){
-            return $q->whereHas('produto',function($q2){
-                $q2->where('nome','like','%'.request()->search.'%');
-            })->orWhere('id','like','%'.request()->search.'%');
-        })->paginate(request()->paginacao ?? 10);
+        $lotes = $this->loteRepository->getIndex();
         return view('lote.index', compact('lotes'));
     }
 
@@ -38,30 +39,10 @@ class LoteController extends Controller
 
     public function store(LoteRequest $request) : RedirectResponse
     {
-        $produto = Produto::find($request->produto);
         try {
-            DB::beginTransaction();
-            $lote = Lote::create([
-                'data_fabricacao' => Carbon::parse($request->dataFabricacao)->startOfDay(),
-                'data_validade' => Carbon::parse($request->dataValidade)->startOfDay(),
-                'preco_custo' => (float) $request->preco_custo,
-                'preco_venda' => $request->preco_venda,
-                'produto_id' => $produto->id,
-                'created_by' => Auth::id()
-            ]);
-
-            Lancamento::create([
-                'tipo' => TipoLancamento::Entrada,
-                'quantidade' => $request->quantidade,
-                'lote_id' => $lote->id,
-                'created_by' => Auth::id()
-
-            ]);
-
-            DB::commit();
+            $this->loteRepository->store($request);
             return redirect(route('lote.index'))->with('messages', ['success' => ['Produtos cadastrados no estoque com sucesso!']]);
         } catch (\Exception $e) {
-            DB::rollBack();
             return back()->with('messages', ['error' => ['Não foi possível cadastrar o lote!']]);
         }
     }
@@ -69,7 +50,7 @@ class LoteController extends Controller
     public function show(int $lote_id) : JsonResponse
     {
         try {
-            $lote = Lote::with(['produto', 'produto.marca', 'produto.fornecedor', 'produto.categoria'])->findOrFail( $lote_id);
+            $lote = $this->loteRepository->getLote($lote_id);
             return response()->json(['success' => true, 'data' => $lote], 200);
         } catch (\Exception $e) {
             if ($e instanceof ModelNotFoundException) {

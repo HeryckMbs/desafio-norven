@@ -38,22 +38,22 @@
 
 
             </select>
-            {{ $produtosEmEstoque->links() }}
+            {{$lotes->appends(['paginacao' => $_GET['paginacao'] ?? 10])}}
 
         </div>
     </div>
 </form>
 
-    @if (!$produtosEmEstoque->isEmpty())
-        <table id="produtosTable" class="table table-striped table-hover">
-            <thead>
+    @if (!$lotes->isEmpty())
+        <table id="produtosTable" class="table shadow rounded table-striped table-hover">
+            <thead class="bg-primary ">
                 <tr>
                     <th> Código do lote</th>
                     <th>Produto</th>
                     <th>Quantidade Atual</th>
 
-                    <th>Preço de custo (R$)</th>
-                    <th>Preço de venda (R$)</th>
+                    <th>Preço de custo </th>
+                    <th>Preço de venda </th>
                     <th>Data de entrada</th>
                     <th>Data de Validade</th>
                     <th>Vencido</th>
@@ -64,31 +64,22 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($produtosEmEstoque as $produto)
+                @foreach ($lotes as $lote)
                     <tr
-                        @if ($produto->vencido) style="background-color:#ff8e8e"
-                    @elseif($produto->quantidadeAtual < 100)
+                        @if ($lote->vencido) style="background-color:#ff8e8e"
+                    @elseif($lote->quantidadeAtual < 100)
                     style="background-color:#ffc967" @endif>
-                        <td>{{ $produto->id }}</td>
-                        <td>{{ $produto->produto->nome }}
-
-                        <td>{{ $produto->quantidadeAtual }}
-                            {{-- -
-                        <span class="{{$produto->quantidadeAtual < 100 ? 'bg-danger': 'bg-info'}} rounded p-1">{{$produto->quantidadeAtual < 100 ? 'Baixo': 'Normal'}}</span> --}}
-                        </td>
-
-                        <td>{{ $produto->preco_custo }}</td>
-                        <td>{{ $produto->preco_venda }}</td>
-
-                        {{-- 
-                        <td>{{ $produto->produtoRelacionado->nome }}</td>
-                        --}}
-                        <td>{{ \Carbon\Carbon::parse($produto->created_at)->format('d/m/Y H:i') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($produto->data_validade)->format('d/m/Y') }}</td>
-                        <td>{{ $produto->vencido ? 'Sim' : 'Não' }}</td>
+                        <td>{{ $lote->id }}</td>
+                        <td>{{ $lote->produto->nome }}
+                        <td>{{ $lote->quantidadeAtual }}</td>
+                        <td>R$ {{ number_format($lote->preco_custo,2,",",".") }}</td>
+                        <td>R$ {{ number_format($lote->preco_venda,2,",",".") }}</td>
+                        <td>{{ \Carbon\Carbon::parse($lote->created_at)->format('d/m/Y H:i') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($lote->data_validade)->format('d/m/Y') }}</td>
+                        <td>{{ $lote->vencido ? 'Sim' : 'Não' }}</td>
 
                         <td class="d-flex  justify-content-around">
-                            <button data-id="{{ $produto->id }}" type="button"
+                            <button data-id="{{ $lote->id }}" type="button"
                                 class="btn btn-primary btn-sm infoProduto mr-1">
                                 <i class="fas  fa-info"></i>
                             </button>

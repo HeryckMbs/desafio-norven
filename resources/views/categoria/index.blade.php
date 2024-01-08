@@ -38,15 +38,15 @@
 
 
                 </select>
-                {{ $categorias->links() }}
+                {{$categorias->appends(['paginacao' => $_GET['paginacao'] ?? 10])}}
 
             </div>
         </div>
     </form>
     @if (!$categorias->isEmpty())
-        <table id="categoriaTable" class="table table-striped table-hover">
-            <thead>
-                <tr>
+        <table id="categoriaTable" class="table shadow rounded table-striped table-hover">
+            <thead class="bg-primary ">
+                <tr >
                     <th>Id</th>
                     <th>Nome</th>
                     <th>Descrição</th>
@@ -55,7 +55,7 @@
             </thead>
             <tbody>
                 @foreach ($categorias as $categoria)
-                    <tr class="{{ $categoria->deleted_at ? 'bg-danger' : '' }}">
+                    <tr @if ($categoria->deleted_at != null) style="background-color:#ff8e8e" @endif>
                         <td>{{ $categoria->id }}</td>
                         <td>{{ $categoria->nome }}</td>
                         <td>{{ $categoria->descricao }}</td>

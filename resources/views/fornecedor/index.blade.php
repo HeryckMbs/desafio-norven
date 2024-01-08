@@ -9,6 +9,7 @@
 
 
 @section('content')
+
 <form class="mr-2 d-flex justify-content-between" id="formSearch" action="{{ route('fornecedor.index') }}" method="GET">
     <div class="d-flex ">
 
@@ -38,15 +39,14 @@
 
 
             </select>
-            {{ $fornecedores->links() }}
+            {{$fornecedores->appends(['paginacao' => $_GET['paginacao'] ?? 10])}}
 
         </div>
     </div>
 </form>
-
     @if (!$fornecedores->isEmpty())
-        <table id="fornecedorTable" class="table table-striped table-hover">
-            <thead>
+        <table id="fornecedorTable" class="table shadow rounded table-striped table-hover">
+            <thead class="bg-primary ">
                 <tr>
                     <th>Id</th>
                     <th>Nome</th>
@@ -57,11 +57,11 @@
             </thead>
             <tbody>
                 @foreach ($fornecedores as $fornecedor)
-                    <tr class="{{ $fornecedor->deleted_at ? 'bg-danger' : '' }}">
+                    <tr  @if ($fornecedor->deleted_at != null) style="background-color:#ff8e8e" @endif>
                         <td>{{ $fornecedor->id }}</td>
                         <td>{{ $fornecedor->nome }}</td>
                         <td>{{ formatCnpjCpf($fornecedor->cnpj) }}</td>
-                        <td>{{ $fornecedor->ativo && $fornecedor->deleted_at == null ? 'Ativo' : 'Inativo' }}</td>
+                        <td>{{ $fornecedor->deleted_at == null ? 'Ativo' : 'Inativo' }}</td>
                         <td class="d-flex  justify-content-around">
                             @if ($fornecedor->deleted_at == null)
                                 <a href="{{ route('fornecedor.edit', $fornecedor->id) }}" type="button"

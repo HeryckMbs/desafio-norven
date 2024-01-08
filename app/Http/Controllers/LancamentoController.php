@@ -6,27 +6,29 @@ use App\Enums\TipoLancamento;
 use App\Http\Requests\LancamentoRequest;
 use App\Models\Lancamento;
 use App\Models\Lote;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LancamentoController extends Controller
 {
 
-    public function index()
+    public function index() : View
     {
         $lancamentos = Lancamento::index();
         return view('lancamento.index', compact('lancamentos'));
     }
 
 
-    public function create()
+    public function create() : View
     {
         return view('lancamento.form');
     }
 
 
-    public function store(LancamentoRequest $request)
+    public function store(LancamentoRequest $request) : RedirectResponse
     {
         try {
             
@@ -51,19 +53,19 @@ class LancamentoController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(int $id)
     {
     }
 
-    public function edit($id)
+    public function edit(int $id)
     {
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
     }
 
-    public function destroy($id)
+    public function destroy(int $id)
     {
     }
 }

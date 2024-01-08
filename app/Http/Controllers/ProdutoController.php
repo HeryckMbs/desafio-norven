@@ -7,28 +7,31 @@ use App\Models\Categoria;
 use App\Models\Fornecedor;
 use App\Models\Marca;
 use App\Models\Produto;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ProdutoController extends Controller
 {
 
-    public function index()
+    public function index() : View
     {
         $produtos = Produto::index();
         return view('produto.index', compact('produtos'));
     }
 
-    public function create()
+    public function create() : View
     {
-        $categorias = Categoria::all();
-        $marcas = Marca::all();
-        $fornecedores = Fornecedor::all();
+        $categorias = Categoria::orderBy('nome')->get();
+        $marcas = Marca::orderBy('nome')->get();
+        $fornecedores = Fornecedor::orderBy('nome')->get();
         return view('produto.form', compact('categorias', 'marcas', 'fornecedores'));
     }
 
-    public function store(ProdutoRequest $request)
+    public function store(ProdutoRequest $request) : RedirectResponse
     {
         try {
             $informacaoNutricional = [
@@ -49,27 +52,24 @@ class ProdutoController extends Controller
             ]);
             return redirect(route('produto.index'))->with('messages', ['success' => ['Produto criado com sucesso!']]);
         } catch (\Exception $e) {
-            if ($e instanceof ModelNotFoundException) {
-                return response()->json(['success' => true, 'data' => null, 'message' => 'Produto não encontrado'], 400);
-            }
-            return response()->json(['success' => true, 'data' => null, 'message' => 'Erro ao processar requisição. Tente novamente mais tarde.'], 400);
+            return back()->with('messages', ['error' => ['Não foi possível salvar o produto. Tente novamente mais tarde!']])->withInput($request->all());
         }
     }
 
-    public function show($produto_id)
+    public function show(int $produto_id) : JsonResponse
     {
         try {
-            $produto = Produto::with(['fornecedor', 'marca', 'responsavel'])->findOrFail($produto_id);
+            $produto = Produto::with(['fornecedor', 'marca', 'responsavel'])->withTrashed()->findOrFail($produto_id);
             return response()->json(['success' => true, 'data' => $produto], 200);
         } catch (\Exception $e) {
             if ($e instanceof ModelNotFoundException) {
-                return response()->json(['success' => true, 'data' => null, 'message' => 'Produto não encontrado'], 400);
+                return response()->json(['success' => false, 'data' => null, 'message' => 'Produto não encontrado'], 400);
             }
-            return response()->json(['success' => true, 'data' => null, 'message' => 'Erro ao processar requisição. Tente novamente mais tarde.'], 400);
+            return response()->json(['success' => false, 'data' => null, 'message' => 'Erro ao processar requisição. Tente novamente mais tarde.'], 500);
         }
     }
 
-    public function edit($id)
+    public function edit($id) : View|RedirectResponse
     {
         $categorias = Categoria::all();
         $marcas = Marca::all();
@@ -82,7 +82,7 @@ class ProdutoController extends Controller
         }
     }
 
-    public function update(ProdutoRequest $request, $id)
+    public function update(ProdutoRequest $request, int $id) : RedirectResponse
     {
         try {
             $informacaoNutricional = [
@@ -108,7 +108,7 @@ class ProdutoController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy(int $id) : RedirectResponse
     {
         try {
             Produto::findOrFail($id)->delete();

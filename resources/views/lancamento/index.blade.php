@@ -38,13 +38,13 @@
 
             </select>
         </div>
-        {{ $lancamentos->links() }}
+        {{$lancamentos->appends(['paginacao' => $_GET['paginacao'] ?? 10])}}
     </div>
 </form>
 
     @if ($lancamentos->isNotEmpty())
-        <table id="produtosTable" class="table table-striped table-hover">
-            <thead>
+        <table id="produtosTable" class="table shadow rounded table-striped table-hover">
+            <thead class="bg-primary ">
                 <tr>
                     <th>Lançamento</th>
                     <th>Tipo</th>

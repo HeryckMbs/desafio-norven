@@ -40,14 +40,14 @@
 
 
                 </select>
-                {{ $marcas->links() }}
+                {{$marcas->appends(['paginacao' => $_GET['paginacao'] ?? 10])}}
 
             </div>
         </div>
     </form>
     @if (!$marcas->isEmpty())
-        <table id="marcaTable" class="table table-striped table-hover">
-            <thead>
+        <table id="marcaTable" class="table shadow rounded table-striped table-hover">
+            <thead class="bg-primary ">
                 <tr>
                     <th>Id</th>
                     <th>Nome</th>
@@ -56,7 +56,7 @@
             </thead>
             <tbody>
                 @foreach ($marcas as $marca)
-                    <tr class="{{ $marca->deleted_at ? 'bg-danger' : '' }}">
+                    <tr @if ($marca->deleted_at != null) style="background-color:#ff8e8e" @endif>
                         <td>{{ $marca->id }}</td>
                         <td>{{ $marca->nome }}</td>
 

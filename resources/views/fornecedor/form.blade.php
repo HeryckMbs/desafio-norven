@@ -12,7 +12,7 @@
         @endif
             <div class="form-group">
                 <label for="exampleInputEmail1" class="form-label">Nome</label>
-                <input value="{{ isset($fornecedor) ? $fornecedor->nome : '' }}" class="form-control" name="nome"
+                <input value="{{ isset($fornecedor) ? $fornecedor->nome : (old('nome') ?? '') }}" class="form-control" name="nome"
                     id="nome">
                 @error('nome')
                     <span class="mt-1  text-red p-1 rounded"><small>{{ $message }}</small></span>
@@ -20,7 +20,7 @@
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail1" class="form-label">CNPJ</label>
-                <input value="{{ isset($fornecedor) ? $fornecedor->cnpj : '' }}" class="form-control" name="cnpj"
+                <input value="{{ isset($fornecedor) ? $fornecedor->cnpj : (old('cnpj') ?? '') }}" class="form-control" name="cnpj"
                     id="cnpj">
                 @error('cnpj')
                     <span class="mt-1 text-red p-1 rounded"><small>{{ $message }}</small></span>

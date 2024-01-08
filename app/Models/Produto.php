@@ -46,20 +46,34 @@ class Produto extends Model
         return $this->hasOne(Categoria::class, 'id', 'categoria_id')->withTrashed();
     }
 
-    public function scopeIndex($query){
+    public function scopeIndex($query)
+    {
         return $query->with(['fornecedor', 'marca', 'responsavel'])
-        ->orderBy('id')
-        ->when(request()->has('search') && request()->search != '', function ($query) {
-            $request = request()->all();
-            return $query->where('nome', 'like', '%' . $request['search'] . '%')
-                ->orWhere('descricao', 'like', '%' . $request['search'] . '%')
-                ->orWhereHas('responsavel', function ($query2) use ($request) {
-                    $query2->where('nome', 'like', '%' . $request['search'] . '%');
-                })->orWhereHas('categoria', function ($query3) use ($request) {
-                    $query3->where('nome', 'like', '%' . $request['search'] . '%');
-                });
-        })
-        ->withTrashed()
-        ->paginate(request()->paginacao ?? 10);
+            ->orderBy('id')
+            ->when(request()->has('search') && request()->search != '', function ($query) {
+                $request = request()->all();
+                return $query->where('nome', 'like', '%' . $request['search'] . '%')
+                    ->orWhere('descricao', 'like', '%' . $request['search'] . '%')
+                    ->orWhereHas('responsavel', function ($query2) use ($request) {
+                        $query2->where('nome', 'like', '%' . $request['search'] . '%');
+                    })->orWhereHas('categoria', function ($query3) use ($request) {
+                        $query3->where('nome', 'like', '%' . $request['search'] . '%');
+                    });
+            })
+            ->withTrashed()
+            ->paginate(request()->paginacao ?? 10);
+    }
+
+    public function scopeIndexHome($query, int $categoria_id)
+    {
+        return $query->when(request()->has('search'), function ($query) {
+            return  $query->whereHas('fornecedor', function ($query3) {
+                $query3->where('nome', 'like', '%' . request()->search . '%');
+            })->orWhereHas('marca', function ($query4) {
+                $query4->where('nome', 'like', '%' . request()->search . '%');
+            });
+        })->where('categoria_id', $categoria_id)
+            ->with(['categoria'])
+            ->paginate(request()->paginacao ?? 10);
     }
 }

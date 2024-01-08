@@ -5,23 +5,25 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CategoriaRequest;
 use App\Models\Categoria;
 use App\Models\Produto;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class CategoriaController extends Controller
 {
-    public function index()
+    public function index() : View
     {
         $categorias = Categoria::index();
         return view('categoria.index', compact('categorias'));
     }
 
-    public function create()
+    public function create() : View
     {
         return view('categoria.form');
     }
 
-    public function store(CategoriaRequest $request)
+    public function store(CategoriaRequest $request) : RedirectResponse
     {
         try {
             $imageLink = Storage::putFile('imagensCategoria', $request->url_capa);
@@ -37,7 +39,7 @@ class CategoriaController extends Controller
         }
     }
 
-    public function show($categoria_id)
+    public function show(int $categoria_id) : Array
     {
 
         try{
@@ -50,7 +52,7 @@ class CategoriaController extends Controller
         }
     }
 
-    public function edit($categoria_id)
+    public function edit(int $categoria_id) : View|RedirectResponse
     {
         try{
             $categoria = Categoria::findOrFail($categoria_id);
@@ -61,7 +63,7 @@ class CategoriaController extends Controller
         }
     }
 
-    public function update(Request $request, $categoria_id)
+    public function update(Request $request, int $categoria_id) : RedirectResponse
     {
         try {
             $categoria = Categoria::findOrFail($categoria_id);
@@ -86,7 +88,7 @@ class CategoriaController extends Controller
         }
     }
 
-    public function destroy($categoria_id)
+    public function destroy(int $categoria_id) : RedirectResponse
     {
         try {
             Categoria::findOrFail($categoria_id)->delete();

@@ -4,24 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\FornecedorRequest;
 use App\Models\Fornecedor;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class FornecedorController extends Controller
 {
 
-    public function index()
+    public function index() : View
     {
         $fornecedores = Fornecedor::index();
         return view('fornecedor.index', compact('fornecedores'));
     }
 
-    public function create()
+    public function create() : View
     {
         return view('fornecedor.form');
     }
 
 
-    public function store(FornecedorRequest $request)
+    public function store(FornecedorRequest $request) : RedirectResponse
     {
         try {
             if(!validar_cnpj($request->cnpj)){
@@ -36,11 +38,11 @@ class FornecedorController extends Controller
     }
 
 
-    public function show($id)
+    public function show( int $id)
     {
     }
 
-    public function edit($id)
+    public function edit( int $id)
     {
         try {
             $fornecedor = Fornecedor::findOrFail($id);
@@ -50,7 +52,7 @@ class FornecedorController extends Controller
         }
     }
 
-    public function update(FornecedorRequest $request, $id)
+    public function update(FornecedorRequest $request, int $id) : RedirectResponse
     {
         try {
             Fornecedor::find($id)->update(['nome' => $request->nome, 'cnpj' => $request->cnpj]);
@@ -61,7 +63,7 @@ class FornecedorController extends Controller
 
     }
 
-    public function destroy($id)
+    public function destroy(int $id) : RedirectResponse
     {
         try {
             Fornecedor::findOrFail($id)->delete();

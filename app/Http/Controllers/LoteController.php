@@ -9,7 +9,10 @@ use App\Models\Lancamento;
 use App\Models\Lote;
 use App\Models\Produto;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +20,7 @@ use Illuminate\Support\Facades\DB;
 class LoteController extends Controller
 {
 
-    public function index()
+    public function index() : View
     {
         $lotes = Lote::when(request()->has('search'),function($q){
             return $q->whereHas('produto',function($q2){
@@ -27,13 +30,13 @@ class LoteController extends Controller
         return view('lote.index', compact('lotes'));
     }
 
-    public function create()
+    public function create() : View
     {
-        $categorias = Categoria::all();
+        $categorias = Categoria::orderBy('nome')->get();
         return view('lote.form', compact('categorias'));
     }
 
-    public function store(LoteRequest $request)
+    public function store(LoteRequest $request) : RedirectResponse
     {
         $produto = Produto::find($request->produto);
         try {
@@ -63,7 +66,7 @@ class LoteController extends Controller
         }
     }
 
-    public function show($lote_id)
+    public function show(int $lote_id) : JsonResponse
     {
         try {
             $lote = Lote::with(['produto', 'produto.marca', 'produto.fornecedor', 'produto.categoria'])->findOrFail( $lote_id);

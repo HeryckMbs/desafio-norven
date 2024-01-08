@@ -7,20 +7,23 @@ use App\Models\Categoria;
 use App\Models\Fornecedor;
 use App\Models\Marca;
 use App\Models\Produto;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ProdutoController extends Controller
 {
 
-    public function index()
+    public function index() : View
     {
         $produtos = Produto::index();
         return view('produto.index', compact('produtos'));
     }
 
-    public function create()
+    public function create() : View
     {
         $categorias = Categoria::orderBy('nome')->get();
         $marcas = Marca::orderBy('nome')->get();
@@ -28,7 +31,7 @@ class ProdutoController extends Controller
         return view('produto.form', compact('categorias', 'marcas', 'fornecedores'));
     }
 
-    public function store(ProdutoRequest $request)
+    public function store(ProdutoRequest $request) : RedirectResponse
     {
         try {
             $informacaoNutricional = [
@@ -53,7 +56,7 @@ class ProdutoController extends Controller
         }
     }
 
-    public function show($produto_id)
+    public function show(int $produto_id) : JsonResponse
     {
         try {
             $produto = Produto::with(['fornecedor', 'marca', 'responsavel'])->withTrashed()->findOrFail($produto_id);
@@ -66,7 +69,7 @@ class ProdutoController extends Controller
         }
     }
 
-    public function edit($id)
+    public function edit($id) : View|RedirectResponse
     {
         $categorias = Categoria::all();
         $marcas = Marca::all();
@@ -79,7 +82,7 @@ class ProdutoController extends Controller
         }
     }
 
-    public function update(ProdutoRequest $request, $id)
+    public function update(ProdutoRequest $request, int $id) : RedirectResponse
     {
         try {
             $informacaoNutricional = [
@@ -105,7 +108,7 @@ class ProdutoController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy(int $id) : RedirectResponse
     {
         try {
             Produto::findOrFail($id)->delete();

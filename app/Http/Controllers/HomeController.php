@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DataTables\AgendamentosDataTable;
 use App\Models\Categoria;
 use App\Models\Produto;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -14,24 +15,15 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index() : View
     {
         $categorias = Categoria::indexHome();
         return view('home', compact('categorias'));
     }
 
-    public function produtosCategoriaEmEstoque(int $categoria_id)
+    public function produtosCategoriaEmEstoque(int $categoria_id) : View
     {
-        $produtosCategoria = Produto::when(request()->has('search'), function ($query) {
-            return  $query->whereHas('fornecedor', function ($query3) {
-                $query3->where('nome', 'like', '%' . request()->search . '%');
-            })->orWhereHas('marca', function ($query4) {
-                $query4->where('nome', 'like', '%' . request()->search . '%');
-            });
-        })->where('categoria_id', $categoria_id)
-            ->with(['categoria'])
-            ->paginate(request()->paginacao ?? 10);
-
+        $produtosCategoria = Produto::indexHome($categoria_id);
         $categoria = Categoria::find($categoria_id);
         return view('produtosCategoria.index', compact('produtosCategoria', 'categoria'));
     }

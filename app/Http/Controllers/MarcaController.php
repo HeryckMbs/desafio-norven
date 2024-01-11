@@ -71,4 +71,12 @@ class MarcaController extends Controller
             return back()->with('messages', ['error' => ['Não foi possível excluir a marca!']]);
         }
     }
+    public function ativar(int $categoria_id){
+        try {
+            $this->marcaRepository->ativar($categoria_id);
+            return back()->with('messages', ['success' => ['Categoria ativada com sucesso!']]);
+        } catch (\Exception $e) {
+            return back()->with('messages', ['error' => ['Não foi possível ativar a categoria!'.$e->getMessage()]]);
+        }
+    }
 }

@@ -80,4 +80,13 @@ class CategoriaController extends Controller
             return back()->with('messages', ['error' => ['Não foi possível excluir a categoria!']]);
         }
     }
+
+    public function ativar(int $categoria_id){
+        try {
+            $this->categoriaRepository->ativar($categoria_id);
+            return back()->with('messages', ['success' => ['Categoria ativada com sucesso!']]);
+        } catch (\Exception $e) {
+            return back()->with('messages', ['error' => ['Não foi possível ativar a categoria!'.$e->getMessage()]]);
+        }
+    }
 }

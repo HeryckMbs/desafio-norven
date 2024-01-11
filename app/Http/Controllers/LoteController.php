@@ -58,7 +58,7 @@ class LoteController extends Controller
             if ($e instanceof ModelNotFoundException) {
                 return response()->json(['success' => true, 'data' => null, 'message' => 'Lote não encontrado'], 400);
             }
-            return response()->json(['success' => true, 'data' => null, 'message' => 'Erro ao processar requisição. Tente novamente mais tarde.'], 400);
+            return response()->json(['success' => true, 'data' => null, 'message' => 'Erro ao processar requisição. Tente novamente mais tarde.'.$e->getMessage()], 400);
         }
     }
 }

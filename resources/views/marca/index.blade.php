@@ -40,7 +40,7 @@
 
 
                 </select>
-                {{$marcas->appends(['paginacao' => $_GET['paginacao'] ?? 10])}}
+                {{ $marcas->appends(['paginacao' => $_GET['paginacao'] ?? 10]) }}
 
             </div>
         </div>
@@ -61,18 +61,25 @@
                         <td>{{ $marca->nome }}</td>
 
                         <td class="d-flex  justify-content-center">
-
                             @if ($marca->deleted_at == null)
-                                <a href="{{ route('marca.edit', $marca->id) }}" 
-                                    class="btn btn-warning  mr-2 "><i class="fas fa-edit"></i></a>
-                                <form method="POST" action="{{ route('marca.destroy', $marca->id) }}"
-                                    enctype="multipart/form-data">
-                                    @method('DELETE')
-                                    @csrf
-                                    <button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
-
-                                </form>
+                                <a href="{{ route('marca.edit', $marca->id) }}" type="button"
+                                    class="btn btn-warning mr-1 editModal"><i class="fas fa-edit"></i></a>
                             @endif
+                            <form method="POST"
+                                action="{{ route($marca->deleted_at == null ? 'marca.destroy' : 'marca.ativar', $marca->id) }}"
+                                enctype="multipart/form-data">
+                                @if ($marca->deleted_at == null)
+                                    @method('DELETE')
+                                @else
+                                    @method('PUT')
+                                @endif
+                                @csrf
+                                <button type="submit"
+                                    class="btn {{ $marca->deleted_at == null ? 'btn-danger' : 'btn-success' }}"><i
+                                        class="fa fa-power-off"></i></button>
+
+                            </form>
+
                         </td>
                     </tr>
                 @endforeach

@@ -38,7 +38,7 @@
 
 
                 </select>
-                {{$categorias->appends(['paginacao' => $_GET['paginacao'] ?? 10])}}
+                {{ $categorias->appends(['paginacao' => $_GET['paginacao'] ?? 10]) }}
 
             </div>
         </div>
@@ -46,7 +46,7 @@
     @if (!$categorias->isEmpty())
         <table id="categoriaTable" class="table shadow rounded table-striped table-hover">
             <thead class="bg-primary ">
-                <tr >
+                <tr>
                     <th>Id</th>
                     <th>Nome</th>
                     <th>Descrição</th>
@@ -67,14 +67,21 @@
                             @if ($categoria->deleted_at == null)
                                 <a href="{{ route('categoria.edit', $categoria->id) }}" type="button"
                                     class="btn btn-warning mr-1 editModal"><i class="fas fa-edit"></i></a>
-                                <form method="POST" action="{{ route('categoria.destroy', $categoria->id) }}"
-                                    enctype="multipart/form-data">
-                                    @method('DELETE')
-                                    @csrf
-                                    <button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
-
-                                </form>
                             @endif
+                            <form method="POST"
+                                action="{{ route($categoria->deleted_at == null ? 'categoria.destroy' : 'categoria.ativar', $categoria->id) }}"
+                                enctype="multipart/form-data">
+                                @if ($categoria->deleted_at == null)
+                                    @method('DELETE')
+                                @else
+                                    @method('PUT')
+                                @endif
+                                @csrf
+                                <button type="submit"
+                                    class="btn {{ $categoria->deleted_at == null ? 'btn-danger' : 'btn-success' }}"><i
+                                        class="fa fa-power-off"></i></button>
+
+                            </form>
                         </td>
                     </tr>
                 @endforeach

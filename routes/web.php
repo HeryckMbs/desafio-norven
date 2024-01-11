@@ -12,6 +12,8 @@ use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Models\Categoria;
+use App\Models\Marca;
+use App\Models\Produto;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -50,4 +52,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('lote', LoteController::class);
     Route::resource('lancamento', LancamentoController::class);
 
+    Route::group(['prefix' => 'ativar'],function(){
+        Route::put('/categoria/{categoria_id}',[CategoriaController::class,'ativar'])->name('categoria.ativar');
+        Route::put('/marca/{marca_id}',[MarcaController::class,'ativar'])->name('marca.ativar');
+        Route::put('/produto/{produto_id}',[ProdutoController::class,'ativar'])->name('produto.ativar');
+        Route::put('/fornecedor/{fornecedor_id}',[FornecedorController::class,'ativar'])->name('fornecedor.ativar');
+        
+
+    });
 });

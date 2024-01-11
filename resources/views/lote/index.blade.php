@@ -9,41 +9,51 @@
 
 
 @section('content')
-<form class="mr-2 d-flex justify-content-between" id="formSearch" action="{{ route('lote.index') }}" method="GET">
-    <div class="d-flex ">
+    <form class="mr-2 d-flex justify-content-between" id="formSearch" action="{{ route('lote.index') }}" method="GET">
+        <div class="d-flex ">
 
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                </div>
+                <input value="{{ $_GET['search'] ?? '' }}" type="text" id="search" name="search" class="form-control"
+                    placeholder="" aria-label="" aria-describedby="basic-addon1">
+                <a href="{{ route('lote.index') }}" class="btn btn-primary">Limpar busca</a>
+
             </div>
-            <input value="{{ $_GET['search'] ?? '' }}" type="text" id="search" name="search" class="form-control"
-                placeholder="" aria-label="" aria-describedby="basic-addon1">
-            <a href="{{ route('lote.index') }}" class="btn btn-primary">Limpar busca</a>
-
         </div>
-    </div>
-    <div class="d-flex">
-        <div class="input-group  ">
-            <select id="paginacao" name="paginacao" class="custom-select mr-2" style="min-width: 80px"
-                id="inputGroupSelect01">
-                <option value="10" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '10' ? 'selected' : '' }}>
-                    10
-                </option>
-                <option value="20" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '20' ? 'selected' : '' }}>
-                    20
-                </option>
-                <option value="30" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '30' ? 'selected' : '' }}>
-                    30
-                </option>
+        <div class="d-flex">
+            <div class="input-group  ">
+                <select id="paginacao" name="paginacao" class="custom-select mr-2" style="min-width: 80px"
+                    id="inputGroupSelect01">
+                    <option value="10" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '10' ? 'selected' : '' }}>
+                        10
+                    </option>
+                    <option value="20" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '20' ? 'selected' : '' }}>
+                        20
+                    </option>
+                    <option value="30" {{ isset($_GET['paginacao']) && $_GET['paginacao'] == '30' ? 'selected' : '' }}>
+                        30
+                    </option>
 
 
-            </select>
-            {{$lotes->appends(['paginacao' => $_GET['paginacao'] ?? 10])}}
+                </select>
+                {{ $lotes->appends(['paginacao' => $_GET['paginacao'] ?? 10]) }}
 
+            </div>
         </div>
+    </form>
+<div class="my-2">
+    <h5>Legenda</h5>
+   <div class="d-flex">
+    <div class="d-flex align-items-center mr-3">
+        <div style="height: 30px;width:30px; background-color:#ffc967;" class="mr-2"></div> Baixo estoque
     </div>
-</form>
-
+    <div class="d-flex align-items-center ">
+        <div style="height: 30px;width:30px; background-color:#ff8e8e;" class="mr-2"></div> Lote Vencido
+    </div>
+   </div>
+</div>
     @if (!$lotes->isEmpty())
         <table id="produtosTable" class="table shadow rounded table-striped table-hover">
             <thead class="bg-primary ">
@@ -72,8 +82,8 @@
                         <td>{{ $lote->id }}</td>
                         <td>{{ $lote->produto->nome }}
                         <td>{{ $lote->quantidadeAtual }}</td>
-                        <td>R$ {{ number_format($lote->preco_custo,2,",",".") }}</td>
-                        <td>R$ {{ number_format($lote->preco_venda,2,",",".") }}</td>
+                        <td>R$ {{ number_format($lote->preco_custo, 2, ',', '.') }}</td>
+                        <td>R$ {{ number_format($lote->preco_venda, 2, ',', '.') }}</td>
                         <td>{{ \Carbon\Carbon::parse($lote->created_at)->format('d/m/Y H:i') }}</td>
                         <td>{{ \Carbon\Carbon::parse($lote->data_validade)->format('d/m/Y') }}</td>
                         <td>{{ $lote->vencido ? 'Sim' : 'Não' }}</td>
@@ -121,6 +131,7 @@
                 document.getElementById('unidadeMedida').value = result.data.produto
                     .unidade_medida
                 document.getElementById('loteProduto').value = result.data.id
+                document.getElementById('responsavel').value = result.data.responsavel.name
 
                 document.getElementById('marca').value = result.data.produto.marca.nome
                 document.getElementById('categoriaProduto').value = result.data.produto.categoria.nome
@@ -144,7 +155,7 @@
                 document.getElementById('dataFabricacao').value = `${dia}/${mes}/${ano}`
 
 
-                
+
                 document.getElementById('porcao').value = result.data.produto
                     .informacao_nutricional.porcao
                 document.getElementById('proteina').value = result.data.produto

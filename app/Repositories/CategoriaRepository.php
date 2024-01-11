@@ -51,4 +51,8 @@ class CategoriaRepository implements CategoriaRepositoryInterface
     {
         return $this->categoria->findOrFail($categoria_id)->delete();
     }
+    public function ativar(int $categoria_id)
+    {
+        return $this->categoria->withTrashed()->where('id',$categoria_id)->update(['deleted_at' => null]);
+    }
 }

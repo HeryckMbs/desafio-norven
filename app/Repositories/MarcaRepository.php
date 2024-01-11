@@ -33,4 +33,8 @@ class MarcaRepository implements MarcaRepositoryInterface
     {
         $this->marca->findOrFail($id)->delete();
     }
+    public function ativar(int $marca_id)
+    {
+        return $this->marca->withTrashed()->where('id',$marca_id)->update(['deleted_at' => null]);
+    }
 }

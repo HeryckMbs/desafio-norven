@@ -73,4 +73,8 @@ class ProdutoRepository implements ProdutoRepositoryInterface
     {
         $this->produto->findOrFail($id)->delete();
     }
+    public function ativar(int $produto_id)
+    {
+        return $this->produto->withTrashed()->where('id',$produto_id)->update(['deleted_at' => null]);
+    }
 }

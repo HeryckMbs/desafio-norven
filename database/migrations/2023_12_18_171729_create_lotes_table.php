@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('lotes', function (Blueprint $table) {
             $table->id();
             $table->dateTime('data_fabricacao');
-            $table->dateTime('data_validade');
+            $table->date('data_validade');
             $table->float('preco_custo');
             $table->float('preco_venda')->default(0);
             $table->boolean('vencido')->default(false);

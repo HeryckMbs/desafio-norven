@@ -53,7 +53,13 @@ class  LoteRepository implements LoteRepositoryInterface
     {
 
         return $this->lote
-            ->with(['produto', 'produto.marca', 'produto.fornecedor', 'produto.categoria'])
+            ->with([
+                'produto',
+                'produto.marca',
+                'produto.fornecedor',
+                'produto.categoria',
+                'responsavel' 
+            ])
             ->findOrFail($lote_id);
     }
 }

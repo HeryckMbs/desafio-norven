@@ -19,7 +19,7 @@ composer i
 ./vendor/bin/sail npm i
 ./vendor/bin/sail npm run build
 ./vendor/bin/sail npm run dev
-
+./vendor/bin/sail php artisan schedule:work
 # Mensagem informativa
 echo "Acesse a aplicação em http://localhost:8092/"
 echo "Usuário padrão está na seeder FillBasicData"

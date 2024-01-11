@@ -75,17 +75,25 @@
                                 <i class="fas fa-info"></i>
                             </button>
                             @if ($produto->deleted_at == null)
-                                <a href="{{ route('produto.edit', $produto->id) }}" type="button"
-                                    class="btn btn-warning mr-1 "><i class="fas fa-edit"></i></a>
-                                <form method="POST" action="{{ route('produto.destroy', $produto->id) }}"
-                                    enctype="multipart/form-data">
-                                    @method('DELETE')
-                                    @csrf
-                                    <button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
-
-                                </form>
+                            <a href="{{ route('produto.edit', $produto->id) }}" type="button"
+                                class="btn btn-warning mr-1 editModal"><i class="fas fa-edit"></i></a>
+                        @endif
+                        <form method="POST"
+                            action="{{ route($produto->deleted_at == null ? 'produto.destroy' : 'produto.ativar', $produto->id) }}"
+                            enctype="multipart/form-data">
+                            @if ($produto->deleted_at == null)
+                                @method('DELETE')
+                            @else
+                                @method('PUT')
                             @endif
+                            @csrf
+                            <button type="submit"
+                                class="btn {{ $produto->deleted_at == null ? 'btn-danger' : 'btn-success' }}"><i
+                                    class="fa fa-power-off"></i></button>
 
+                        </form>
+                        
+                           
 
                         </td>
                     </tr>
@@ -127,7 +135,7 @@
 
 
                     document.getElementById('fornecedorNome').value = result.data.fornecedor.nome
-                    document.getElementById('marca').value = result.data.marca.nome
+                    document.getElementById('nomeProduto').value = result.data.nome
 
                     let date = new Date(Date.parse(result.data.created_at));
                     let dia = date.getDate().toString().padStart(2, '0');

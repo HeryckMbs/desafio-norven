@@ -45,17 +45,20 @@
                             <input class="form-control" id="dataEntrada" disabled>
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-3">
                             <label for="exampleInputEmail1" class="form-label">Data de Fabricação</label>
                             <input class="form-control" id="dataFabricacao" disabled>
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-3">
                             <label for="exampleInputEmail1" class="form-label">Data de validade</label>
                             <input class="form-control" id="dataValidade" disabled>
                         </div>
 
-
+                        <div class="col-6">
+                            <label for="exampleInputEmail1" class="form-label">Responsável</label>
+                            <input class="form-control" id="responsavel" disabled>
+                        </div>
 
                         <div class="col-12 ">
                             <div class="form-floating">

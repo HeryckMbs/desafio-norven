@@ -36,4 +36,8 @@ class FornecedorRepository implements FornecedorRepositoryInterface
 
         $this->fornecedor->findOrFail($id)->delete();
     }
+    public function ativar(int $fornecedor_id)
+    {
+        return $this->fornecedor->withTrashed()->where('id',$fornecedor_id)->update(['deleted_at' => null]);
+    }
 }

@@ -7,18 +7,18 @@ cp .env.example .env
 composer i
 
 # Passo 3: Criar alias para Sail (se ainda não existir)
-alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
+
 
 # Passo 4: Iniciar os containers Docker com Sail, gerar chave e realizar migrações
-sail up -d
-sail php artisan key:generate
-sail php artisan storage:link
-sail php artisan migrate:fresh --seed
+./vendor/bin/sail up -d
+./vendor/bin/sail php artisan key:generate
+./vendor/bin/sail php artisan storage:link
+./vendor/bin/sail php artisan migrate:fresh --seed
 
 # Passo 5: Instalar as dependências do npm, compilar e construir
-sail npm i
-sail npm run build
-sail npm run dev
+./vendor/bin/sail npm i
+./vendor/bin/sail npm run build
+./vendor/bin/sail npm run dev
 
 # Mensagem informativa
 echo "Acesse a aplicação em http://localhost:8092/"

@@ -1,4 +1,4 @@
 Passos para executar o projeto
 
-- sudo chmod +x setup.sh
-- ./setup.sh
+- sudo chmod +x run.sh
+- ./run.sh

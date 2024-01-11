@@ -26,9 +26,9 @@ class FillBasicData extends Seeder
         $data =
             [
                 'name' => 'Heryck',
-                'email' => 'heryckmota@gmail.com',
+                'email' => 'heryck@email.com',
                 'email_verified_at' => now(),
-                'password' => Hash::make('heryck1516'), // password
+                'password' => Hash::make('heryck172020'), // password
 
             ];
         User::create($data);

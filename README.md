@@ -1,5 +1,5 @@
 Passos para executar o projeto
-
+- cp .env.example .env
 - composer i
 - alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
 - sail up -d
